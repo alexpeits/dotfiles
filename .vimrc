@@ -13,6 +13,7 @@ Plugin 'klen/python-mode'
 Plugin 'tpope/vim-fugitive'
 "Plugin 'Raimondi/delimitMate'
 Plugin 'KabbAmine/zeavim.vim'
+Plugin 'airblade/vim-gitgutter'
 call vundle#end()
 
 """""""""""""""""""""""""""""""""
@@ -24,6 +25,9 @@ let g:airline_powerline_fonts=1
 "let g:airline_theme='hybridline'
 let g:airline_theme='base16_eighties'
 let g:airline#extensions#branch#enabled = 1
+
+" GitGutter setup
+let g:gitgutter_signs=0
 
 """""""""""""""""""""""""""""""""
 
@@ -111,6 +115,8 @@ set matchtime=4
 "" remove delay from insert to normal
 set timeoutlen=1000 ttimeoutlen=0
 
+set updatetime=100
+
 set nu
 set background=dark
 let python_highlight_all = 1
@@ -154,6 +160,8 @@ map <F4> :TagbarToggle<CR>
 map <C-n> :set invnu <CR>
 map <C-p> :PresentingStart<CR>
 nnoremap <C-L> :redraw!<CR>
+nnoremap <C-h> :GitGutterLineHighlightsToggle<CR>
+nnoremap <C-j> :GitGutterSignsToggle<CR>
 
 au BufRead,BufNewFile *.py vnoremap <silent> # :s#^#\##<cr>:noh<cr>
 au BufRead,BufNewFile *.py vnoremap <silent> -# :s#^\###<cr>:noh<cr>
