@@ -59,6 +59,7 @@ fi
 . ~/.git-prompt.sh
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWUNTRACKEDFILES=1
+export GIT_EDITOR=vim
 
 if [ "$color_prompt" = yes ]; then
     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;35m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w \[\033[01;31m\]$(__git_ps1 "(%s) ")\[\033[01;34m\]\$\[\033[00m\] '
