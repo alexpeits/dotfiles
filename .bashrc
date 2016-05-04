@@ -127,6 +127,7 @@ alias uu='cd ../..'
 alias uuu='cd ../../..'
 alias uuuu='cd ../../../..'
 alias uuuuu='cd ../../../../..'
+alias detach='udisksctl power-off -b'
 
 export WORKON_HOME=$HOME/venvs
 export PROJECT_HOME=$HOME/devel
