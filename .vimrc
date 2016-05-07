@@ -69,7 +69,7 @@ let g:pymode_lint = 1
 let g:pymode_lint_checker = "pyflakes,pep8,pylint"
 "let g:pymode_options_max_line_length=79
 " Auto check on save
-"let g:pymode_lint_write = 1
+let g:pymode_lint_on_write = 0
 let g:pymode_lint_ignore = "E5"
 "let g:pymode_lint_ignore = \"E5,W0401,E302,E225,E228,E265,E127,E128"
 
@@ -135,7 +135,8 @@ highlight Function ctermfg=105
 highlight Normal ctermbg=none ctermfg=251
 highlight Search cterm=none ctermbg=222 ctermfg=234
 highlight Error ctermbg=160
-highlight MatchParen ctermbg=222
+highlight MatchParen ctermbg=251 ctermfg=240
+highlight Comment cterm=italic ctermfg=242
 
 " enable syntax for .ino files
 au BufRead,BufNewFile *.pde,*.ino set filetype=cpp
