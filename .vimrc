@@ -127,9 +127,11 @@ set background=dark
 let python_highlight_all = 1
 "let g:gruvbox_termtrans=1
 "colorscheme gruvbox
-colorscheme sexy-railscasts-256
+"colorscheme sexy-railscasts-256
+set t_Co=256
+colorscheme OceanicNext
 highlight LineNr ctermbg=none ctermfg=241
-"highlight Comment ctermfg=60
+highlight Function ctermfg=105
 highlight Normal ctermbg=none
 highlight Search cterm=none ctermbg=222 ctermfg=234
 highlight Error ctermbg=160
