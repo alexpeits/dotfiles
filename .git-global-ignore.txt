@@ -1,10 +1,1 @@
-# Python
-*.pyc
-*.pyo
-.ropeproject/
-
-# Sphinx
-docs/_build
-
-# Vim
-*.swp
+/home/alex/.git-global-ignore.txt
