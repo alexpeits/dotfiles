@@ -135,6 +135,7 @@ highlight Function ctermfg=105
 highlight Normal ctermbg=none ctermfg=251
 highlight Search cterm=none ctermbg=222 ctermfg=234
 highlight Error ctermbg=160
+highlight MatchParen ctermbg=222
 
 " enable syntax for .ino files
 au BufRead,BufNewFile *.pde,*.ino set filetype=cpp
