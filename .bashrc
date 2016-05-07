@@ -129,7 +129,7 @@ alias uuuu='cd ../../../..'
 alias uuuuu='cd ../../../../..'
 alias detach='udisksctl power-off -b'
 
-export WORKON_HOME=$HOME/venvs
+export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/devel
 source /usr/local/bin/virtualenvwrapper.sh
 

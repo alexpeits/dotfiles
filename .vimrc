@@ -14,6 +14,7 @@ Plugin 'tpope/vim-fugitive'
 "Plugin 'Raimondi/delimitMate'
 Plugin 'KabbAmine/zeavim.vim'
 Plugin 'airblade/vim-gitgutter'
+Plugin 'mattn/emmet-vim'
 call vundle#end()
 
 """""""""""""""""""""""""""""""""
@@ -27,7 +28,7 @@ let g:airline_theme='base16_eighties'
 let g:airline#extensions#branch#enabled = 1
 
 " GitGutter setup
-let g:gitgutter_signs=0
+"let g:gitgutter_signs=0
 
 """""""""""""""""""""""""""""""""
 
@@ -66,9 +67,11 @@ set completeopt=menu
 "Linting
 let g:pymode_lint = 1
 let g:pymode_lint_checker = "pyflakes,pep8,pylint"
+"let g:pymode_options_max_line_length=79
 " Auto check on save
-let g:pymode_lint_write = 1
-let g:pymode_lint_ignore = "E5,W0401,E302,E225,E228,E265,E127,E128"
+"let g:pymode_lint_write = 1
+let g:pymode_lint_ignore = "E5"
+"let g:pymode_lint_ignore = \"E5,W0401,E302,E225,E228,E265,E127,E128"
 
 " Support virtualenv
 let g:pymode_virtualenv = 1
@@ -88,6 +91,8 @@ let g:pymode_syntax_space_errors = g:pymode_syntax_all
 let g:pymode_folding = 0
 
 let g:pymode_rope_show_doc_bind = 'K'
+
+nnoremap <F8> :PymodeLint<CR>
 
 """"""""""""""""""""""""""""
 
@@ -126,7 +131,8 @@ colorscheme sexy-railscasts-256
 highlight LineNr ctermbg=none ctermfg=241
 "highlight Comment ctermfg=60
 highlight Normal ctermbg=none
-" highlight LineNr ctermfg=yellow
+highlight Search cterm=none ctermbg=222 ctermfg=234
+highlight Error ctermbg=160
 
 " enable syntax for .ino files
 au BufRead,BufNewFile *.pde,*.ino set filetype=cpp
@@ -140,10 +146,10 @@ if exists("+mouse")
 endif
 
 "split navigations
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+nnoremap <C-Down> <C-W><C-J>
+nnoremap <C-Up> <C-W><C-K>
+nnoremap <C-Right> <C-W><C-L>
+nnoremap <C-Left> <C-W><C-H>
 
 "" run python script
 nnoremap <F2> :w !python <CR>
@@ -160,8 +166,7 @@ map <F4> :TagbarToggle<CR>
 map <C-n> :set invnu <CR>
 map <C-p> :PresentingStart<CR>
 nnoremap <C-L> :redraw!<CR>
-nnoremap <C-h> :GitGutterLineHighlightsToggle<CR>
-nnoremap <C-j> :GitGutterSignsToggle<CR>
+nnoremap <F5> :GitGutterSignsToggle<CR>
 
 au BufRead,BufNewFile *.py vnoremap <silent> # :s#^#\##<cr>:noh<cr>
 au BufRead,BufNewFile *.py vnoremap <silent> -# :s#^\###<cr>:noh<cr>
