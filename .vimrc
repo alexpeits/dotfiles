@@ -132,7 +132,7 @@ set t_Co=256
 colorscheme OceanicNext
 highlight LineNr ctermbg=none ctermfg=241
 highlight Function ctermfg=105
-highlight Normal ctermbg=none
+highlight Normal ctermbg=none ctermfg=251
 highlight Search cterm=none ctermbg=222 ctermfg=234
 highlight Error ctermbg=160
 
