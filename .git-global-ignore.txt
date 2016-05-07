@@ -1,0 +1,10 @@
+# Python
+*.pyc
+*.pyo
+.ropeproject/
+
+# Sphinx
+docs/_build
+
+# Vim
+*.swp

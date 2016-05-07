@@ -1,0 +1,10 @@
+[user]
+	name = alexpeits
+	email = alexpeitsinis@gmail.com
+[credential]
+	helper = store
+[core]
+	excludesfile = /home/alex/.git-global-ignore.txt
+[alias]
+	c = commit --verbose
+	tree = log --oneline --decorate --all --graph
