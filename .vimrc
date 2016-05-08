@@ -146,6 +146,12 @@ highlight Error ctermbg=160
 highlight MatchParen ctermbg=251 ctermfg=240
 highlight Comment cterm=italic ctermfg=242
 
+highlight GitGutterAdd ctermbg=none
+highlight GitGutterChange ctermbg=none ctermfg=221
+highlight GitGutterChangeDelete ctermbg=none
+highlight GitGutterDelete ctermbg=none
+
+
 " enable syntax for .ino files
 au BufRead,BufNewFile *.pde,*.ino set filetype=cpp
 
