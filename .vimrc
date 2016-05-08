@@ -4,7 +4,6 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdtree.git'
-Plugin 'sotte/presenting.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'majutsushi/tagbar'
@@ -16,6 +15,7 @@ Plugin 'KabbAmine/zeavim.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mattn/emmet-vim'
 Plugin 'mbbill/undotree'
+Plugin 'ctrlpvim/ctrlp.vim'
 call vundle#end()
 
 """""""""""""""""""""""""""""""""
@@ -177,6 +177,9 @@ nnoremap <C-L> :redraw!<CR>
 nnoremap <F5> :GitGutterSignsToggle<CR>
 nnoremap <F6> :UndotreeToggle<CR>
 nnoremap <F8> :PymodeLint<CR>
+" CtrlP
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
 
 au BufRead,BufNewFile *.py vnoremap <silent> # :s#^#\##<cr>:noh<cr>
 au BufRead,BufNewFile *.py vnoremap <silent> -# :s#^\###<cr>:noh<cr>
