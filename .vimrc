@@ -15,6 +15,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'KabbAmine/zeavim.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mattn/emmet-vim'
+Plugin 'mbbill/undotree'
 call vundle#end()
 
 """""""""""""""""""""""""""""""""
@@ -92,7 +93,6 @@ let g:pymode_folding = 0
 
 let g:pymode_rope_show_doc_bind = 'K'
 
-nnoremap <F8> :PymodeLint<CR>
 
 """"""""""""""""""""""""""""
 
@@ -107,7 +107,11 @@ filetype plugin indent on
 filetype plugin on
 
 
-set undofile undodir=~/.vimundo
+
+if has("persistent_undo")
+    set undodir=~/.vimundo/
+    set undofile
+endif
 set foldmethod=indent
 set foldlevel=99
 set hlsearch
@@ -171,6 +175,8 @@ map <C-n> :set invnu <CR>
 map <C-p> :PresentingStart<CR>
 nnoremap <C-L> :redraw!<CR>
 nnoremap <F5> :GitGutterSignsToggle<CR>
+nnoremap <F6> :UndotreeToggle<CR>
+nnoremap <F8> :PymodeLint<CR>
 
 au BufRead,BufNewFile *.py vnoremap <silent> # :s#^#\##<cr>:noh<cr>
 au BufRead,BufNewFile *.py vnoremap <silent> -# :s#^\###<cr>:noh<cr>
