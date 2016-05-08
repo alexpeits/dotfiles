@@ -7,8 +7,9 @@ Plugin 'scrooloose/nerdtree.git'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'majutsushi/tagbar'
-Plugin 'klen/python-mode'
-"Plugin 'davidhalter/jedi-vim'
+"Plugin 'klen/python-mode'
+"Plugin 'Valloric/YouCompleteMe'
+Plugin 'davidhalter/jedi-vim'
 Plugin 'tpope/vim-fugitive'
 "Plugin 'Raimondi/delimitMate'
 Plugin 'KabbAmine/zeavim.vim'
@@ -16,7 +17,9 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'mattn/emmet-vim'
 Plugin 'mbbill/undotree'
 Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'jmcantrell/vim-virtualenv'
 call vundle#end()
+
 
 """""""""""""""""""""""""""""""""
 
@@ -46,10 +49,10 @@ let g:airline#extensions#branch#enabled = 1
 " ]]            Jump on next class or function (normal, visual, operator modes)
 " [M            Jump on previous class or method (normal, visual, operator modes)
 " ]M            Jump on next class or method (normal, visual, operator modes)
-let g:pymode_rope = 1
-let g:pymode_rope_completion = 1
-let g:pymode_rope_rename_bind = '<C-c>rr'
-let g:pymode_rope_completion_bind = '<C-Space>'
+let g:pymode_rope = 0
+let g:pymode_rope_completion = 0
+"let g:pymode_rope_rename_bind = '<C-c>rr'
+"let g:pymode_rope_completion_bind = '<C-Space>'
 let g:pymode_options_max_line_length = 0
 if filereadable(".disable_rope")
     so .disable_rope
@@ -76,6 +79,7 @@ let g:pymode_lint_ignore = "E5"
 
 " Support virtualenv
 let g:pymode_virtualenv = 1
+let g:virtualenv_directory = $WORKON_HOME
 let g:pymode_virtualenv_path = $VIRTUAL_ENV
 
 " Enable breakpoints plugin
