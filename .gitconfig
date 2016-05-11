@@ -1,10 +1,11 @@
 [user]
-	name = alexpeits
-	email = alexpeitsinis@gmail.com
+	name = Alexandros Peitsinis
+	email = peitsinis@vermantia.com
 [credential]
 	helper = store
 [core]
 	excludesfile = /home/alex/.git-global-ignore.txt
 [alias]
-	c = commit --verbose
-	tree = log --oneline --decorate --all --graph
+        ll = log --graph --decorate --pretty=oneline --abbrev-commit
+        lla = log --graph --decorate --pretty=oneline --abbrev-commit --all
+        c = commit --verbose
