@@ -145,6 +145,28 @@ man() {
     man "$@"
 }
 
+# Grep for pattern recursively,
+# starting from current path down
+#search() {
+#    
+#    grep -rI $1 *
+#
+#}
+
+# Grep for pattern recursively,
+# starting from current path down.
+# Accepts multiple arguments.
+search() {
+    
+    #FOO=${@:1:1}
+    PARAMS=""
+    for i in "$@"; do
+        PARAMS="$PARAMS -e $i"
+    done
+    grep -nrI $PARAMS *
+
+}
+
 TERM=xterm-256color
 . ~/.git-completion.bash
 #source $HOME/.vim/gruvbox_256palette.sh
