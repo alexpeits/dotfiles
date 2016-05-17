@@ -1,5 +1,6 @@
 set nocompatible
 filetype off
+
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
@@ -7,6 +8,7 @@ Plugin 'scrooloose/nerdtree.git'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'majutsushi/tagbar'
+Plugin 'jmcantrell/vim-virtualenv'
 "Plugin 'klen/python-mode'
 "Plugin 'Valloric/YouCompleteMe'
 Plugin 'davidhalter/jedi-vim'
@@ -17,7 +19,10 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'mattn/emmet-vim'
 Plugin 'mbbill/undotree'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'jmcantrell/vim-virtualenv'
+Plugin 'mhartington/oceanic-next'
+Plugin 'nvie/vim-flake8'
+Plugin 'tomasr/molokai'
+Plugin 'jacoborus/tender'
 call vundle#end()
 
 
@@ -25,14 +30,19 @@ call vundle#end()
 
 " Powerline setup
 set laststatus=2
-"set ttimeoutlen=50
 let g:airline_powerline_fonts=1
 "let g:airline_theme='hybridline'
 let g:airline_theme='base16_eighties'
+"let g:airline_theme='oceanicnext'
 let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
 
 " GitGutter setup
 "let g:gitgutter_signs=0
+
+" Virtualenv setup
+let g:virtualenv_directory = $WORKON_HOME
+let g:virtualenv_auto_activate = 1
 
 """""""""""""""""""""""""""""""""
 
@@ -60,8 +70,8 @@ endif
 
 
 " Documentation
-let g:pymode_doc = 1
-let g:pymode_doc_key = 'K'
+let g:pymode_doc = 0
+"let g:pymode_doc_key = 'K'
 " If you prefer the Omni-Completion tip window to close when a selection is
 " made, these lines close it on movement in insert mode or when leaving
 " insert mode
@@ -79,15 +89,14 @@ let g:pymode_lint_ignore = "E5"
 
 " Support virtualenv
 let g:pymode_virtualenv = 1
-let g:virtualenv_directory = $WORKON_HOME
 let g:pymode_virtualenv_path = $VIRTUAL_ENV
 
 " Enable breakpoints plugin
-let g:pymode_breakpoint = 1
+let g:pymode_breakpoint = 0
 let g:pymode_breakpoint_bind = '<leader>b'
 
 " syntax highlighting
-let g:pymode_syntax = 1
+let g:pymode_syntax = 0
 let g:pymode_syntax_all = 1
 let g:pymode_syntax_indent_errors = g:pymode_syntax_all
 let g:pymode_syntax_space_errors = g:pymode_syntax_all
@@ -95,7 +104,7 @@ let g:pymode_syntax_space_errors = g:pymode_syntax_all
 " Don't autofold code
 let g:pymode_folding = 0
 
-let g:pymode_rope_show_doc_bind = 'K'
+"let g:pymode_rope_show_doc_bind = 'K'
 
 
 """"""""""""""""""""""""""""
@@ -106,6 +115,7 @@ set tabstop=8
 set expandtab
 set softtabstop=4
 set shiftwidth=4
+set hidden
 " set autoindent
 filetype plugin indent on
 filetype plugin on
@@ -134,22 +144,28 @@ set nu
 set background=dark
 let python_highlight_all = 1
 "let g:gruvbox_termtrans=1
-"colorscheme gruvbox
 "colorscheme sexy-railscasts-256
 set t_Co=256
 colorscheme OceanicNext
+"colorscheme gruvbox
+"colorscheme onedark
+"let g:rehash256 = 1
+"colorscheme molokai
+"colorscheme tender
 highlight LineNr ctermbg=none ctermfg=241
-highlight Function ctermfg=105
 highlight Normal ctermbg=none ctermfg=251
-highlight Search cterm=none ctermbg=222 ctermfg=234
-highlight Error ctermbg=160
-highlight MatchParen ctermbg=251 ctermfg=240
-highlight Comment cterm=italic ctermfg=242
+"highlight Function ctermfg=105
+"highlight Search cterm=none ctermbg=222 ctermfg=234
+"highlight Error ctermbg=203
+"highlight MatchParen ctermbg=251 ctermfg=240
+"highlight Comment cterm=italic ctermfg=242
 
 highlight GitGutterAdd ctermbg=none
-highlight GitGutterChange ctermbg=none ctermfg=221
+highlight GitGutterChange ctermbg=none
 highlight GitGutterChangeDelete ctermbg=none
 highlight GitGutterDelete ctermbg=none
+let g:gitgutter_map_keys = 0
+
 
 
 " enable syntax for .ino files
@@ -181,12 +197,20 @@ nnoremap <C-M-PageDown> <Esc>:tabnew<CR>
 "" various shortcuts
 map <F3> :NERDTreeToggle<CR>
 map <F4> :TagbarToggle<CR>
-map <C-n> :set invnu <CR>
+"map <C-n> :set invnu <CR>
 map <C-p> :PresentingStart<CR>
 nnoremap <C-L> :redraw!<CR>
 nnoremap <F5> :GitGutterSignsToggle<CR>
 nnoremap <F6> :UndotreeToggle<CR>
-nnoremap <F8> :PymodeLint<CR>
+nnoremap <C-w>' ciw''<Esc>P
+nnoremap <C-w>" ciw""<Esc>P
+noremap <c-n> :nohlsearch<CR>
+vnoremap > >gv
+vnoremap < <gv
+
+" flake8
+autocmd FileType python map <buffer> <F8> :call Flake8()<CR>
+
 " CtrlP
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
@@ -199,3 +223,8 @@ au BufRead,BufNewFile *.c,*.cpp,*.java,*.js vnoremap <silent> -# :s#^\//##<cr>:n
 
 au BufRead,BufNewFile *.html vnoremap <silent> # :s/^\(.*\)$/<!-- \1 -->/<cr>:noh<cr>
 au BufRead,BufNewFile *.html vnoremap <silent> -# :s/^<!--\s*\(.*\)\s*-->$/\1/<cr>:noh<cr>
+" buffer navigation
+nnoremap <leader>h :bprevious<CR>
+nnoremap <leader>l :bnext<CR>
+nnoremap <leader>bq :bp <BAR> bd #<CR>
+nnoremap <leader>bl :ls<CR>
