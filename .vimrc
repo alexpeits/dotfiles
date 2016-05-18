@@ -151,14 +151,15 @@ colorscheme OceanicNext
 "colorscheme onedark
 "let g:rehash256 = 1
 "colorscheme molokai
-"colorscheme tender
-highlight LineNr ctermbg=none ctermfg=241
+highlight LineNr ctermbg=none ctermfg=242
 highlight Normal ctermbg=none ctermfg=251
-"highlight Function ctermfg=105
-"highlight Search cterm=none ctermbg=222 ctermfg=234
-"highlight Error ctermbg=203
-"highlight MatchParen ctermbg=251 ctermfg=240
-"highlight Comment cterm=italic ctermfg=242
+highlight Function ctermfg=111
+highlight Define ctermfg=111
+highlight Include ctermfg=111
+highlight Search cterm=none ctermbg=222 ctermfg=234
+highlight Error ctermbg=203
+highlight MatchParen ctermbg=251 ctermfg=240
+highlight Comment cterm=italic ctermfg=242
 
 highlight GitGutterAdd ctermbg=none
 highlight GitGutterChange ctermbg=none
