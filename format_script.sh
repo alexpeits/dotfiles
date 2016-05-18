@@ -11,6 +11,7 @@
 
 apm install atom-beautify atom-bootstrap3 autoclose-html autocomplete-python color-picker dash emmet file-icons highlight-selected linter linter-eslint linter-flake8 merge-conflicts minimap minimap-git-diff pigments python-tools rest-client symbols-tree-view terminal-plus
 
-#sudo apt-get install skype zeal chromium-browser
+#sudo apt-get install skype 
+sudo apt-get install zeal chromium-browser
 
 #sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
