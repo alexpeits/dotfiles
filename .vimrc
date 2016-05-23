@@ -14,7 +14,7 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-"Plugin 'Raimondi/delimitMate'
+Plugin 'Raimondi/delimitMate'
 Plugin 'KabbAmine/zeavim.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mattn/emmet-vim'
@@ -60,6 +60,8 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 let g:syntastic_loc_list_height=5
 let g:syntastic_python_checkers = ["flake8"]
+let g:syntastic_enable_signs=1
+map <F8> :SyntasticCheck<CR>
 
 " YCM
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
@@ -71,7 +73,11 @@ let g:jedi#popup_on_dot = 0
 let g:jedi#smart_auto_mappings = 0
 
 " IndentLine
-let g:indentLine_color_term = 238
+let g:indentLine_color_term = 240
+
+" Delimitmate
+let g:loaded_delimitMate = 0
+au FileType html,css,c,js let b:loaded_delimitMate = 1
 
 
 set shortmess+=I
@@ -120,13 +126,13 @@ colorscheme OceanicNext2
 "let g:rehash256 = 1
 "colorscheme molokai
 "colorscheme Tomorrow-Night-Eighties
-highlight LineNr ctermbg=none ctermfg=241
+highlight LineNr ctermbg=none ctermfg=242
 highlight Normal ctermbg=none ctermfg=251
 "highlight Function ctermfg=105
 "highlight String ctermfg=78
 highlight Search cterm=none ctermbg=222 ctermfg=234
 highlight Error ctermbg=203
-highlight VertSplit ctermbg=0
+highlight VertSplit ctermbg=239 ctermfg=244
 highlight MatchParen ctermbg=251 ctermfg=240
 highlight Comment cterm=italic ctermfg=242
 
@@ -174,7 +180,7 @@ nnoremap <leader>l :tabnext<CR>
 
 "" various shortcuts
 map <F3> :NERDTreeToggle<CR>
-map <F4> :TagbarToggle<CR>
+map <C-\> :TagbarToggle<CR>
 "map <C-n> :set invnu <CR>
 map <C-p> :PresentingStart<CR>
 nnoremap <leader>0 :redraw!<CR>
@@ -190,7 +196,7 @@ vnoremap < <gv
 nmap ; :
 
 " flake8
-autocmd FileType python map <buffer> <F8> :call Flake8()<CR>
+"autocmd FileType python map <buffer> <F8> :call Flake8()<CR>
 
 " CtrlP
 let g:ctrlp_map = '<c-p>'
