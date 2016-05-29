@@ -11,8 +11,8 @@ Plugin 'majutsushi/tagbar'
 Plugin 'jmcantrell/vim-virtualenv'
 "Plugin 'klen/python-mode'
 Plugin 'Valloric/YouCompleteMe'
-"Plugin 'Shougo/neocomplete'
 Plugin 'davidhalter/jedi-vim'
+"Plugin 'Shougo/neocomplete'
 Plugin 'tpope/vim-fugitive'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 "Plugin 'Raimondi/delimitMate'
@@ -29,7 +29,7 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
 Plugin 'Yggdroot/indentLine'
 Plugin 'dhruvasagar/vim-table-mode'
-Plugin 'ryanoasis/vim-devicons'
+"Plugin 'ryanoasis/vim-devicons'
 call vundle#end()
 
 
@@ -63,7 +63,7 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 let g:syntastic_loc_list_height = 5
 let g:syntastic_enable_signs = 1
-let g:syntastic_python_checkers = ["flake8"]
+let g:syntastic_python_checkers = ["pylint"]
 
 map <F8> :SyntasticCheck<CR>
 
