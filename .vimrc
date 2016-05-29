@@ -11,10 +11,11 @@ Plugin 'majutsushi/tagbar'
 Plugin 'jmcantrell/vim-virtualenv'
 "Plugin 'klen/python-mode'
 Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Shougo/neocomplete'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'Raimondi/delimitMate'
+"Plugin 'Raimondi/delimitMate'
 Plugin 'KabbAmine/zeavim.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mattn/emmet-vim'
@@ -28,6 +29,7 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
 Plugin 'Yggdroot/indentLine'
 Plugin 'dhruvasagar/vim-table-mode'
+Plugin 'ryanoasis/vim-devicons'
 call vundle#end()
 
 
@@ -40,6 +42,7 @@ let g:airline_theme='base16_eighties'
 "let g:airline_theme='oceanicnext'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
+set guifont=UbuntuMonoDerivativePowerline\ Nerd\ Font\ Regular\ 13
 
 " GitGutter setup
 "let g:gitgutter_signs=0
@@ -58,36 +61,42 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
-let g:syntastic_loc_list_height=5
+let g:syntastic_loc_list_height = 5
+let g:syntastic_enable_signs = 1
 let g:syntastic_python_checkers = ["flake8"]
-let g:syntastic_enable_signs=1
+
 map <F8> :SyntasticCheck<CR>
 
 " YCM
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
-nnoremap <leader>jd :YcmCompleter GoToReferences<CR>
+nnoremap <leader>jr :YcmCompleter GoToReferences<CR>
+let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 
 " jedi-vim
 let g:jedi#completions_enabled = 0
 let g:jedi#popup_on_dot = 0
 let g:jedi#smart_auto_mappings = 0
+let g:jedi#show_call_signatures = 1 
 
 " IndentLine
-let g:indentLine_color_term = 240
+let g:indentLine_color_term = 238
+"let g:indentLine_char = │
 
-" Delimitmate
-let g:loaded_delimitMate = 0
-au FileType html,css,c,js let b:loaded_delimitMate = 1
+" flake8
+autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
 
+" CtrlP
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
 
 set shortmess+=I
 set tabstop=4   
 set softtabstop=4
 set shiftwidth=4
-au BufNewFile,BufRead *.js, *.html, *.css
-    \ set tabstop=2
-    \ set softtabstop=2
-    \ set shiftwidth=2
+"au BufNewFile,BufRead *.js, *.html, *.css
+    "\ set tabstop=2
+    "\ set softtabstop=2
+    "\ set shiftwidth=2
 set expandtab
 set hidden
 " set autoindent
@@ -114,7 +123,22 @@ set timeoutlen=1000 ttimeoutlen=0
 
 set updatetime=100
 
-set nu
+function! NumberToggle()
+    if(&relativenumber == 1)
+        set number
+    else
+        set relativenumber
+    endif
+endfunc
+
+nnoremap <F6> :set invrelativenumber<cr>
+autocmd BufLeave,WinLeave,FocusLost * :set norelativenumber 
+autocmd BufEnter,WinEnter,FocusGained * :set relativenumber
+autocmd InsertEnter * :set norelativenumber
+autocmd InsertLeave * :set relativenumber
+
+set number
+set relativenumber
 set background=dark
 let python_highlight_all = 1
 "let g:gruvbox_termtrans=1
@@ -126,15 +150,15 @@ colorscheme OceanicNext2
 "let g:rehash256 = 1
 "colorscheme molokai
 "colorscheme Tomorrow-Night-Eighties
-highlight LineNr ctermbg=none ctermfg=242
+highlight LineNr ctermbg=none ctermfg=241
 highlight Normal ctermbg=none ctermfg=251
 "highlight Function ctermfg=105
 "highlight String ctermfg=78
 highlight Search cterm=none ctermbg=222 ctermfg=234
 highlight Error ctermbg=203
-highlight VertSplit ctermbg=239 ctermfg=244
+highlight VertSplit ctermbg=0 ctermfg=244
 highlight MatchParen ctermbg=251 ctermfg=240
-highlight Comment cterm=italic ctermfg=242
+highlight Comment cterm=italic ctermfg=243
 
 highlight GitGutterAdd ctermbg=none
 highlight GitGutterChange ctermbg=none
@@ -185,7 +209,7 @@ map <C-\> :TagbarToggle<CR>
 map <C-p> :PresentingStart<CR>
 nnoremap <leader>0 :redraw!<CR>
 nnoremap <F5> :GitGutterSignsToggle<CR>
-nnoremap <F6> :UndotreeToggle<CR>
+nnoremap <leader>u :UndotreeToggle<CR>
 nnoremap <C-w>' ciw''<Esc>P
 nnoremap <C-w>" ciw""<Esc>P
 noremap <c-n> :nohlsearch<CR>
@@ -195,12 +219,6 @@ vnoremap < <gv
 " lololol
 nmap ; :
 
-" flake8
-"autocmd FileType python map <buffer> <F8> :call Flake8()<CR>
-
-" CtrlP
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
 
 au BufRead,BufNewFile *.py vnoremap <silent> # :s#^#\##<cr>:noh<cr>
 au BufRead,BufNewFile *.py vnoremap <silent> -# :s#^\###<cr>:noh<cr>
