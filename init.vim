@@ -74,13 +74,14 @@
   NeoBundle 'davidhalter/jedi-vim'
 
 " Shougo
-  NeoBundle 'Shougo/neocomplete.vim'
+  "NeoBundle 'Shougo/neocomplete.vim'
+  "NeoBundle 'Shougo/deoplete.nvim'
   NeoBundle 'Shougo/unite.vim'
   NeoBundle 'Shougo/unite-outline'
   NeoBundle 'ujihisa/unite-colorscheme'
   NeoBundle 'junkblocker/unite-codesearch'
   NeoBundle 'Shougo/vimfiler.vim'
-  "NeoBundle 'Valloric/YouCompleteMe'
+  NeoBundle 'Valloric/YouCompleteMe'
   NeoBundle 'Shougo/vimproc.vim', {
         \ 'build' : {
         \     'windows' : 'tools\\update-dll-mingw',
@@ -123,6 +124,8 @@ if pluginsExist
 " System Settings  ----------------------------------------------------------{{{
 
 let g:python_host_prog = '/usr/bin/python'
+"let g:deoplete#enable_at_startup = 1
+
 
 " Neovim Settings
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
