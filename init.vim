@@ -29,8 +29,6 @@
   NeoBundleFetch 'Shougo/neobundle.vim'
 
 " syntax
-  " NeoBundle 'vim-scripts/SyntaxComplete'
-  " NeoBundle 'othree/javascript-libraries-syntax.vim'
   NeoBundleLazy 'elzr/vim-json', {'autoload':{'filetypes':['json']}}
   NeoBundle 'tpope/vim-markdown'
   NeoBundle 'dhruvasagar/vim-table-mode'
@@ -42,6 +40,7 @@
   NeoBundle 'Yggdroot/indentLine'
   NeoBundle 'Raimondi/delimitMate'
  " Git helpers
+  NeoBundle 'airblade/vim-gitgutter'
   NeoBundle 'tpope/vim-fugitive'
   NeoBundle 'jreybert/vimagit'
   NeoBundle 'mhinz/vim-signify'
@@ -68,10 +67,10 @@
   NeoBundle 'ctrlpvim/ctrlp.vim'
   NeoBundle 'mbbill/undotree'
   NeoBundle 'scrooloose/nerdcommenter'
-  NeoBundle 'airblade/vim-gitgutter'
   NeoBundle 'KabbAmine/zeavim.vim'
   NeoBundle 'jmcantrell/vim-virtualenv'
   NeoBundle 'davidhalter/jedi-vim'
+  NeoBundle 'majutsushi/tagbar'
 
 " Shougo
   "NeoBundle 'Shougo/neocomplete.vim'
@@ -116,6 +115,8 @@
 
 " Required:
   filetype plugin indent on
+  filetype plugin on
+
   let pluginsExist=1
   NeoBundleCheck
 " }}}
@@ -131,16 +132,21 @@ let g:python_host_prog = '/usr/bin/python'
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
   let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
   let $NEOVIM_JS_DEBUG='nvimjs.log'
-  set clipboard+=unnamedplus
-" Currently needed for neovim paste issue
-  set pastetoggle=<f6>
-  set nopaste
 " Let airline tell me my status
   set noshowmode
   set noswapfile
   filetype on
-  set relativenumber number
-  set tabstop=4 shiftwidth=4 expandtab
+
+  " relative numbers in normal mode
+  " regular numbers in insert mode and when not focused
+  nnoremap <leader>] :set invrelativenumber<cr>
+  autocmd BufLeave,WinLeave,FocusLost * :set norelativenumber 
+  autocmd BufEnter,WinEnter,FocusGained * :set relativenumber
+  autocmd InsertEnter * :set norelativenumber
+  autocmd InsertLeave * :set relativenumber
+  set number
+  set relativenumber
+
   set conceallevel=0
 " block select not limited by shortest line
   set virtualedit=
@@ -149,9 +155,6 @@ let g:python_host_prog = '/usr/bin/python'
   "set colorcolumn=100
   set wrap linebreak nolist
   set wildmode=full
-" leader is ,
-  set undofile
-  set undodir="$HOME/.VIM_UNDO_FILES"
   let g:gitgutter_max_signs = 1000  " default value
 " }}}
 
@@ -171,15 +174,12 @@ let g:python_host_prog = '/usr/bin/python'
   inoremap <silent> <Home> <C-o>g<Home>
   inoremap <silent> <End>  <C-o>g<End>
 " copy current files path to clipboard
-  nmap cp :let @+ = expand("%") <cr>
 " Neovim terminal mapping
 " terminal 'normal mode'
-  tmap <esc> <c-\><c-n><esc><cr>
+  "tmap <esc> <c-\><c-n><esc><cr>
 " ,f to format code, requires formatters: read the docs
   noremap <leader>f :Autoformat<CR>
-  noremap <leader>TM :TableModeToggle<CR>
-" exit insert, dd line, enter insert
-  inoremap <c-d> <esc>ddi
+  "noremap <leader>TM :TableModeToggle<CR>
   noremap H ^
   noremap L g_
   noremap J 5j
@@ -194,22 +194,17 @@ let g:python_host_prog = '/usr/bin/python'
   nnoremap ; :
   inoremap <c-f> <c-x><c-f>
 " Copy to osx clipboard
-  vnoremap <C-c> "*y<CR>
-  vnoremap y "*y<CR>
-  nnoremap Y "*Y<CR>
+  "vnoremap <C-c> "*y<CR>
+  "vnoremap y "*y<CR>
+  "nnoremap Y "*Y<CR>
   let g:multi_cursor_next_key='<C-n>'
   let g:multi_cursor_prev_key='<C-p>'
   let g:multi_cursor_skip_key='<C-x>'
   let g:multi_cursor_quit_key='<Esc>'
 
 " Align blocks of text and keep them selected
-  vmap < <gv
-  vmap > >gv
   nnoremap <leader>d "_d
   vnoremap <leader>d "_d
-  vnoremap <c-/> :TComment<cr>
-  map <esc> :noh<cr>
-autocmd FileType typescript nmap <buffer> <Leader>T : <C-u>echo tsuquyomi#hint()<CR>
 
 nnoremap <leader>e :call <SID>SynStack()<CR>
 function! <SID>SynStack()
@@ -242,6 +237,17 @@ autocmd BufRead,BufNewFile *.md hi SpellBad guibg=#ff2929 guifg=#ffffff" ctermbg
 let g:instant_markdown_autostart = 0
 " Keep my termo window open when I navigate away
 autocmd TermOpen * set bufhidden=hide
+
+" highlight if line exceeds specified amount
+highlight ColorColumn ctermbg=242
+au BufRead,BufNewFile *.py call matchadd('ColorColumn', '\%79v', 100) "set column nr
+
+
+set tabstop=4   
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+set hidden
 
 if has("persistent_undo")
     set undodir=~/.vimundo/
@@ -279,7 +285,7 @@ highlight Normal ctermbg=none ctermfg=251
 "highlight String ctermfg=78
 highlight Search cterm=none ctermbg=222 ctermfg=234
 highlight Error ctermbg=203
-highlight VertSplit ctermbg=0 ctermfg=244
+highlight VertSplit ctermbg=239 ctermfg=246
 highlight MatchParen ctermbg=251 ctermfg=240
 highlight Comment cterm=italic ctermfg=243
 
@@ -351,7 +357,6 @@ autocmd FileType coffee setl foldmethod=indent
 
 " NERDTree ------------------------------------------------------------------{{{
 
-map <C-\> :NERDTreeToggle<CR>
 autocmd StdinReadPre * let s:std_in=1
 " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 let NERDTreeShowHidden=1
@@ -417,11 +422,12 @@ let g:syntastic_loc_list_height = 5
 let g:syntastic_enable_signs = 1
 let g:syntastic_python_checkers = ["flake8"]
 
-map <F8> :SyntasticCheck<CR>
+"map <F8> :SyntasticCheck<CR>
 
 " YCM
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
 nnoremap <leader>jr :YcmCompleter GoToReferences<CR>
+let g:ycm_autoclose_preview_window_after_completion = 1
 
 " jedi-vim
 let g:jedi#completions_enabled = 0
@@ -429,7 +435,7 @@ let g:jedi#popup_on_dot = 0
 let g:jedi#smart_auto_mappings = 0
 
 " IndentLine
-let g:indentLine_color_term = 238
+let g:indentLine_color_term = 239
 "let g:indentLine_char = │
 
 " flake8
@@ -568,7 +574,7 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='oceanicnext'
 " let g:airline_theme='base16_solarized'
 cnoreabbrev <expr> x getcmdtype() == ":" && getcmdline() == 'x' ? 'Sayonara' : 'x'
-tmap <leader>x <c-\><c-n>:bp! <BAR> bd! #<CR>
+"tmap <leader>x <c-\><c-n>:bp! <BAR> bd! #<CR>
 nmap <leader>t :term<cr>
 nmap <leader>, :bnext<CR>
 tmap <leader>, <C-\><C-n>:bnext<cr>
@@ -610,7 +616,25 @@ set guifont=UbuntuMonoDerivativePowerline\ Nerd\ Font\ Regular\ 13
           \ }
   endfunction
   let g:neomake_javascript_enabled_makers = ['eslint']
-  let g:neomake_python_enabled_makers = ['pylint']
+  " call pylint using the current python (venv or global)
+  let g:neomake_python_venvpylint_maker = {
+    \ 'exe': 'python',
+    \ 'args': [
+        \ '`which pylint`',
+        \ '-f', 'text',
+        \ '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg}"',
+        \ '-r', 'n'
+    \ ],
+    \ 'errorformat':
+        \ '%A%f:%l:%c:%t: %m,' .
+        \ '%A%f:%l: %m,' .
+        \ '%A%f:(%l): %m,' .
+        \ '%-Z%p^%.%#,' .
+        \ '%-G%.%#',
+    \ }
+
+  let g:neomake_python_enabled_makers = ['venvpylint']
+  "let g:neomake_python_enabled_makers = ['flake8']
   autocmd! BufWritePost * Neomake
   function! JscsFix()
       let l:winview = winsaveview()
@@ -619,6 +643,9 @@ set guifont=UbuntuMonoDerivativePowerline\ Nerd\ Font\ Regular\ 13
   endfunction
   command JscsFix :call JscsFix()
   noremap <leader>j :JscsFix<CR>
+  map <F8> :Neomake<CR>
+  let g:neomake_open_list = 0
+  let g:neomake_verbose = 0
 "}}}
 endif
 
@@ -644,8 +671,6 @@ nnoremap <M-PageUp>   <Esc>:tabprevious<CR>
 nnoremap <M-PageDown> <Esc>:tabnext<CR>
 nnoremap <C-M-PageUp> <Esc>:tabnew<CR>
 nnoremap <C-M-PageDown> <Esc>:tabnew<CR>
-nnoremap <leader>h :tabprevious<CR>
-nnoremap <leader>l :tabnext<CR>
 
 "" various shortcuts
 map <F3> :NERDTreeToggle<CR>
@@ -654,10 +679,10 @@ map <C-\> :TagbarToggle<CR>
 map <C-p> :PresentingStart<CR>
 nnoremap <leader>0 :redraw!<CR>
 nnoremap <F5> :GitGutterSignsToggle<CR>
-nnoremap <F6> :UndotreeToggle<CR>
+nnoremap <leader>u :UndotreeToggle<CR>
 nnoremap <C-w>' ciw''<Esc>P
 nnoremap <C-w>" ciw""<Esc>P
-noremap <c-n> :nohlsearch<CR>
+noremap <c-n> :noh<CR>
 vnoremap > >gv
 vnoremap < <gv
 
@@ -666,6 +691,8 @@ nmap ; :
 
 
 " buffer navigation
+nnoremap <leader>h :bp<CR>
+nnoremap <leader>l :bn<CR>
 nnoremap <leader>bq :bp <BAR> bd #<CR>
 nnoremap <leader>bl :ls<CR>
 
