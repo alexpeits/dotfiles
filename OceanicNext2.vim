@@ -34,12 +34,13 @@ let s:cterm05 = "152"
 let s:cterm06 = "188"
 let s:cterm07 = "15"
 let s:cterm08 = "203"
-let s:cterm09 = "209"
-let s:cterm0A = "221"
+let s:cterm09 = "3"
+let s:cterm0A = "74"
 let s:cterm0B = "114"
+"let s:cterm0B = "2"
 let s:cterm0C = "74"
-let s:cterm0D = "11"
-let s:cterm0E = "176"
+let s:cterm0D = "3"
+let s:cterm0E = "74"
 let s:cterm0F = "223"
 let s:ctermWhite = "15" "}}}
 
@@ -205,8 +206,8 @@ call <sid>hi("PreProc",      s:gui0A, "", s:cterm0F, "", "")
 call <sid>hi("Repeat",       s:gui0A, "", s:cterm0A, "", "")
 call <sid>hi("Special",      s:gui0C, "", s:cterm0C, "", "")
 call <sid>hi("SpecialChar",  s:gui0F, "", s:cterm0F, "", "")
-call <sid>hi("Statement",    s:gui08, "", s:cterm08, "", "")
-call <sid>hi("StorageClass", s:gui0A, "", s:cterm0A, "", "")
+call <sid>hi("Statement",    s:gui08, "", s:cterm08, "", "bold")
+call <sid>hi("StorageClass", s:gui0A, "", s:cterm0D, "", "")
 call <sid>hi("String",       s:gui0B, "", s:cterm0B, "", "")
 call <sid>hi("Structure",    s:gui0E, "", s:cterm0E, "", "")
 call <sid>hi("Tag",          s:gui0A, "", s:cterm0A, "", "")

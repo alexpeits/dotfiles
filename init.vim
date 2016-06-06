@@ -10,115 +10,116 @@
 
 " Setup NeoBundle  ----------------------------------------------------------{{{
 " If vundle is not installed, do it first
-  if (!isdirectory(expand("$HOME/.config/nvim/bundle/neobundle.vim")))
-     call system(expand("mkdir -p $HOME/.confg/nvim/bundle"))
-     call system(expand("git clone https://github.com/Shougo/neobundle.vim $HOME/.config/nvim/bundle/neobundle.vim"))
-  endif
+if (!isdirectory(expand("$HOME/.config/nvim/bundle/neobundle.vim")))
+ call system(expand("mkdir -p $HOME/.confg/nvim/bundle"))
+ call system(expand("git clone https://github.com/Shougo/neobundle.vim $HOME/.config/nvim/bundle/neobundle.vim"))
+endif
 
-  set nocompatible
-
-" Required:
-    set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
-    " set runtimepath+=~/Github/deoplete-angular/
+set nocompatible
 
 " Required:
-  call neobundle#begin(expand('~/.config/nvim/bundle/'))
-  let pluginsExist = 0
+set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
+" set runtimepath+=~/Github/deoplete-angular/
+
+" Required:
+call neobundle#begin(expand('~/.config/nvim/bundle/'))
+let pluginsExist = 0
 " Let NeoBundle manage NeoBundle
 " Required:
-  NeoBundleFetch 'Shougo/neobundle.vim'
+NeoBundleFetch 'Shougo/neobundle.vim'
 
 " syntax
-  NeoBundleLazy 'elzr/vim-json', {'autoload':{'filetypes':['json']}}
-  NeoBundle 'tpope/vim-markdown'
-  NeoBundle 'dhruvasagar/vim-table-mode'
-  NeoBundle 'suan/vim-instant-markdown'
+NeoBundleLazy 'elzr/vim-json', {'autoload':{'filetypes':['json']}}
+NeoBundle 'tpope/vim-markdown'
+NeoBundle 'dhruvasagar/vim-table-mode'
+NeoBundle 'suan/vim-instant-markdown'
 " colorscheme & syntax highlighting
-  NeoBundle 'mhartington/oceanic-next'
-  NeoBundle 'nanotech/jellybeans.vim'
-  NeoBundle 'chriskempson/base16-vim'
-  NeoBundle 'Yggdroot/indentLine'
-  NeoBundle 'Raimondi/delimitMate'
- " Git helpers
-  NeoBundle 'airblade/vim-gitgutter'
-  NeoBundle 'tpope/vim-fugitive'
-  NeoBundle 'jreybert/vimagit'
-  NeoBundle 'mhinz/vim-signify'
-  NeoBundle 'Xuyuanp/nerdtree-git-plugin'
-  NeoBundle 'LemonBoy/autobahn'
+NeoBundle 'mhartington/oceanic-next'
+NeoBundle 'tomasr/molokai'
+NeoBundle 'nanotech/jellybeans.vim'
+NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'Yggdroot/indentLine'
+NeoBundle 'Raimondi/delimitMate'
+" Git helpers
+NeoBundle 'airblade/vim-gitgutter'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'jreybert/vimagit'
+NeoBundle 'mhinz/vim-signify'
+NeoBundle 'Xuyuanp/nerdtree-git-plugin'
+NeoBundle 'LemonBoy/autobahn'
 " utils
-  NeoBundle 'tpope/vim-repeat'
-  NeoBundle 'benekastah/neomake'
-  NeoBundle 'editorconfig/editorconfig-vim'
-  NeoBundle 'scrooloose/nerdtree'
-  NeoBundle 'AndrewRadev/switch.vim'
-  NeoBundle 'christoomey/vim-tmux-navigator'
-  NeoBundle 'tmux-plugins/vim-tmux'
-  NeoBundle 'tmux-plugins/vim-tmux-focus-events'
-  NeoBundle 'vim-airline/vim-airline'
-  NeoBundle 'vim-airline/vim-airline-themes'
-  NeoBundle 'tpope/vim-surround'
-  NeoBundle 'tomtom/tcomment_vim'
-  NeoBundle 'mattn/emmet-vim'
-  NeoBundle 'Chiel92/vim-autoformat'
-  " NeoBundle 'gorodinskiy/vim-coloresque'
-  NeoBundle 'ap/vim-css-color'
-  "NeoBundle 'scrooloose/syntastic'
-  NeoBundle 'ctrlpvim/ctrlp.vim'
-  NeoBundle 'mbbill/undotree'
-  NeoBundle 'scrooloose/nerdcommenter'
-  NeoBundle 'KabbAmine/zeavim.vim'
-  NeoBundle 'jmcantrell/vim-virtualenv'
-  NeoBundle 'davidhalter/jedi-vim'
-  NeoBundle 'majutsushi/tagbar'
+NeoBundle 'tpope/vim-repeat'
+NeoBundle 'benekastah/neomake'
+NeoBundle 'editorconfig/editorconfig-vim'
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'AndrewRadev/switch.vim'
+NeoBundle 'christoomey/vim-tmux-navigator'
+NeoBundle 'tmux-plugins/vim-tmux'
+NeoBundle 'tmux-plugins/vim-tmux-focus-events'
+NeoBundle 'vim-airline/vim-airline'
+NeoBundle 'vim-airline/vim-airline-themes'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'tomtom/tcomment_vim'
+NeoBundle 'mattn/emmet-vim'
+NeoBundle 'Chiel92/vim-autoformat'
+" NeoBundle 'gorodinskiy/vim-coloresque'
+NeoBundle 'ap/vim-css-color'
+"NeoBundle 'scrooloose/syntastic'
+NeoBundle 'ctrlpvim/ctrlp.vim'
+NeoBundle 'mbbill/undotree'
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'KabbAmine/zeavim.vim'
+NeoBundle 'jmcantrell/vim-virtualenv'
+NeoBundle 'davidhalter/jedi-vim'
+NeoBundle 'majutsushi/tagbar'
 
 " Shougo
-  "NeoBundle 'Shougo/neocomplete.vim'
-  "NeoBundle 'Shougo/deoplete.nvim'
-  NeoBundle 'Shougo/unite.vim'
-  NeoBundle 'Shougo/unite-outline'
-  NeoBundle 'ujihisa/unite-colorscheme'
-  NeoBundle 'junkblocker/unite-codesearch'
-  NeoBundle 'Shougo/vimfiler.vim'
-  NeoBundle 'Valloric/YouCompleteMe'
-  NeoBundle 'Shougo/vimproc.vim', {
-        \ 'build' : {
-        \     'windows' : 'tools\\update-dll-mingw',
-        \     'cygwin' : 'make -f make_cygwin.mak',
-        \     'mac' : 'make -f make_mac.mak',
-        \     'linux' : 'make',
-        \     'unix' : 'gmake',
-        \    },
-        \ }
-  NeoBundle 'Shougo/neco-vim'
-  NeoBundle 'Shougo/neoinclude.vim'
-  NeoBundleLazy 'ujihisa/neco-look',{'autoload':{'filetypes':['markdown','md']}}
+"NeoBundle 'Shougo/neocomplete.vim'
+"NeoBundle 'Shougo/deoplete.nvim'
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/unite-outline'
+NeoBundle 'ujihisa/unite-colorscheme'
+NeoBundle 'junkblocker/unite-codesearch'
+NeoBundle 'Shougo/vimfiler.vim'
+NeoBundle 'Valloric/YouCompleteMe'
+NeoBundle 'Shougo/vimproc.vim', {
+    \ 'build' : {
+    \     'windows' : 'tools\\update-dll-mingw',
+    \     'cygwin' : 'make -f make_cygwin.mak',
+    \     'mac' : 'make -f make_mac.mak',
+    \     'linux' : 'make',
+    \     'unix' : 'gmake',
+    \    },
+    \ }
+NeoBundle 'Shougo/neco-vim'
+NeoBundle 'Shougo/neoinclude.vim'
+NeoBundleLazy 'ujihisa/neco-look',{'autoload':{'filetypes':['markdown','md']}}
 
-  NeoBundle 'Shougo/neosnippet.vim'
-  NeoBundle 'Shougo/neosnippet-snippets'
-  NeoBundle 'honza/vim-snippets'
-  NeoBundle 'matthewsimo/angular-vim-snippets'
+NeoBundle 'Shougo/neosnippet.vim'
+NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'honza/vim-snippets'
+NeoBundle 'matthewsimo/angular-vim-snippets'
 
-  " NeoBundle 'junegunn/fzf', { 'dir': '~/.fzf' }
-  " NeoBundle 'junegunn/fzf.vim'
-  " NeoBundle 'ashisha/image.vim'
-  NeoBundle 'mhinz/vim-sayonara'
-  NeoBundle 'mattn/gist-vim', {'depends': 'mattn/webapi-vim'}
-  NeoBundle 'terryma/vim-multiple-cursors'
-  NeoBundle 'rhysd/github-complete.vim'
-  NeoBundle 'junegunn/goyo.vim'
-  NeoBundle 'https://github.com/danielmiessler/VimBlog'
-  " NeoBundle 'https://github.com/neovim/node-host'
-  NeoBundle 'vim-scripts/SyntaxRange'
-  NeoBundle 'ryanoasis/vim-devicons'
-  call neobundle#end()
+" NeoBundle 'junegunn/fzf', { 'dir': '~/.fzf' }
+" NeoBundle 'junegunn/fzf.vim'
+" NeoBundle 'ashisha/image.vim'
+NeoBundle 'mhinz/vim-sayonara'
+NeoBundle 'mattn/gist-vim', {'depends': 'mattn/webapi-vim'}
+NeoBundle 'terryma/vim-multiple-cursors'
+NeoBundle 'rhysd/github-complete.vim'
+NeoBundle 'junegunn/goyo.vim'
+NeoBundle 'https://github.com/danielmiessler/VimBlog'
+" NeoBundle 'https://github.com/neovim/node-host'
+NeoBundle 'vim-scripts/SyntaxRange'
+NeoBundle 'ryanoasis/vim-devicons'
+call neobundle#end()
 
 " Required:
-  filetype plugin indent on
-  filetype plugin on
+filetype plugin indent on
+filetype plugin on
 
-  let pluginsExist=1
-  NeoBundleCheck
+let pluginsExist=1
+NeoBundleCheck
 " }}}
 
 if pluginsExist
@@ -129,61 +130,61 @@ let g:python_host_prog = '/usr/bin/python'
 
 
 " Neovim Settings
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-  let $NEOVIM_JS_DEBUG='nvimjs.log'
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+let $NEOVIM_JS_DEBUG='nvimjs.log'
 " Let airline tell me my status
-  set noshowmode
-  set noswapfile
-  filetype on
+set noshowmode
+set noswapfile
+filetype on
 
-  " relative numbers in normal mode
-  " regular numbers in insert mode and when not focused
-  nnoremap <leader>] :set invrelativenumber<cr>
-  autocmd BufLeave,WinLeave,FocusLost * :set norelativenumber 
-  autocmd BufEnter,WinEnter,FocusGained * :set relativenumber
-  autocmd InsertEnter * :set norelativenumber
-  autocmd InsertLeave * :set relativenumber
-  set number
-  set relativenumber
+" relative numbers in normal mode
+" regular numbers in insert mode and when not focused
+nnoremap <leader>] :set invrelativenumber<cr>
+autocmd BufLeave,WinLeave,FocusLost * :set norelativenumber 
+autocmd BufEnter,WinEnter,FocusGained * :set relativenumber
+autocmd InsertEnter * :set norelativenumber
+autocmd InsertLeave * :set relativenumber
+set number
+set relativenumber
 
-  set conceallevel=0
+set conceallevel=0
 " block select not limited by shortest line
-  set virtualedit=
-  set wildmenu
-  set laststatus=2
-  "set colorcolumn=100
-  set wrap linebreak nolist
-  set wildmode=full
-  let g:gitgutter_max_signs = 1000  " default value
+set virtualedit=
+set wildmenu
+set laststatus=2
+"set colorcolumn=100
+set wrap linebreak nolist
+set wildmode=full
+let g:gitgutter_max_signs = 1000  " default value
 " }}}
 
 " System mappings  ----------------------------------------------------------{{{
 
 " No need for ex mode
-  nnoremap Q <nop>
+nnoremap Q <nop>
 " exit insert, dd line, enter insert
-  inoremap <c-d> <esc>ddi
+inoremap <c-d> <esc>ddi
 " Navigate between display lines
-  noremap  <silent> <Up>   gk
-  noremap  <silent> <Down> gj
-  noremap  <silent> k gk
-  noremap  <silent> j gj
-  noremap  <silent> <Home> g<Home>
-  noremap  <silent> <End>  g<End>
-  inoremap <silent> <Home> <C-o>g<Home>
-  inoremap <silent> <End>  <C-o>g<End>
+noremap  <silent> <Up>   gk
+noremap  <silent> <Down> gj
+noremap  <silent> k gk
+noremap  <silent> j gj
+noremap  <silent> <Home> g<Home>
+noremap  <silent> <End>  g<End>
+inoremap <silent> <Home> <C-o>g<Home>
+inoremap <silent> <End>  <C-o>g<End>
 " copy current files path to clipboard
 " Neovim terminal mapping
 " terminal 'normal mode'
-  "tmap <esc> <c-\><c-n><esc><cr>
+"tmap <esc> <c-\><c-n><esc><cr>
 " ,f to format code, requires formatters: read the docs
-  noremap <leader>f :Autoformat<CR>
-  "noremap <leader>TM :TableModeToggle<CR>
-  noremap H ^
-  noremap L g_
-  noremap J 5j
-  noremap K 5k
+noremap <leader>f :Autoformat<CR>
+"noremap <leader>TM :TableModeToggle<CR>
+noremap H ^
+noremap L g_
+noremap J 5j
+noremap K 5k
 " this is the best, let me tell you why
 " how annoying is that everytime you want to do something in vim
 " you have to do shift-; to get :, can't we just do ;?
@@ -191,34 +192,34 @@ let g:python_host_prog = '/usr/bin/python'
 " if you do have a plugin that needs ;, you can just wap the mapping
 " nnoremap : ;
 " give it a try and you will like it
-  nnoremap ; :
-  inoremap <c-f> <c-x><c-f>
+nnoremap ; :
+inoremap <c-f> <c-x><c-f>
 " Copy to osx clipboard
-  "vnoremap <C-c> "*y<CR>
-  "vnoremap y "*y<CR>
-  "nnoremap Y "*Y<CR>
-  let g:multi_cursor_next_key='<C-n>'
-  let g:multi_cursor_prev_key='<C-p>'
-  let g:multi_cursor_skip_key='<C-x>'
-  let g:multi_cursor_quit_key='<Esc>'
+"vnoremap <C-c> "*y<CR>
+"vnoremap y "*y<CR>
+"nnoremap Y "*Y<CR>
+"let g:multi_cursor_next_key='<C-n>'
+"let g:multi_cursor_prev_key='<C-p>'
+"let g:multi_cursor_skip_key='<C-x>'
+"let g:multi_cursor_quit_key='<Esc>'
 
 " Align blocks of text and keep them selected
-  nnoremap <leader>d "_d
-  vnoremap <leader>d "_d
+nnoremap <leader>d "_d
+vnoremap <leader>d "_d
 
 nnoremap <leader>e :call <SID>SynStack()<CR>
 function! <SID>SynStack()
-  if !exists("*synstack")
-    return
-  endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+if !exists("*synstack")
+return
+endif
+echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
 
 function! s:PlaceholderImgTag(size)
-  let url = 'http://dummyimage.com/' . a:size . '/000000/555555'
-  let [width,height] = split(a:size, 'x')
-  execute "normal a<img src=\"".url."\" width=\"".width."\" height=\"".height."\" />"
-  endfunction
+let url = 'http://dummyimage.com/' . a:size . '/000000/555555'
+let [width,height] = split(a:size, 'x')
+execute "normal a<img src=\"".url."\" width=\"".width."\" height=\"".height."\" />"
+endfunction
 command! -nargs=1 PlaceholderImgTag call s:PlaceholderImgTag(<f-args>)
 "}}}"
 
@@ -248,6 +249,8 @@ set softtabstop=4
 set shiftwidth=4
 set expandtab
 set hidden
+set lazyredraw
+map <F10> :set invlazyredraw<CR>
 
 if has("persistent_undo")
     set undodir=~/.vimundo/
@@ -274,12 +277,19 @@ let python_highlight_all = 1
 "colorscheme sexy-railscasts-256
 set t_Co=256
 colorscheme OceanicNext2
+"let g:solarized_contrast = "low"
+"let g:solarized_termtrans=1
+"let g:solarized_termcolors=256
+"colorscheme solarized
+"colorscheme elflord
+"colorscheme tender
 "colorscheme gruvbox
 "colorscheme onedark
 "let g:rehash256 = 1
 "colorscheme molokai
 "colorscheme Tomorrow-Night-Eighties
 highlight LineNr ctermbg=none ctermfg=241
+highlight CursorLineNr ctermbg=239 ctermfg=245
 highlight Normal ctermbg=none ctermfg=251
 "highlight Function ctermfg=105
 "highlight String ctermfg=78
@@ -428,6 +438,7 @@ let g:syntastic_python_checkers = ["flake8"]
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
 nnoremap <leader>jr :YcmCompleter GoToReferences<CR>
 let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_global_ycm_extra_conf = '~/.vim/confs/.ycm_extra_conf.py'
 
 " jedi-vim
 let g:jedi#completions_enabled = 0
@@ -571,6 +582,7 @@ set hidden
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline_powerline_fonts = 1
+"let g:airline_theme='molokai'
 let g:airline_theme='oceanicnext'
 " let g:airline_theme='base16_solarized'
 cnoreabbrev <expr> x getcmdtype() == ":" && getcmdline() == 'x' ? 'Sayonara' : 'x'
@@ -682,12 +694,13 @@ nnoremap <F5> :GitGutterSignsToggle<CR>
 nnoremap <leader>u :UndotreeToggle<CR>
 nnoremap <C-w>' ciw''<Esc>P
 nnoremap <C-w>" ciw""<Esc>P
-noremap <c-n> :noh<CR>
+nnoremap <leader>[ :noh<CR>
 vnoremap > >gv
 vnoremap < <gv
 
 " lololol
 nmap ; :
+nnoremap n nzz
 
 
 " buffer navigation
