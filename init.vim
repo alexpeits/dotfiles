@@ -36,6 +36,7 @@ NeoBundle 'suan/vim-instant-markdown'
 " colorscheme & syntax highlighting
 NeoBundle 'mhartington/oceanic-next'
 NeoBundle 'tomasr/molokai'
+NeoBundle 'fmoralesc/molokayo'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'Yggdroot/indentLine'
@@ -124,6 +125,8 @@ NeoBundleCheck
 
 if pluginsExist
 " System Settings  ----------------------------------------------------------{{{
+
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 let g:python_host_prog = '/usr/bin/python'
 "let g:deoplete#enable_at_startup = 1
@@ -239,11 +242,6 @@ let g:instant_markdown_autostart = 0
 " Keep my termo window open when I navigate away
 autocmd TermOpen * set bufhidden=hide
 
-" highlight if line exceeds specified amount
-highlight ColorColumn ctermbg=242
-au BufRead,BufNewFile *.py call matchadd('ColorColumn', '\%79v', 100) "set column nr
-
-
 set tabstop=4   
 set softtabstop=4
 set shiftwidth=4
@@ -275,9 +273,9 @@ set background=dark
 let python_highlight_all = 1
 "let g:gruvbox_termtrans=1
 "colorscheme sexy-railscasts-256
-set t_Co=256
-colorscheme OceanicNext2
-"let g:solarized_contrast = "low"
+"set t_Co=256
+"colorscheme OceanicNext2
+"colorscheme sexy-railscasts-256
 "let g:solarized_termtrans=1
 "let g:solarized_termcolors=256
 "colorscheme solarized
@@ -287,7 +285,7 @@ colorscheme OceanicNext2
 "colorscheme onedark
 "let g:rehash256 = 1
 "colorscheme molokai
-"colorscheme Tomorrow-Night-Eighties
+colorscheme Tomorrow-Night
 highlight LineNr ctermbg=none ctermfg=241
 highlight CursorLineNr ctermbg=239 ctermfg=245
 highlight Normal ctermbg=none ctermfg=251
@@ -298,12 +296,28 @@ highlight Error ctermbg=203
 highlight VertSplit ctermbg=239 ctermfg=246
 highlight MatchParen ctermbg=251 ctermfg=240
 highlight Comment cterm=italic ctermfg=243
+highlight Todo cterm=italic ctermbg=114 ctermfg=234
+highlight pythonSelf ctermfg=223
+
+" Tomorrow-Night
+highlight Number ctermfg=167
+highlight pythonSelf ctermfg=210
+highlight pythonDoctest ctermfg=74
+highlight pythonAsync ctermfg=209
+highlight pythonEscape ctermfg=167
+highlight pythonClass ctermfg=3
+highlight Folded ctermbg=238
 
 highlight GitGutterAdd ctermbg=none
 highlight GitGutterChange ctermbg=none
 highlight GitGutterChangeDelete ctermbg=none
 highlight GitGutterDelete ctermbg=none
 let g:gitgutter_map_keys = 0
+
+" highlight if line exceeds specified amount
+highlight ColorColumn ctermbg=238
+au BufRead,BufNewFile *.py call matchadd('ColorColumn', '\%79v', 100) "set column nr
+
 "}}}
 
 " Fold, gets it's own section  ----------------------------------------------{{{
@@ -413,6 +427,7 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \: "\<TAB>"
 
 "}}}
+
 
 " Virtualenv setup
 let g:virtualenv_directory = $WORKON_HOME
@@ -584,7 +599,7 @@ let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline_powerline_fonts = 1
 "let g:airline_theme='molokai'
 let g:airline_theme='oceanicnext'
-" let g:airline_theme='base16_solarized'
+"let g:airline_theme='alexline'
 cnoreabbrev <expr> x getcmdtype() == ":" && getcmdline() == 'x' ? 'Sayonara' : 'x'
 "tmap <leader>x <c-\><c-n>:bp! <BAR> bd! #<CR>
 nmap <leader>t :term<cr>
