@@ -193,8 +193,15 @@ search() {
 
 }
 
-# same as search, but open all files in vim and highlight occurences
+# same as search, but open all files in vim and show results in quickfix
 visearch() {
+
+    search $1 | awk -F":" '{print $1}' | uniq | cat | xargs bash -c '</dev/tty nvim -c "vimgrep /"'$1'"/ ##" -c copen $@' ignoreme
+
+}
+
+# same as above, but open all files in vim and highlight occurences
+visearch2() {
 
     search $1 | awk -F":" '{print $1}' | uniq | cat | xargs bash -c '</dev/tty nvim -c /'$1' $@' ignoreme
 
