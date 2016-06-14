@@ -60,7 +60,7 @@ NeoBundle 'tmux-plugins/vim-tmux-focus-events'
 NeoBundle 'vim-airline/vim-airline'
 NeoBundle 'vim-airline/vim-airline-themes'
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'tomtom/tcomment_vim'
+"NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'Chiel92/vim-autoformat'
 " NeoBundle 'gorodinskiy/vim-coloresque'
@@ -274,7 +274,7 @@ let python_highlight_all = 1
 "let g:gruvbox_termtrans=1
 "colorscheme sexy-railscasts-256
 "set t_Co=256
-"colorscheme OceanicNext2
+colorscheme OceanicNext2
 "colorscheme sexy-railscasts-256
 "let g:solarized_termtrans=1
 "let g:solarized_termcolors=256
@@ -285,7 +285,7 @@ let python_highlight_all = 1
 "colorscheme onedark
 "let g:rehash256 = 1
 "colorscheme molokai
-colorscheme Tomorrow-Night
+"colorscheme Tomorrow-Night
 highlight LineNr ctermbg=none ctermfg=241
 highlight CursorLineNr ctermbg=239 ctermfg=245
 highlight Normal ctermbg=none ctermfg=251
@@ -300,13 +300,13 @@ highlight Todo cterm=italic ctermbg=114 ctermfg=234
 highlight pythonSelf ctermfg=223
 
 " Tomorrow-Night
-highlight Number ctermfg=167
-highlight pythonSelf ctermfg=210
-highlight pythonDoctest ctermfg=74
-highlight pythonAsync ctermfg=209
-highlight pythonEscape ctermfg=167
+"highlight Number ctermfg=167
+"highlight pythonSelf ctermfg=210
+"highlight pythonDoctest ctermfg=74
+"highlight pythonAsync ctermfg=209
+"highlight pythonEscape ctermfg=167
 highlight pythonClass ctermfg=3
-highlight Folded ctermbg=238
+"highlight Folded ctermbg=238
 
 highlight GitGutterAdd ctermbg=none
 highlight GitGutterChange ctermbg=none
@@ -710,6 +710,10 @@ nnoremap <leader>u :UndotreeToggle<CR>
 nnoremap <C-w>' ciw''<Esc>P
 nnoremap <C-w>" ciw""<Esc>P
 nnoremap <leader>[ :noh<CR>
+nnoremap <leader>= :cn<CR>
+nnoremap <leader>- :cp<CR>
+nnoremap <leader>+ :copen<CR>
+nnoremap <leader>_ :cclose<CR>
 vnoremap > >gv
 vnoremap < <gv
 
