@@ -62,7 +62,8 @@ export GIT_PS1_SHOWUNTRACKEDFILES=1
 export GIT_EDITOR=vim
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;35m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w \[\033[01;31m\]$(__git_ps1 "(%s) ")\[\033[01;34m\]\$\[\033[00m\] '
+    #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;33m\]\u@\h\[\033[00m\] \[\033[01;34m\]\w \[\033[01;31m\]$(__git_ps1 "(%s) ")\[\033[01;34m\]\$\[\033[00m\] '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;33m\][\u]\[\033[00m\] \[\033[01;34m\]\w \[\033[01;31m\]$(__git_ps1 "(%s) ")\[\033[01;34m\]\$\[\033[00m\] '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -90,7 +91,7 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # some more ls aliases
-alias ll='ls -alF'
+alias ll='ls -lA'
 alias la='ls -A'
 alias l='ls -CF'
 
@@ -128,10 +129,15 @@ alias uuu='cd ../../..'
 alias uuuu='cd ../../../..'
 alias uuuuu='cd ../../../../..'
 alias detach='udisksctl power-off -b'
+alias nv=nvim
+alias nvi=nvim
+alias tmux="TERM=screen-256color-bce tmux"
 
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/devel
 source /usr/local/bin/virtualenvwrapper.sh
+
+export EDITOR=vim
 
 # colorize man pages with less
 man() {
@@ -148,7 +154,7 @@ man() {
 # Grep for pattern recursively,
 # starting from current path down
 #search() {
-#    
+
 #    grep -rI $1 *
 #
 #}
@@ -156,19 +162,58 @@ man() {
 # Grep for pattern recursively,
 # starting from current path down.
 # Accepts multiple arguments.
+#search() {
+#
+#    #FOO=${@:1:1}
+#    PARAMS=""
+#    for i in "$@"; do
+#        PARAMS="$PARAMS -e $i"
+#    done
+#    grep -nrI $PARAMS *
+#
+#}
+# Grep for pattern recursively,
+# starting from current path down.
+# Accepts multiple arguments and
+# an optional argument to surround
+# lines with results (search [-<num_of_lines>] ...)
 search() {
-    
-    #FOO=${@:1:1}
-    PARAMS=""
-    for i in "$@"; do
+
+    SURR=${@:1:1}
+    if [[ $SURR =~ -[0-9]* ]] ; then
+        PARAMS=$SURR
+    else
+        PARAMS="-e $1"
+    fi
+    for i in "${@:2}"; do
         PARAMS="$PARAMS -e $i"
     done
+    #grep -nrI $PARAMS *k
     grep -nrI $PARAMS *
 
 }
+
+# same as search, but open all files in vim and highlight occurences
+visearch() {
+
+    search $1 | awk -F":" '{print $1}' | uniq | cat | xargs bash -c '</dev/tty nvim -c /'$1' $@' ignoreme
+
+}
+
+# Count appearances of a word in a directory
+# (recursively). Excludes .git folder
+count() {
+
+    grep -crI --exclude-dir=.git $1 * | sed '/:0$/d'
+
+}
+export LC_CTYPE=en_US.UTF-8
 
 TERM=xterm-256color
 . ~/.git-completion.bash
 #source $HOME/.vim/gruvbox_256palette.sh
 #BASE16_SHELL="$HOME/sources/base16-shell/base16-default.dark.sh"
 #[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
+
+export DNS1=10.10.10.11
+export DNS2=10.10.11.11
