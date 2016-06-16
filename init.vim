@@ -234,9 +234,9 @@ set background=dark
 " no need to fold things in markdown all the time
 let g:vim_markdown_folding_disabled = 1
 " turn on spelling for markdown files
-autocmd BufRead,BufNewFile *.md setlocal spell complete+=kspell
+autocmd BufRead,BufNewFile *.md,*.rst setlocal spell complete+=kspell
 " highlight bad words in red
-autocmd BufRead,BufNewFile *.md hi SpellBad guibg=#ff2929 guifg=#ffffff" ctermbg=224
+autocmd BufRead,BufNewFile *.md,*.rst hi SpellBad guibg=#ff2929 guifg=#ffffff" ctermbg=224
 " disable markdown auto-preview. Gets annoying
 let g:instant_markdown_autostart = 0
 " Keep my termo window open when I navigate away
@@ -274,7 +274,8 @@ let python_highlight_all = 1
 "let g:gruvbox_termtrans=1
 "colorscheme sexy-railscasts-256
 "set t_Co=256
-colorscheme OceanicNext2
+"colorscheme OceanicNext2
+colorscheme codeschool
 "colorscheme sexy-railscasts-256
 "let g:solarized_termtrans=1
 "let g:solarized_termcolors=256
@@ -297,7 +298,15 @@ highlight VertSplit ctermbg=239 ctermfg=246
 highlight MatchParen ctermbg=251 ctermfg=240
 highlight Comment cterm=italic ctermfg=243
 highlight Todo cterm=italic ctermbg=114 ctermfg=234
-highlight pythonSelf ctermfg=223
+"highlight pythonSelf ctermfg=223
+"highlight pythonClass ctermfg=147
+
+" Codeschool
+highlight pythonSelf ctermfg=174
+highlight pythonClass ctermfg=174
+highlight pythonDoctest ctermfg=209
+highlight NonText ctermbg=none
+highlight Folded ctermbg=238 ctermfg=246
 
 " Tomorrow-Night
 "highlight Number ctermfg=167
@@ -305,7 +314,7 @@ highlight pythonSelf ctermfg=223
 "highlight pythonDoctest ctermfg=74
 "highlight pythonAsync ctermfg=209
 "highlight pythonEscape ctermfg=167
-highlight pythonClass ctermfg=3
+"highlight pythonClass ctermfg=3
 "highlight Folded ctermbg=238
 
 highlight GitGutterAdd ctermbg=none
@@ -709,17 +718,24 @@ nnoremap <F5> :GitGutterSignsToggle<CR>
 nnoremap <leader>u :UndotreeToggle<CR>
 nnoremap <C-w>' ciw''<Esc>P
 nnoremap <C-w>" ciw""<Esc>P
+nnoremap <C-w>( ciw()<Esc>P
 nnoremap <leader>[ :noh<CR>
-nnoremap <leader>= :cn<CR>
-nnoremap <leader>- :cp<CR>
+nnoremap <leader>= :cn<CR>zz
+nnoremap <leader>- :cp<CR>zz
 nnoremap <leader>+ :copen<CR>
 nnoremap <leader>_ :cclose<CR>
 vnoremap > >gv
 vnoremap < <gv
+cnoreabbrev spch setlocal spell spelllang=en_us
 
 " lololol
 nmap ; :
+
 nnoremap n nzz
+nnoremap ]] ]]zz
+nnoremap [[ [[zz
+nnoremap ]m ]mzz
+nnoremap [m []zz
 
 
 " buffer navigation
