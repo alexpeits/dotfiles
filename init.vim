@@ -303,10 +303,15 @@ highlight Todo cterm=italic ctermbg=114 ctermfg=234
 
 " Codeschool
 highlight pythonSelf ctermfg=174
-highlight pythonClass ctermfg=174
+highlight pythonClass ctermfg=210
 highlight pythonDoctest ctermfg=209
 highlight NonText ctermbg=none
 highlight Folded ctermbg=238 ctermfg=246
+highlight Pmenu ctermbg=238
+highlight SpellBad cterm=underline ctermbg=237
+highlight SpellCap cterm=none ctermbg=none
+highlight SpellLocal cterm=none ctermbg=none
+highlight SpellRare cterm=none ctermbg=none
 
 " Tomorrow-Night
 "highlight Number ctermfg=167
@@ -730,6 +735,7 @@ cnoreabbrev spch setlocal spell spelllang=en_us
 
 " lololol
 nmap ; :
+imap jj <Esc>
 
 nnoremap n nzz
 nnoremap ]] ]]zz
