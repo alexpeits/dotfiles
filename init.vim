@@ -312,6 +312,7 @@ highlight SpellBad cterm=underline ctermbg=237
 highlight SpellCap cterm=none ctermbg=none
 highlight SpellLocal cterm=none ctermbg=none
 highlight SpellRare cterm=none ctermbg=none
+highlight rstSections ctermfg=210 cterm=bold
 
 " Tomorrow-Night
 "highlight Number ctermfg=167
