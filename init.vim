@@ -341,8 +341,12 @@ highlight Visual ctermbg=239
 highlight pythonClass ctermfg=3
 highlight pythonSelf ctermfg=216
 highlight Number ctermfg=209
-"highlight Pmenu ctermbg=238
-"highlight MatchParen ctermbg=237
+highlight Pmenu ctermbg=236 ctermfg=245
+highlight Folded ctermbg=238 ctermfg=245 cterm=italic
+highlight StatusLine ctermbg=238 ctermfg=250
+highlight WildMenu ctermbg=2 ctermfg=236 cterm=bold
+highlight MatchParen ctermbg=237 ctermfg=180 cterm=underline
+highlight IncSearch cterm=none ctermbg=173 ctermfg=234
 highlight SpellBad cterm=underline ctermbg=237
 highlight SpellCap cterm=none ctermbg=none
 highlight SpellLocal cterm=none ctermbg=none
