@@ -346,6 +346,8 @@ highlight javaScriptType ctermfg=209
 highlight javaScriptNumber ctermfg=209
 highlight Pmenu ctermbg=236 ctermfg=248
 highlight PmenuSel ctermbg=248 ctermfg=236
+highlight TabLine ctermbg=236 ctermfg=248
+highlight CursorLine ctermbg=236 ctermfg=248
 highlight Folded ctermbg=238 ctermfg=245 cterm=italic
 highlight StatusLine ctermbg=238 ctermfg=250
 highlight WildMenu ctermbg=2 ctermfg=236 cterm=bold
