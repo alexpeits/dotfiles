@@ -10,184 +10,182 @@
 
 " Setup NeoBundle  ----------------------------------------------------------{{{
 " If vundle is not installed, do it first
-if (!isdirectory(expand("$HOME/.config/nvim/bundle/neobundle.vim")))
- call system(expand("mkdir -p $HOME/.confg/nvim/bundle"))
- call system(expand("git clone https://github.com/Shougo/neobundle.vim $HOME/.config/nvim/bundle/neobundle.vim"))
-endif
+  if (!isdirectory(expand("$HOME/.config/nvim/bundle/neobundle.vim")))
+     call system(expand("mkdir -p $HOME/.confg/nvim/bundle"))
+     call system(expand("git clone https://github.com/Shougo/neobundle.vim $HOME/.config/nvim/bundle/neobundle.vim"))
+  endif
 
-set nocompatible
-
-" Required:
-set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
-" set runtimepath+=~/Github/deoplete-angular/
+  set nocompatible
 
 " Required:
-call neobundle#begin(expand('~/.config/nvim/bundle/'))
-let pluginsExist = 0
+    set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
+    " set runtimepath+=~/Github/deoplete-angular/
+
+" Required:
+  call neobundle#begin(expand('~/.config/nvim/bundle/'))
+  let pluginsExist = 0
 " Let NeoBundle manage NeoBundle
 " Required:
-NeoBundleFetch 'Shougo/neobundle.vim'
+  NeoBundleFetch 'Shougo/neobundle.vim'
 
 " syntax
-NeoBundleLazy 'elzr/vim-json', {'autoload':{'filetypes':['json']}}
-NeoBundle 'tpope/vim-markdown'
-NeoBundle 'dhruvasagar/vim-table-mode'
-NeoBundle 'suan/vim-instant-markdown'
+  NeoBundleLazy 'elzr/vim-json', {'autoload':{'filetypes':['json']}}
+  NeoBundle 'tpope/vim-markdown'
+  NeoBundle 'dhruvasagar/vim-table-mode'
+  NeoBundle 'suan/vim-instant-markdown'
 " colorscheme & syntax highlighting
-NeoBundle 'mhartington/oceanic-next'
-NeoBundle 'tomasr/molokai'
-NeoBundle 'fmoralesc/molokayo'
-NeoBundle 'nanotech/jellybeans.vim'
-NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'Yggdroot/indentLine'
-NeoBundle 'Raimondi/delimitMate'
-" Git helpers
-NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'jreybert/vimagit'
-NeoBundle 'mhinz/vim-signify'
-NeoBundle 'Xuyuanp/nerdtree-git-plugin'
-NeoBundle 'LemonBoy/autobahn'
+  NeoBundle 'mhartington/oceanic-next'
+  NeoBundle 'nanotech/jellybeans.vim'
+  NeoBundle 'chriskempson/base16-vim'
+  NeoBundle 'tomasr/molokai'
+  NeoBundle 'fmoralesc/molokayo'
+  NeoBundle 'Yggdroot/indentLine'
+  NeoBundle 'Raimondi/delimitMate'
+ " Git helpers
+  NeoBundle 'airblade/vim-gitgutter'
+  NeoBundle 'tpope/vim-fugitive'
+  NeoBundle 'jreybert/vimagit'
+  "NeoBundle 'mhinz/vim-signify'
+  NeoBundle 'Xuyuanp/nerdtree-git-plugin'
+  NeoBundle 'LemonBoy/autobahn'
 " utils
-NeoBundle 'tpope/vim-repeat'
-NeoBundle 'benekastah/neomake'
-NeoBundle 'editorconfig/editorconfig-vim'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'AndrewRadev/switch.vim'
-NeoBundle 'christoomey/vim-tmux-navigator'
-NeoBundle 'tmux-plugins/vim-tmux'
-NeoBundle 'tmux-plugins/vim-tmux-focus-events'
-NeoBundle 'vim-airline/vim-airline'
-NeoBundle 'vim-airline/vim-airline-themes'
-NeoBundle 'tpope/vim-surround'
-"NeoBundle 'tomtom/tcomment_vim'
-NeoBundle 'mattn/emmet-vim'
-NeoBundle 'Chiel92/vim-autoformat'
-" NeoBundle 'gorodinskiy/vim-coloresque'
-NeoBundle 'ap/vim-css-color'
-"NeoBundle 'scrooloose/syntastic'
-NeoBundle 'ctrlpvim/ctrlp.vim'
-NeoBundle 'mbbill/undotree'
-NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'KabbAmine/zeavim.vim'
-NeoBundle 'jmcantrell/vim-virtualenv'
-NeoBundle 'davidhalter/jedi-vim'
-NeoBundle 'majutsushi/tagbar'
+  NeoBundle 'tpope/vim-repeat'
+  NeoBundle 'benekastah/neomake'
+  NeoBundle 'editorconfig/editorconfig-vim'
+  NeoBundle 'scrooloose/nerdtree'
+  NeoBundle 'AndrewRadev/switch.vim'
+  NeoBundle 'christoomey/vim-tmux-navigator'
+  NeoBundle 'tmux-plugins/vim-tmux'
+  NeoBundle 'tmux-plugins/vim-tmux-focus-events'
+  NeoBundle 'vim-airline/vim-airline'
+  NeoBundle 'vim-airline/vim-airline-themes'
+  NeoBundle 'tpope/vim-surround'
+  "NeoBundle 'tomtom/tcomment_vim'
+  NeoBundle 'mattn/emmet-vim'
+  NeoBundle 'Chiel92/vim-autoformat'
+  " NeoBundle 'gorodinskiy/vim-coloresque'
+  NeoBundle 'ap/vim-css-color'
+  "NeoBundle 'scrooloose/syntastic'
+  NeoBundle 'ctrlpvim/ctrlp.vim'
+  NeoBundle 'mbbill/undotree'
+  NeoBundle 'scrooloose/nerdcommenter'
+  NeoBundle 'KabbAmine/zeavim.vim'
+  NeoBundle 'jmcantrell/vim-virtualenv'
+  NeoBundle 'davidhalter/jedi-vim'
+  NeoBundle 'majutsushi/tagbar'
 
 " Shougo
-"NeoBundle 'Shougo/neocomplete.vim'
-"NeoBundle 'Shougo/deoplete.nvim'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/unite-outline'
-NeoBundle 'ujihisa/unite-colorscheme'
-NeoBundle 'junkblocker/unite-codesearch'
-NeoBundle 'Shougo/vimfiler.vim'
-NeoBundle 'Valloric/YouCompleteMe'
-NeoBundle 'Shougo/vimproc.vim', {
-    \ 'build' : {
-    \     'windows' : 'tools\\update-dll-mingw',
-    \     'cygwin' : 'make -f make_cygwin.mak',
-    \     'mac' : 'make -f make_mac.mak',
-    \     'linux' : 'make',
-    \     'unix' : 'gmake',
-    \    },
-    \ }
-NeoBundle 'Shougo/neco-vim'
-NeoBundle 'Shougo/neoinclude.vim'
-NeoBundleLazy 'ujihisa/neco-look',{'autoload':{'filetypes':['markdown','md']}}
+  "NeoBundle 'Shougo/neocomplete.vim'
+  "NeoBundle 'Shougo/deoplete.nvim'
+  NeoBundle 'Shougo/unite.vim'
+  NeoBundle 'Shougo/unite-outline'
+  NeoBundle 'ujihisa/unite-colorscheme'
+  NeoBundle 'junkblocker/unite-codesearch'
+  NeoBundle 'Shougo/vimfiler.vim'
+  NeoBundle 'Valloric/YouCompleteMe'
+  NeoBundle 'Shougo/vimproc.vim', {
+        \ 'build' : {
+        \     'windows' : 'tools\\update-dll-mingw',
+        \     'cygwin' : 'make -f make_cygwin.mak',
+        \     'mac' : 'make -f make_mac.mak',
+        \     'linux' : 'make',
+        \     'unix' : 'gmake',
+        \    },
+        \ }
+  NeoBundle 'Shougo/neco-vim'
+  NeoBundle 'Shougo/neoinclude.vim'
+  NeoBundleLazy 'ujihisa/neco-look',{'autoload':{'filetypes':['markdown','md']}}
 
-NeoBundle 'Shougo/neosnippet.vim'
-NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'honza/vim-snippets'
-NeoBundle 'matthewsimo/angular-vim-snippets'
+  NeoBundle 'Shougo/neosnippet.vim'
+  NeoBundle 'Shougo/neosnippet-snippets'
+  NeoBundle 'honza/vim-snippets'
+  NeoBundle 'matthewsimo/angular-vim-snippets'
 
-" NeoBundle 'junegunn/fzf', { 'dir': '~/.fzf' }
-" NeoBundle 'junegunn/fzf.vim'
-" NeoBundle 'ashisha/image.vim'
-NeoBundle 'mhinz/vim-sayonara'
-NeoBundle 'mattn/gist-vim', {'depends': 'mattn/webapi-vim'}
-NeoBundle 'terryma/vim-multiple-cursors'
-NeoBundle 'rhysd/github-complete.vim'
-NeoBundle 'junegunn/goyo.vim'
-NeoBundle 'https://github.com/danielmiessler/VimBlog'
-" NeoBundle 'https://github.com/neovim/node-host'
-NeoBundle 'vim-scripts/SyntaxRange'
-NeoBundle 'ryanoasis/vim-devicons'
-call neobundle#end()
+  " NeoBundle 'junegunn/fzf', { 'dir': '~/.fzf' }
+  " NeoBundle 'junegunn/fzf.vim'
+  " NeoBundle 'ashisha/image.vim'
+  NeoBundle 'mhinz/vim-sayonara'
+  NeoBundle 'mattn/gist-vim', {'depends': 'mattn/webapi-vim'}
+  NeoBundle 'terryma/vim-multiple-cursors'
+  NeoBundle 'rhysd/github-complete.vim'
+  NeoBundle 'junegunn/goyo.vim'
+  NeoBundle 'https://github.com/danielmiessler/VimBlog'
+  " NeoBundle 'https://github.com/neovim/node-host'
+  NeoBundle 'vim-scripts/SyntaxRange'
+  NeoBundle 'ryanoasis/vim-devicons'
+  call neobundle#end()
 
 " Required:
-filetype plugin indent on
-filetype plugin on
+  filetype plugin indent on
+  filetype plugin on
 
-let pluginsExist=1
-NeoBundleCheck
+  let pluginsExist=1
+  NeoBundleCheck
 " }}}
 
 if pluginsExist
 " System Settings  ----------------------------------------------------------{{{
-
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 let g:python_host_prog = '/usr/bin/python'
 "let g:deoplete#enable_at_startup = 1
 
 
 " Neovim Settings
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-let $NEOVIM_JS_DEBUG='nvimjs.log'
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+  let $NEOVIM_JS_DEBUG='nvimjs.log'
 " Let airline tell me my status
-set noshowmode
-set noswapfile
-filetype on
+  set noshowmode
+  set noswapfile
+  filetype on
 
-" relative numbers in normal mode
-" regular numbers in insert mode and when not focused
-nnoremap <leader>] :set invrelativenumber<cr>
-autocmd BufLeave,WinLeave,FocusLost * :set norelativenumber 
-autocmd BufEnter,WinEnter,FocusGained * :set relativenumber
-autocmd InsertEnter * :set norelativenumber
-autocmd InsertLeave * :set relativenumber
-set number
-set relativenumber
+  " relative numbers in normal mode
+  " regular numbers in insert mode and when not focused
+  nnoremap <leader>] :set invrelativenumber<cr>
+  autocmd BufLeave,WinLeave,FocusLost * :set norelativenumber
+  autocmd BufEnter,WinEnter,FocusGained * :set relativenumber
+  autocmd InsertEnter * :set norelativenumber
+  autocmd InsertLeave * :set relativenumber
+  set number
+  set relativenumber
 
-set conceallevel=0
+  set conceallevel=0
 " block select not limited by shortest line
-set virtualedit=
-set wildmenu
-set laststatus=2
-"set colorcolumn=100
-set wrap linebreak nolist
-set wildmode=full
-let g:gitgutter_max_signs = 1000  " default value
+  set virtualedit=
+  set wildmenu
+  set laststatus=2
+  "set colorcolumn=100
+  set wrap linebreak nolist
+  set wildmode=full
+  let g:gitgutter_max_signs = 1000  " default value
 " }}}
 
 " System mappings  ----------------------------------------------------------{{{
 
 " No need for ex mode
-nnoremap Q <nop>
+  nnoremap Q <nop>
 " exit insert, dd line, enter insert
-inoremap <c-d> <esc>ddi
+  inoremap <c-d> <esc>ddi
 " Navigate between display lines
-noremap  <silent> <Up>   gk
-noremap  <silent> <Down> gj
-noremap  <silent> k gk
-noremap  <silent> j gj
-noremap  <silent> <Home> g<Home>
-noremap  <silent> <End>  g<End>
-inoremap <silent> <Home> <C-o>g<Home>
-inoremap <silent> <End>  <C-o>g<End>
+  noremap  <silent> <Up>   gk
+  noremap  <silent> <Down> gj
+  noremap  <silent> k gk
+  noremap  <silent> j gj
+  noremap  <silent> <Home> g<Home>
+  noremap  <silent> <End>  g<End>
+  inoremap <silent> <Home> <C-o>g<Home>
+  inoremap <silent> <End>  <C-o>g<End>
 " copy current files path to clipboard
 " Neovim terminal mapping
 " terminal 'normal mode'
-"tmap <esc> <c-\><c-n><esc><cr>
+  "tmap <esc> <c-\><c-n><esc><cr>
 " ,f to format code, requires formatters: read the docs
-noremap <leader>f :Autoformat<CR>
-"noremap <leader>TM :TableModeToggle<CR>
-noremap H ^
-noremap L g_
-noremap J 5j
-noremap K 5k
+  noremap <leader>f :Autoformat<CR>
+  "noremap <leader>TM :TableModeToggle<CR>
+  noremap H ^
+  noremap L g_
+  noremap J 5j
+  noremap K 5k
 " this is the best, let me tell you why
 " how annoying is that everytime you want to do something in vim
 " you have to do shift-; to get :, can't we just do ;?
@@ -195,34 +193,34 @@ noremap K 5k
 " if you do have a plugin that needs ;, you can just wap the mapping
 " nnoremap : ;
 " give it a try and you will like it
-nnoremap ; :
-inoremap <c-f> <c-x><c-f>
+  nnoremap ; :
+  inoremap <c-f> <c-x><c-f>
 " Copy to osx clipboard
-"vnoremap <C-c> "*y<CR>
-"vnoremap y "*y<CR>
-"nnoremap Y "*Y<CR>
-"let g:multi_cursor_next_key='<C-n>'
-"let g:multi_cursor_prev_key='<C-p>'
-"let g:multi_cursor_skip_key='<C-x>'
-"let g:multi_cursor_quit_key='<Esc>'
+  "vnoremap <C-c> "*y<CR>
+  "vnoremap y "*y<CR>
+  "nnoremap Y "*Y<CR>
+  let g:multi_cursor_next_key='<C-n>'
+  let g:multi_cursor_prev_key='<C-p>'
+  let g:multi_cursor_skip_key='<C-x>'
+  let g:multi_cursor_quit_key='<Esc>'
 
 " Align blocks of text and keep them selected
-nnoremap <leader>d "_d
-vnoremap <leader>d "_d
+  nnoremap <leader>d "_d
+  vnoremap <leader>d "_d
 
 nnoremap <leader>e :call <SID>SynStack()<CR>
 function! <SID>SynStack()
-if !exists("*synstack")
-return
-endif
-echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
 
 function! s:PlaceholderImgTag(size)
-let url = 'http://dummyimage.com/' . a:size . '/000000/555555'
-let [width,height] = split(a:size, 'x')
-execute "normal a<img src=\"".url."\" width=\"".width."\" height=\"".height."\" />"
-endfunction
+  let url = 'http://dummyimage.com/' . a:size . '/000000/555555'
+  let [width,height] = split(a:size, 'x')
+  execute "normal a<img src=\"".url."\" width=\"".width."\" height=\"".height."\" />"
+  endfunction
 command! -nargs=1 PlaceholderImgTag call s:PlaceholderImgTag(<f-args>)
 "}}}"
 
@@ -234,21 +232,22 @@ set background=dark
 " no need to fold things in markdown all the time
 let g:vim_markdown_folding_disabled = 1
 " turn on spelling for markdown files
-autocmd BufRead,BufNewFile *.md,*.rst setlocal spell complete+=kspell
+autocmd BufRead,BufNewFile *.md setlocal spell complete+=kspell
 " highlight bad words in red
-autocmd BufRead,BufNewFile *.md,*.rst hi SpellBad guibg=#ff2929 guifg=#ffffff" ctermbg=224
+autocmd BufRead,BufNewFile *.md hi SpellBad guibg=#ff2929 guifg=#ffffff" ctermbg=224
 " disable markdown auto-preview. Gets annoying
 let g:instant_markdown_autostart = 0
 " Keep my termo window open when I navigate away
 autocmd TermOpen * set bufhidden=hide
 
-set tabstop=4   
+set lazyredraw
+
+set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set expandtab
 set hidden
 set lazyredraw
-map <F10> :set invlazyredraw<CR>
 
 if has("persistent_undo")
     set undodir=~/.vimundo/
@@ -273,46 +272,61 @@ set background=dark
 let python_highlight_all = 1
 "let g:gruvbox_termtrans=1
 "colorscheme sexy-railscasts-256
-"set t_Co=256
+set t_Co=256
+"colorscheme OceanicNext
+"colorscheme codeschool
 "colorscheme OceanicNext2
-colorscheme codeschool
-"colorscheme sexy-railscasts-256
-"let g:solarized_termtrans=1
 "let g:solarized_termcolors=256
 "colorscheme solarized
-"colorscheme elflord
-"colorscheme tender
+"colorscheme sexy-railscasts-256
+"let g:gruvbox_termcolors=256
 "colorscheme gruvbox
+"highlight String ctermfg=179
 "colorscheme onedark
 "let g:rehash256 = 1
+"colorscheme molokayo
 "colorscheme molokai
-"colorscheme Tomorrow-Night
+"colorscheme Tomorrow-Night-Eighties
+"colorscheme hybrid
+let base16colorspace=256
+colorscheme base16
 highlight LineNr ctermbg=none ctermfg=241
 highlight CursorLineNr ctermbg=239 ctermfg=245
 highlight Normal ctermbg=none ctermfg=251
-"highlight Function ctermfg=105
-"highlight String ctermfg=78
 highlight Search cterm=none ctermbg=222 ctermfg=234
-highlight Error ctermbg=203
-highlight VertSplit ctermbg=239 ctermfg=246
-highlight MatchParen ctermbg=251 ctermfg=240
+highlight Error ctermbg=203 ctermfg=234 cterm=none
+highlight VertSplit ctermbg=238 ctermfg=247
+"highlight MatchParen ctermbg=251 ctermfg=240 cterm=none
 highlight Comment cterm=italic ctermfg=243
-highlight Todo cterm=italic ctermbg=114 ctermfg=234
-"highlight pythonSelf ctermfg=223
-"highlight pythonClass ctermfg=147
+highlight Todo cterm=italic ctermfg=235 ctermbg=114
+highlight Visual ctermbg=239
+"highlight Number ctermfg=167
+"highlight Statement cterm=bold
+"highlight Repeat ctermfg=173
+"highlight Conditional ctermfg=173
+"highlight Exception ctermfg=173
+"highlight pythonSelf ctermfg=80
+"highlight pythonClass ctermfg=5
+"highlight String ctermfg=143
+""highlight pythonSelf ctermfg=74
+""highlight Include ctermfg=176
+"highlight Folded ctermbg=238 ctermfg=245 cterm=italic
 
 " Codeschool
-highlight pythonSelf ctermfg=174
-highlight pythonClass ctermfg=210
-highlight pythonDoctest ctermfg=209
-highlight NonText ctermbg=none
-highlight Folded ctermbg=238 ctermfg=246
-highlight Pmenu ctermbg=238
-highlight SpellBad cterm=underline ctermbg=237
-highlight SpellCap cterm=none ctermbg=none
-highlight SpellLocal cterm=none ctermbg=none
-highlight SpellRare cterm=none ctermbg=none
-highlight rstSections ctermfg=210 cterm=bold
+"highlight Function ctermfg=111
+"highlight pythonSelf ctermfg=174
+"highlight pythonClass ctermfg=174
+""highlight pythonClass ctermfg=210
+"highlight pythonDoctest ctermfg=209
+"highlight NonText ctermbg=none
+"highlight Folded ctermbg=238 ctermfg=246
+"highlight Pmenu ctermbg=238
+"highlight MatchParen ctermbg=237
+"highlight SpellBad cterm=underline ctermbg=237
+"highlight SpellCap cterm=none ctermbg=none
+"highlight SpellLocal cterm=none ctermbg=none
+"highlight SpellRare cterm=none ctermbg=none
+"highlight rstSections ctermfg=210 cterm=bold
 
 " Tomorrow-Night
 "highlight Number ctermfg=167
@@ -323,14 +337,27 @@ highlight rstSections ctermfg=210 cterm=bold
 "highlight pythonClass ctermfg=3
 "highlight Folded ctermbg=238
 
+" base16
+highlight pythonClass ctermfg=3
+highlight pythonSelf ctermfg=216
+highlight Number ctermfg=209
+"highlight Pmenu ctermbg=238
+"highlight MatchParen ctermbg=237
+highlight SpellBad cterm=underline ctermbg=237
+highlight SpellCap cterm=none ctermbg=none
+highlight SpellLocal cterm=none ctermbg=none
+highlight SpellRare cterm=none ctermbg=none
+
 highlight GitGutterAdd ctermbg=none
 highlight GitGutterChange ctermbg=none
 highlight GitGutterChangeDelete ctermbg=none
 highlight GitGutterDelete ctermbg=none
 let g:gitgutter_map_keys = 0
 
+highlight rstSections ctermfg=203
+
 " highlight if line exceeds specified amount
-highlight ColorColumn ctermbg=238
+highlight ColorColumn ctermbg=239
 au BufRead,BufNewFile *.py call matchadd('ColorColumn', '\%79v', 100) "set column nr
 
 "}}}
@@ -443,7 +470,7 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 
 "}}}
 
-
+" Package config -----------------------------------------------------------------{{{
 " Virtualenv setup
 let g:virtualenv_directory = $WORKON_HOME
 let g:virtualenv_auto_activate = 1
@@ -468,7 +495,6 @@ let g:syntastic_python_checkers = ["flake8"]
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
 nnoremap <leader>jr :YcmCompleter GoToReferences<CR>
 let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_global_ycm_extra_conf = '~/.vim/confs/.ycm_extra_conf.py'
 
 " jedi-vim
 let g:jedi#completions_enabled = 0
@@ -476,7 +502,7 @@ let g:jedi#popup_on_dot = 0
 let g:jedi#smart_auto_mappings = 0
 
 " IndentLine
-let g:indentLine_color_term = 239
+let g:indentLine_color_term = 237
 "let g:indentLine_char = │
 
 " flake8
@@ -485,6 +511,8 @@ autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
 " CtrlP
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
+
+"}}}
 
 " Typescript & Javscript omni complete --------------------------------------{{{
   let g:vimjs#casesensistive = 1
@@ -612,9 +640,9 @@ set hidden
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline_powerline_fonts = 1
-"let g:airline_theme='molokai'
-let g:airline_theme='oceanicnext'
-"let g:airline_theme='alexline'
+set guifont=UbuntuMonoDerivativePowerline\ Nerd\ Font\ Regular\ 13
+"let g:airline_theme='oceanicnext'
+let g:airline_theme='alexline'
 cnoreabbrev <expr> x getcmdtype() == ":" && getcmdline() == 'x' ? 'Sayonara' : 'x'
 "tmap <leader>x <c-\><c-n>:bp! <BAR> bd! #<CR>
 nmap <leader>t :term<cr>
@@ -642,10 +670,6 @@ nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 "}}}
-"
-set encoding=utf8
-set guifont=UbuntuMonoDerivativePowerline\ Nerd\ Font\ Regular\ 13
-
 
 " Linting -------------------------------------------------------------------{{{
 
@@ -659,23 +683,24 @@ set guifont=UbuntuMonoDerivativePowerline\ Nerd\ Font\ Regular\ 13
   endfunction
   let g:neomake_javascript_enabled_makers = ['eslint']
   " call pylint using the current python (venv or global)
-  let g:neomake_python_venvpylint_maker = {
-    \ 'exe': 'python',
-    \ 'args': [
-        \ '`which pylint`',
-        \ '-f', 'text',
-        \ '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg}"',
-        \ '-r', 'n'
-    \ ],
-    \ 'errorformat':
-        \ '%A%f:%l:%c:%t: %m,' .
-        \ '%A%f:%l: %m,' .
-        \ '%A%f:(%l): %m,' .
-        \ '%-Z%p^%.%#,' .
-        \ '%-G%.%#',
-    \ }
+  "let g:neomake_python_venvpylint_maker = {
+    "\ 'exe': 'python',
+    "\ 'args': [
+        "\ '`which pylint`',
+        "\ '-f', 'text',
+        "\ '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg}"',
+        "\ '-r', 'n'
+    "\ ],
+    "\ 'errorformat':
+        "\ '%A%f:%l:%c:%t: %m,' .
+        "\ '%A%f:%l: %m,' .
+        "\ '%A%f:(%l): %m,' .
+        "\ '%-Z%p^%.%#,' .
+        "\ '%-G%.%#',
+    "\ }
 
-  let g:neomake_python_enabled_makers = ['venvpylint']
+  "let g:neomake_python_enabled_makers = ['venvpylint']
+  let g:neomake_python_enabled_makers = ['pylint', 'flake8']
   "let g:neomake_python_enabled_makers = ['flake8']
   autocmd! BufWritePost * Neomake
   function! JscsFix()
@@ -688,10 +713,12 @@ set guifont=UbuntuMonoDerivativePowerline\ Nerd\ Font\ Regular\ 13
   map <F8> :Neomake<CR>
   let g:neomake_open_list = 0
   let g:neomake_verbose = 0
-"}}}
 endif
 
+"}}}
 
+
+set encoding=utf8
 
 "split navigations
 nnoremap <C-Down> <C-W><C-J>
@@ -724,7 +751,7 @@ nnoremap <F5> :GitGutterSignsToggle<CR>
 nnoremap <leader>u :UndotreeToggle<CR>
 nnoremap <C-w>' ciw''<Esc>P
 nnoremap <C-w>" ciw""<Esc>P
-nnoremap <C-w>( ciw()<Esc>P
+noremap <c-n> :noh<CR>
 nnoremap <leader>[ :noh<CR>
 nnoremap <leader>= :cn<CR>zz
 nnoremap <leader>- :cp<CR>zz
@@ -738,11 +765,13 @@ cnoreabbrev spch setlocal spell spelllang=en_us
 nmap ; :
 imap jj <Esc>
 
-nnoremap n nzz
-nnoremap ]] ]]zz
-nnoremap [[ [[zz
-nnoremap ]m ]mzz
-nnoremap [m []zz
+" bring stuff to center when jumping
+nmap n nzz
+nmap N Nzz
+nmap [[ [[zz
+nmap ]] ]]zz
+nmap [m [mzz
+nmap ]m ]mzz
 
 
 " buffer navigation
@@ -752,4 +781,7 @@ nnoremap <leader>bq :bp <BAR> bd #<CR>
 nnoremap <leader>bl :ls<CR>
 
 " Various macros
-let @d = "oimport ipdb; ipdb.set_trace()\e" " python debug trace
+let @d = "Oimport ipdb; ipdb.set_trace()\ej0" " python debug trace
+
+" search for TODO and open quickfix
+nnoremap <leader>s :vimgrep /TODO/gj **/*.*<CR> :copen<CR>
