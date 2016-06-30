@@ -137,10 +137,10 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 let g:python_host_prog = '/usr/bin/python'
 "let g:deoplete#enable_at_startup = 1
 
-
 " Neovim Settings
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+let $TMUX_TUI_ENABLE_CURSOR_SHAPE=1
 let $NEOVIM_JS_DEBUG='nvimjs.log'
 " Let airline tell me my status
 set noshowmode
@@ -287,7 +287,6 @@ let python_highlight_all = 1
 "let g:solarized_termcolors=256
 "colorscheme solarized
 "colorscheme elflord
-colorscheme elflord
 "colorscheme tender
 "colorscheme badwolf
 "colorscheme gruvbox
@@ -295,43 +294,45 @@ colorscheme elflord
 "let g:rehash256 = 1
 "colorscheme molokai
 "colorscheme Tomorrow-Night
-"let base16colorspace=256
-"colorscheme base16
+let base16colorspace=256
+colorscheme base16
 highlight LineNr ctermbg=none ctermfg=241
 highlight CursorLineNr ctermbg=239 ctermfg=245
 highlight Normal ctermbg=none ctermfg=251
 "highlight Function ctermfg=105
 "highlight String ctermfg=78
 highlight Search cterm=none ctermbg=222 ctermfg=234
-highlight Error ctermbg=203
+highlight Error ctermbg=203 cterm=none
 highlight VertSplit ctermbg=239 ctermfg=246
 "highlight MatchParen ctermbg=251 ctermfg=240 cterm=none
-highlight Comment cterm=italic ctermfg=243
+highlight Comment cterm=italic ctermfg=244
 highlight Todo cterm=italic ctermbg=114 ctermfg=234
 "highlight pythonSelf ctermfg=223
 "highlight pythonClass ctermfg=147
 
 " elflord
-highlight String ctermfg=5
-highlight Structure ctermfg=2
-highlight Function ctermfg=4
-highlight pythonClass ctermfg=6
-highlight pythonSelf ctermfg=217
-highlight pythonDoctest ctermfg=2
-highlight MatchParen ctermbg=237 ctermfg=180 cterm=underline
-highlight SpellBad cterm=underline ctermbg=237
-highlight SpellCap cterm=none ctermbg=none
-highlight SpellLocal cterm=none ctermbg=none
-highlight SpellRare cterm=none ctermbg=none
-highlight rstSections ctermfg=210 cterm=bold
-highlight rstStrongEmphasis cterm=bold
-highlight Pmenu ctermbg=238 ctermfg=248
-highlight PmenuSel ctermbg=248 ctermfg=236
+"highlight String ctermfg=5
+"highlight Structure ctermfg=2
+"highlight Function ctermfg=4
+"highlight Conditional ctermfg=2
+"highlight Repeat ctermfg=2
+"highlight pythonClass ctermfg=2
+"highlight pythonSelf ctermfg=217
+"highlight pythonDoctest ctermfg=2
+"highlight MatchParen ctermbg=237 ctermfg=180 cterm=underline
+"highlight SpellBad cterm=underline ctermbg=237
+"highlight SpellCap cterm=none ctermbg=none
+"highlight SpellLocal cterm=none ctermbg=none
+"highlight SpellRare cterm=none ctermbg=none
+"highlight rstSections ctermfg=210 cterm=bold
+"highlight rstStrongEmphasis cterm=bold
+"highlight Pmenu ctermbg=238 ctermfg=248
+"highlight PmenuSel ctermbg=248 ctermfg=236
 
 
 " Codeschool
 "highlight pythonSelf ctermfg=174
-"highlight pythonClass ctermfg=174
+"hi! link pythonClass Function
 "highlight pythonDoctest ctermfg=209
 "highlight NonText ctermbg=none
 "highlight Folded ctermbg=238 ctermfg=246
@@ -353,30 +354,53 @@ highlight PmenuSel ctermbg=248 ctermfg=236
 "highlight Folded ctermbg=238
 
 " base16
-"highlight pythonClass ctermfg=3
-"highlight pythonSelf ctermfg=216
-"highlight Number ctermfg=209
-"highlight Float ctermfg=221
-"highlight javaScriptType ctermfg=209
-"highlight javaScriptNumber ctermfg=209
-"highlight Pmenu ctermbg=236 ctermfg=248
-"highlight PmenuSel ctermbg=248 ctermfg=236
-"highlight TabLine ctermbg=236 ctermfg=248
-"highlight CursorLine ctermbg=236 ctermfg=248
-"highlight Folded ctermbg=238 ctermfg=245 cterm=italic
-"highlight StatusLine ctermbg=238 ctermfg=250
-"highlight WildMenu ctermbg=2 ctermfg=236 cterm=bold
-"highlight MatchParen ctermbg=237 ctermfg=180 cterm=underline
-"highlight IncSearch cterm=none ctermbg=173 ctermfg=234
-"highlight Boolean ctermfg=4
-"highlight Constant ctermfg=4
-"highlight Delimiter ctermfg=4
-"highlight SpecialChar ctermfg=4
+highlight pythonClass ctermfg=3
+highlight pythonSelf ctermfg=216
+highlight Number ctermfg=209
+highlight Float ctermfg=221
+highlight javaScriptType ctermfg=209
+highlight javaScriptNumber ctermfg=209
+highlight Pmenu ctermbg=236 ctermfg=248
+highlight PmenuSel ctermbg=248 ctermfg=236
+highlight TabLine ctermbg=236 ctermfg=248
+highlight CursorLine ctermbg=236 ctermfg=248
+highlight Folded ctermbg=238 ctermfg=245 cterm=italic
+highlight FoldColumn ctermbg=238 ctermfg=74
+highlight StatusLine ctermbg=238 ctermfg=250
+highlight WildMenu ctermbg=2 ctermfg=236 cterm=bold
+highlight MatchParen ctermbg=237 ctermfg=180 cterm=underline
+highlight IncSearch cterm=none ctermbg=173 ctermfg=234
+highlight Boolean ctermfg=4
+highlight Constant ctermfg=4
+highlight Delimiter ctermfg=4
+highlight SpecialChar ctermfg=4
+highlight SpellBad cterm=underline ctermbg=237
+highlight SpellCap cterm=none ctermbg=none
+highlight SpellLocal cterm=none ctermbg=none
+highlight SpellRare cterm=none ctermbg=none
+highlight Visual ctermbg=240
+
+" Badwolf
+"highlight pythonSelf ctermfg=5
+"highlight pythonClass ctermfg=11
+"highlight Function ctermfg=4
+"highlight Statement cterm=none
+"highlight String ctermfg=2
+"highlight Number ctermfg=2 cterm=none
+"highlight pythonDoctest ctermfg=209
+"highlight pythonException ctermfg=4 cterm=none
+"highlight NonText ctermbg=none
+"highlight Folded ctermbg=238 ctermfg=246
+"highlight Pmenu ctermbg=238
+""highlight TabLine ctermbg=236 ctermfg=248
+""highlight CursorLine ctermbg=236 ctermfg=248
+"highlight StatusLine cterm=none
+"highlight WildMenu cterm=none
 "highlight SpellBad cterm=underline ctermbg=237
 "highlight SpellCap cterm=none ctermbg=none
 "highlight SpellLocal cterm=none ctermbg=none
 "highlight SpellRare cterm=none ctermbg=none
-"highlight Visual ctermbg=240
+"highlight rstSections ctermfg=210
 
 highlight GitGutterAdd ctermbg=none
 highlight GitGutterChange ctermbg=none
@@ -385,7 +409,7 @@ highlight GitGutterDelete ctermbg=none
 let g:gitgutter_map_keys = 0
 
 " highlight if line exceeds specified amount
-highlight ColorColumn ctermbg=238
+highlight ColorColumn ctermbg=239
 au BufRead,BufNewFile *.py call matchadd('ColorColumn', '\%79v', 100) "set column nr
 
 "}}}
@@ -523,6 +547,9 @@ let g:syntastic_python_checkers = ["flake8"]
 " YCM
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
 nnoremap <leader>jr :YcmCompleter GoToReferences<CR>
+if $PYTHONCURRENT == '3'
+    let g:ycm_python_binary_path = '/usr/bin/python3'
+endif
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_global_ycm_extra_conf = '~/.vim/confs/.ycm_extra_conf.py'
 
@@ -792,6 +819,11 @@ nnoremap <leader>_ :cclose<CR>
 vnoremap > >gv
 vnoremap < <gv
 cnoreabbrev spch setlocal spell spelllang=en_us
+
+inoremap <C-h> <Left>
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-l> <Right>
 
 " lololol
 nmap ; :
