@@ -11,10 +11,11 @@ Plugin 'majutsushi/tagbar'
 Plugin 'jmcantrell/vim-virtualenv'
 "Plugin 'klen/python-mode'
 Plugin 'Valloric/YouCompleteMe'
-"Plugin 'davidhalter/jedi-vim'
+Plugin 'davidhalter/jedi-vim'
+"Plugin 'Shougo/neocomplete'
 Plugin 'tpope/vim-fugitive'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'Raimondi/delimitMate'
+"Plugin 'Raimondi/delimitMate'
 Plugin 'KabbAmine/zeavim.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mattn/emmet-vim'
@@ -25,19 +26,14 @@ Plugin 'mhartington/oceanic-next'
 Plugin 'tomasr/molokai'
 Plugin 'chriskempson/base16-vim'
 Plugin 'scrooloose/nerdcommenter'
-"Plugin 'benekastah/neomake'
 Plugin 'scrooloose/syntastic'
 Plugin 'Yggdroot/indentLine'
 Plugin 'dhruvasagar/vim-table-mode'
-"Plugin 'ervandew/supertab'
-"Plugin 'Rykka/InstantRst'
-"Plugin 'Shougo/neocomplete.vim'
+"Plugin 'ryanoasis/vim-devicons'
 call vundle#end()
 
 
 """""""""""""""""""""""""""""""""
-"let g:neocomplete#enable_at_startup = 1
-
 " Powerline setup
 set laststatus=2
 let g:airline_powerline_fonts=1
@@ -46,6 +42,7 @@ let g:airline_theme='base16_eighties'
 "let g:airline_theme='oceanicnext'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
+set guifont=UbuntuMonoDerivativePowerline\ Nerd\ Font\ Regular\ 13
 
 " GitGutter setup
 "let g:gitgutter_signs=0
@@ -64,43 +61,62 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
-let g:syntastic_loc_list_height=5
+let g:syntastic_loc_list_height = 5
+let g:syntastic_enable_signs = 1
 let g:syntastic_python_checkers = ["pylint"]
-let g:syntastic_enable_signs=1
+
 map <F8> :SyntasticCheck<CR>
 
 " YCM
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
 nnoremap <leader>jr :YcmCompleter GoToReferences<CR>
-let g:ycm_collect_identifiers_from_tags_files = 1 " Let YCM read tags from Ctags file
-let g:ycm_use_ultisnips_completer = 1 " Default 1, just ensure
-let g:ycm_seed_identifiers_with_syntax = 1 " Completion for programming language's keyword
-let g:ycm_complete_in_comments = 1 " Completion in comments
-let g:ycm_complete_in_strings = 1 " Completion in string
-let g:ycm_min_num_of_chars_for_completion = 1
-let g:ycm_auto_trigger = 1
-
+let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 
 " jedi-vim
-"let g:jedi#completions_enabled = 0
-"let g:jedi#popup_on_dot = 0
+let g:jedi#completions_enabled = 0
+let g:jedi#popup_on_dot = 0
 let g:jedi#smart_auto_mappings = 0
-"let g:jedi#show_call_signatures = 1
-let g:SuperTabDefaultCompletionType = "<c-n>"
+let g:jedi#show_call_signatures = 1
 
 " IndentLine
-let g:indentLine_color_term = 240
+let g:indentLine_color_term = 238
+"let g:indentLine_char = │
 
-" Delimitmate
-let g:loaded_delimitMate = 0
-au FileType html,css,c,js let b:loaded_delimitMate = 1
+" flake8
+autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
 
-" neomake
-"let g:neomake_python_enabled_makers = ['flake8']
-"map <F8> :Neomake<CR>
+" CtrlP
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+
+" neocomplete
+"let g:neocomplete#enable_at_startup = 1
+"let g:neocomplete#enable_smart_case = 1
+"let g:neocomplete#sources#syntax#min_keyword_length = 3
+"let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+"function! s:my_cr_function()
+    "return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+    "" For no inserting <CR> key.
+"endfunction
+""   " <TAB>: completion.
+"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+"inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+"inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+"autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+"autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+"autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+"autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+"" Enable heavy omni completion.
+"if !exists('g:neocomplete#sources#omni#input_patterns')
+    "let g:neocomplete#sources#omni#input_patterns = {}
+"endif
+
+set lazyredraw
 
 set shortmess+=I
-set tabstop=4   
+set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 "au BufNewFile,BufRead *.js, *.html, *.css
@@ -133,8 +149,16 @@ set timeoutlen=1000 ttimeoutlen=0
 
 set updatetime=100
 
-nnoremap <leader>] :set invrelativenumber<cr>
-autocmd BufLeave,WinLeave,FocusLost * :set norelativenumber 
+function! NumberToggle()
+    if(&relativenumber == 1)
+        set number
+    else
+        set relativenumber
+    endif
+endfunc
+
+nnoremap <F6> :set invrelativenumber<cr>
+autocmd BufLeave,WinLeave,FocusLost * :set norelativenumber
 autocmd BufEnter,WinEnter,FocusGained * :set relativenumber
 autocmd InsertEnter * :set norelativenumber
 autocmd InsertLeave * :set relativenumber
@@ -142,29 +166,32 @@ autocmd InsertLeave * :set relativenumber
 set number
 set relativenumber
 set background=dark
-let python_highlight_all = 1
+"let python_highlight_all = 1
 "let g:gruvbox_termtrans=1
-"colorscheme sexy-railscasts-256
 set t_Co=256
-colorscheme OceanicNext2
+"colorscheme sexy-railscasts-256
+"colorscheme OceanicNext
+"colorscheme codeschool
+"colorscheme OceanicNext2
 "colorscheme gruvbox
 "colorscheme onedark
 "let g:rehash256 = 1
 "colorscheme molokai
-"colorscheme Tomorrow-Night-Eighties
-highlight LineNr ctermbg=none ctermfg=242
+"colorscheme hybrid
+"colorscheme Tomorrow-Night
+let base16colorspace=256
+colorscheme base16-default
+highlight LineNr ctermbg=none ctermfg=241
+highlight CursorLineNr ctermbg=239 ctermfg=245
 highlight Normal ctermbg=none ctermfg=251
 "highlight Function ctermfg=105
 "highlight String ctermfg=78
 highlight Search cterm=none ctermbg=222 ctermfg=234
-highlight VertSplit ctermbg=239 ctermfg=246
 highlight Error ctermbg=203
-highlight MatchParen ctermbg=251 ctermfg=240
-if exists('$TMUX')
-    highlight Comment cterm=none ctermfg=242
-else
-    highlight Comment cterm=italic ctermfg=243
-endif
+highlight VertSplit ctermbg=238 ctermfg=247
+"highlight MatchParen ctermbg=251 ctermfg=240
+highlight Comment cterm=italic ctermfg=243
+highlight Self ctermfg=167
 
 highlight GitGutterAdd ctermbg=none
 highlight GitGutterChange ctermbg=none
@@ -172,7 +199,48 @@ highlight GitGutterChangeDelete ctermbg=none
 highlight GitGutterDelete ctermbg=none
 let g:gitgutter_map_keys = 0
 
+" Codeschool
+"highlight Function ctermfg=111
+"highlight pythonSelf ctermfg=174
+"highlight pythonClass ctermfg=174
+""highlight pythonClass ctermfg=210
+"highlight pythonDoctest ctermfg=209
+"highlight NonText ctermbg=none
+"highlight Folded ctermbg=238 ctermfg=246
+"highlight Pmenu ctermbg=238
+"highlight MatchParen ctermbg=237
+"highlight SpellBad cterm=underline ctermbg=237
+"highlight SpellCap cterm=none ctermbg=none
+"highlight SpellLocal cterm=none ctermbg=none
+"highlight SpellRare cterm=none ctermbg=none
+"highlight rstSections ctermfg=210 cterm=bold
 
+" base16
+highlight pythonClass ctermfg=3
+highlight pythonSelf ctermfg=216
+highlight Number ctermfg=209
+highlight Float ctermfg=221
+highlight javaScriptType ctermfg=209
+highlight javaScriptNumber ctermfg=209
+highlight Pmenu ctermbg=236 ctermfg=248
+highlight PmenuSel ctermbg=248 ctermfg=236
+highlight TabLine ctermbg=236 ctermfg=248
+highlight CursorLine ctermbg=236 ctermfg=248
+highlight Folded ctermbg=238 ctermfg=245 cterm=italic
+highlight FoldColumn ctermbg=24 ctermfg=252
+highlight StatusLine ctermbg=238 ctermfg=250
+highlight StatusLineNC ctermbg=none
+highlight WildMenu ctermbg=2 ctermfg=236 cterm=bold
+highlight MatchParen ctermbg=237 ctermfg=180 cterm=underline
+highlight IncSearch cterm=none ctermbg=173 ctermfg=234
+highlight Boolean ctermfg=4
+highlight Constant ctermfg=4
+highlight Delimiter ctermfg=4
+highlight SpecialChar ctermfg=4
+highlight SpellBad cterm=underline ctermbg=237
+highlight SpellCap cterm=none ctermbg=none
+highlight SpellLocal cterm=none ctermbg=none
+highlight SpellRare cterm=none ctermbg=none
 
 " enable syntax for .ino files
 au BufRead,BufNewFile *.pde,*.ino set filetype=cpp
@@ -221,17 +289,10 @@ nnoremap <C-w>" ciw""<Esc>P
 noremap <c-n> :nohlsearch<CR>
 vnoremap > >gv
 vnoremap < <gv
-nnoremap <F9> :SyntasticToggleMode<CR>
 
 " lololol
 nmap ; :
 
-" flake8
-"autocmd FileType python map <buffer> <F8> :call Flake8()<CR>
-
-" CtrlP
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
 
 au BufRead,BufNewFile *.py vnoremap <silent> # :s#^#\##<cr>:noh<cr>
 au BufRead,BufNewFile *.py vnoremap <silent> -# :s#^\###<cr>:noh<cr>
