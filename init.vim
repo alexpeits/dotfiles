@@ -41,6 +41,8 @@ NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'Raimondi/delimitMate'
+NeoBundle 'mxw/vim-jsx'
+NeoBundle 'othree/yajs.vim'
 " Git helpers
 NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'tpope/vim-fugitive'
@@ -70,9 +72,14 @@ NeoBundle 'ctrlpvim/ctrlp.vim'
 NeoBundle 'mbbill/undotree'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'KabbAmine/zeavim.vim'
-NeoBundle 'jmcantrell/vim-virtualenv'
+"NeoBundle 'jmcantrell/vim-virtualenv'
 NeoBundle 'davidhalter/jedi-vim'
 NeoBundle 'majutsushi/tagbar'
+NeoBundle 'myusuf3/numbers.vim'
+NeoBundle 'jbgutierrez/vim-babel'
+NeoBundle 'mattn/webapi-vim'
+NeoBundle 'mileszs/ack.vim'
+NeoBundle 'ternjs/tern_for_vim'
 
 " Shougo
 "NeoBundle 'Shougo/neocomplete.vim'
@@ -99,8 +106,6 @@ NeoBundleLazy 'ujihisa/neco-look',{'autoload':{'filetypes':['markdown','md']}}
 NeoBundle 'Shougo/neosnippet.vim'
 NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'honza/vim-snippets'
-NeoBundle 'matthewsimo/angular-vim-snippets'
-
 " NeoBundle 'junegunn/fzf', { 'dir': '~/.fzf' }
 " NeoBundle 'junegunn/fzf.vim'
 " NeoBundle 'ashisha/image.vim'
@@ -132,13 +137,10 @@ NeoBundleCheck
 if pluginsExist
 " System Settings  ----------------------------------------------------------{{{
 
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-
 let g:python_host_prog = '/usr/bin/python'
 "let g:deoplete#enable_at_startup = 1
 
 " Neovim Settings
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 let $TMUX_TUI_ENABLE_CURSOR_SHAPE=1
 let $NEOVIM_JS_DEBUG='nvimjs.log'
@@ -149,13 +151,13 @@ filetype on
 
 " relative numbers in normal mode
 " regular numbers in insert mode and when not focused
-nnoremap <leader>] :set invrelativenumber<cr>
-autocmd BufLeave,WinLeave,FocusLost * :set norelativenumber 
-autocmd BufEnter,WinEnter,FocusGained * :set relativenumber
-autocmd InsertEnter * :set norelativenumber
-autocmd InsertLeave * :set relativenumber
+"nnoremap <leader>] :set invrelativenumber<cr>
+"autocmd BufLeave,WinLeave,FocusLost * :set norelativenumber 
+"autocmd BufEnter,WinEnter,FocusGained * :set relativenumber
+"autocmd InsertEnter * :set norelativenumber
+"autocmd InsertLeave * :set relativenumber
 set number
-set relativenumber
+"set relativenumber
 
 set conceallevel=0
 " block select not limited by shortest line
@@ -166,6 +168,19 @@ set laststatus=2
 set wrap linebreak nolist
 set wildmode=full
 let g:gitgutter_max_signs = 1000  " default value
+
+" The Silver Searcher
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
+
 " }}}
 
 " System mappings  ----------------------------------------------------------{{{
@@ -194,13 +209,6 @@ noremap H ^
 noremap L g_
 noremap J 5j
 noremap K 5k
-" this is the best, let me tell you why
-" how annoying is that everytime you want to do something in vim
-" you have to do shift-; to get :, can't we just do ;?
-" Plus what does ; do anyways??
-" if you do have a plugin that needs ;, you can just wap the mapping
-" nnoremap : ;
-" give it a try and you will like it
 nnoremap ; :
 inoremap <c-f> <c-x><c-f>
 " Copy to osx clipboard
@@ -235,8 +243,7 @@ command! -nargs=1 PlaceholderImgTag call s:PlaceholderImgTag(<f-args>)
 " Themes, Commands, etc  ----------------------------------------------------{{{
 " Theme
 syntax enable
-set background=dark
-" set background=light
+set termguicolors
 " no need to fold things in markdown all the time
 let g:vim_markdown_folding_disabled = 1
 " turn on spelling for markdown files
@@ -254,6 +261,9 @@ set shiftwidth=4
 set expandtab
 set hidden
 set lazyredraw
+autocmd BufRead,BufNewFile *.js,*.html,*.css set tabstop=2
+autocmd BufRead,BufNewFile *.js,*.html,*.css set softtabstop=2
+autocmd BufRead,BufNewFile *.js,*.html,*.css set shiftwidth=2
 map <F10> :set invlazyredraw<CR>
 
 if has("persistent_undo")
@@ -272,15 +282,17 @@ set matchtime=4
 "" remove delay from insert to normal
 set timeoutlen=1000 ttimeoutlen=0
 
+" auto comment lines after comments
+set formatoptions+=r
+
 set updatetime=100
 
 set nu
-set background=dark
 let python_highlight_all = 1
 "let g:gruvbox_termtrans=1
 "colorscheme sexy-railscasts-256
 "set t_Co=256
-"colorscheme OceanicNext2
+"colorscheme OceanicNext
 "colorscheme codeschool
 "colorscheme sexy-railscasts-256
 "let g:solarized_termtrans=1
@@ -294,113 +306,33 @@ let python_highlight_all = 1
 "let g:rehash256 = 1
 "colorscheme molokai
 "colorscheme Tomorrow-Night
-let base16colorspace=256
-colorscheme base16
-highlight LineNr ctermbg=none ctermfg=241
-highlight CursorLineNr ctermbg=239 ctermfg=245
-highlight Normal ctermbg=none ctermfg=251
-"highlight Function ctermfg=105
-"highlight String ctermfg=78
-highlight Search cterm=none ctermbg=222 ctermfg=234
-highlight Error ctermbg=203 cterm=none
-highlight VertSplit ctermbg=239 ctermfg=246
-"highlight MatchParen ctermbg=251 ctermfg=240 cterm=none
-highlight Comment cterm=italic ctermfg=244
-highlight Todo cterm=italic ctermbg=114 ctermfg=234
-"highlight pythonSelf ctermfg=223
-"highlight pythonClass ctermfg=147
-
-" elflord
-"highlight String ctermfg=5
-"highlight Structure ctermfg=2
-"highlight Function ctermfg=4
-"highlight Conditional ctermfg=2
-"highlight Repeat ctermfg=2
-"highlight pythonClass ctermfg=2
-"highlight pythonSelf ctermfg=217
-"highlight pythonDoctest ctermfg=2
-"highlight MatchParen ctermbg=237 ctermfg=180 cterm=underline
-"highlight SpellBad cterm=underline ctermbg=237
-"highlight SpellCap cterm=none ctermbg=none
-"highlight SpellLocal cterm=none ctermbg=none
-"highlight SpellRare cterm=none ctermbg=none
-"highlight rstSections ctermfg=210 cterm=bold
-"highlight rstStrongEmphasis cterm=bold
-"highlight Pmenu ctermbg=238 ctermfg=248
-"highlight PmenuSel ctermbg=248 ctermfg=236
-
-
-" Codeschool
-"highlight pythonSelf ctermfg=174
-"hi! link pythonClass Function
-"highlight pythonDoctest ctermfg=209
-"highlight NonText ctermbg=none
-"highlight Folded ctermbg=238 ctermfg=246
-"highlight Pmenu ctermbg=238
-"highlight MatchParen ctermbg=238
-"highlight SpellBad cterm=underline ctermbg=237
-"highlight SpellCap cterm=none ctermbg=none
-"highlight SpellLocal cterm=none ctermbg=none
-"highlight SpellRare cterm=none ctermbg=none
-"highlight rstSections ctermfg=210 cterm=bold
-
-" Tomorrow-Night
-"highlight Number ctermfg=167
-"highlight pythonSelf ctermfg=210
-"highlight pythonDoctest ctermfg=74
-"highlight pythonAsync ctermfg=209
-"highlight pythonEscape ctermfg=167
-"highlight pythonClass ctermfg=3
-"highlight Folded ctermbg=238
-
-" base16
-highlight pythonClass ctermfg=3
-highlight pythonSelf ctermfg=216
-highlight Number ctermfg=209
-highlight Float ctermfg=221
-highlight javaScriptType ctermfg=209
-highlight javaScriptNumber ctermfg=209
-highlight Pmenu ctermbg=236 ctermfg=248
-highlight PmenuSel ctermbg=248 ctermfg=236
-highlight TabLine ctermbg=236 ctermfg=248
-highlight CursorLine ctermbg=236 ctermfg=248
-highlight Folded ctermbg=238 ctermfg=245 cterm=italic
-highlight FoldColumn ctermbg=238 ctermfg=74
-highlight StatusLine ctermbg=238 ctermfg=250
-highlight WildMenu ctermbg=2 ctermfg=236 cterm=bold
-highlight MatchParen ctermbg=237 ctermfg=180 cterm=underline
-highlight IncSearch cterm=none ctermbg=173 ctermfg=234
-highlight Boolean ctermfg=4
-highlight Constant ctermfg=4
-highlight Delimiter ctermfg=4
-highlight SpecialChar ctermfg=4
-highlight SpellBad cterm=underline ctermbg=237
-highlight SpellCap cterm=none ctermbg=none
-highlight SpellLocal cterm=none ctermbg=none
-highlight SpellRare cterm=none ctermbg=none
-highlight Visual ctermbg=240
-
-" Badwolf
-"highlight pythonSelf ctermfg=5
-"highlight pythonClass ctermfg=11
-"highlight Function ctermfg=4
-"highlight Statement cterm=none
-"highlight String ctermfg=2
-"highlight Number ctermfg=2 cterm=none
-"highlight pythonDoctest ctermfg=209
-"highlight pythonException ctermfg=4 cterm=none
-"highlight NonText ctermbg=none
-"highlight Folded ctermbg=238 ctermfg=246
-"highlight Pmenu ctermbg=238
-""highlight TabLine ctermbg=236 ctermfg=248
-""highlight CursorLine ctermbg=236 ctermfg=248
-"highlight StatusLine cterm=none
-"highlight WildMenu cterm=none
-"highlight SpellBad cterm=underline ctermbg=237
-"highlight SpellCap cterm=none ctermbg=none
-"highlight SpellLocal cterm=none ctermbg=none
-"highlight SpellRare cterm=none ctermbg=none
-"highlight rstSections ctermfg=210
+if $VIMCOLOR != 0
+    colorscheme kalisi
+    set background=light
+    highlight CursorLineNr ctermbg=245 ctermfg=250
+    highlight Normal ctermbg=231
+    highlight MatchParen ctermbg=252 ctermfg=240 cterm=underline
+else
+    set background=dark
+    let base16colorspace=256
+    colorscheme base16-default-dark2
+    "colorscheme wombat256
+    "autocmd BufRead,BufNewFile *.js,*.html,*.css colorscheme Tomorrow-Night
+    so $HOME/.config/nvim/custom/base16colors.vim
+    highlight LineNr ctermbg=none ctermfg=241
+    highlight CursorLineNr ctermbg=239 ctermfg=245 guibg=#666666 guifg=#222222
+    highlight Normal ctermbg=none ctermfg=251 guibg=#212121
+    "highlight Function ctermfg=105
+    "highlight String ctermfg=78
+    highlight Search cterm=none ctermbg=222 ctermfg=234
+    highlight Error ctermbg=203 cterm=none
+    highlight VertSplit ctermbg=239 ctermfg=246
+    "highlight MatchParen ctermbg=251 ctermfg=240 cterm=none
+    highlight Comment cterm=italic ctermfg=244 guifg=#666666 gui=italic
+    highlight Todo cterm=italic ctermbg=114 ctermfg=234
+    "highlight pythonSelf ctermfg=223
+    "highlight pythonClass ctermfg=147
+endif
 
 highlight GitGutterAdd ctermbg=none
 highlight GitGutterChange ctermbg=none
@@ -408,8 +340,19 @@ highlight GitGutterChangeDelete ctermbg=none
 highlight GitGutterDelete ctermbg=none
 let g:gitgutter_map_keys = 0
 
+" vimdiff
+highlight DiffAdd ctermbg=none guibg=none
+highlight DiffAdded ctermbg=none guibg=none
+highlight DiffChange ctermbg=none guibg=none
+highlight DiffDelete ctermbg=none guibg=none
+highlight DiffText ctermbg=none guibg=none
+highlight DiffFile ctermbg=none guibg=none
+highlight DiffLine ctermbg=none guibg=none
+highlight DiffNewFile ctermbg=none guibg=none
+highlight DiffRemoved ctermbg=none guibg=none
+
 " highlight if line exceeds specified amount
-highlight ColorColumn ctermbg=239
+highlight ColorColumn ctermbg=239 guibg=#404040
 au BufRead,BufNewFile *.py call matchadd('ColorColumn', '\%79v', 100) "set column nr
 
 "}}}
@@ -478,7 +421,7 @@ autocmd FileType coffee setl foldmethod=indent
 autocmd StdinReadPre * let s:std_in=1
 " autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 let NERDTreeShowHidden=1
-let g:NERDTreeWinSize=45
+let g:NERDTreeWinSize=30
 let g:NERDTreeAutoDeleteBuffer=1
 " NERDTress File highlighting
 function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
@@ -524,9 +467,12 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 
 " Packages -----------------------------------------------------------------{{{
 
+
+let g:jsx_ext_required = 0 " Allow JSX in normal JS files
+
 " Virtualenv setup
-let g:virtualenv_directory = $WORKON_HOME
-let g:virtualenv_auto_activate = 1
+"let g:virtualenv_directory = $WORKON_HOME
+"let g:virtualenv_auto_activate = 1
 
 
 "Syntastic
@@ -557,9 +503,15 @@ let g:ycm_global_ycm_extra_conf = '~/.vim/confs/.ycm_extra_conf.py'
 let g:jedi#completions_enabled = 0
 let g:jedi#popup_on_dot = 0
 let g:jedi#smart_auto_mappings = 0
+if $PYTHONCURRENT == '3'
+    let g:jedi#force_py_version = 3
+endif
 
 " IndentLine
 let g:indentLine_color_term = 239
+if $VIMCOLOR != 0
+    let g:indentLine_color_term = 250
+endif
 "let g:indentLine_char = │
 
 " flake8
@@ -568,6 +520,27 @@ autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
 " CtrlP
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" CTRLP & GREP
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ctrlp_user_command = 'ag %s -i --nogroup --hidden
+\ --ignore .git
+\ --ignore .svn
+\ --ignore .hg
+\ --ignore .DS_Store
+\ --ignore node_modules
+\ --ignore "**/*.pyc"
+\ -g ""'
+" let g:ctrlp_regexp = 1
+let g:ctrlp_use_caching = 0
+let g:ctrlp_working_path_mode = 0
+let g:ctrlp_switch_buffer = 0
+" let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
+let g:ackprg = 'ag --nogroup --column'
+set grepprg=ag\ --nogroup\ --nocolor
+
+" Neocomplete
+"let g:neocomplete#enable_at_startup = 1
 
 "}}}
 
@@ -616,7 +589,7 @@ let g:ctrlp_cmd = 'CtrlP'
   let g:user_emmet_mode='a'
   let g:user_emmet_complete_tag = 1
   let g:user_emmet_install_global = 0
-  autocmd FileType html,css EmmetInstall
+  autocmd FileType html,css,js,javascript.jsx EmmetInstall
 "}}}
 
 " unite ---------------------------------------------------------------------{{{
@@ -693,12 +666,14 @@ tmap <C-;> <C-\><C-n>:TmuxNavigatePrevious<cr>
 
 " vim-airline ---------------------------------------------------------------{{{
 let g:airline#extensions#tabline#enabled = 1
-set hidden
+let g:airline#extensions#branch#enabled = 1
+"set hidden
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline_powerline_fonts = 1
-"let g:airline_theme='molokai'
+"let g:airline_theme='tomorrow'
 let g:airline_theme='oceanicnext'
+"let g:airline_theme='base16_eighties'
 "let g:airline_theme='alexline'
 cnoreabbrev <expr> x getcmdtype() == ":" && getcmdline() == 'x' ? 'Sayonara' : 'x'
 "tmap <leader>x <c-\><c-n>:bp! <BAR> bd! #<CR>
@@ -763,6 +738,7 @@ set guifont=UbuntuMonoDerivativePowerline\ Nerd\ Font\ Regular\ 13
   let g:neomake_python_enabled_makers = ['venvpylint', 'flake8']
   "let g:neomake_python_enabled_makers = ['venvpylint']
   "let g:neomake_python_enabled_makers = ['flake8']
+  let g:neomake_java_enabled_makers = []
   autocmd! BufWritePost * Neomake
   function! JscsFix()
       let l:winview = winsaveview()
@@ -816,6 +792,7 @@ nnoremap <leader>= :cn<CR>zz
 nnoremap <leader>- :cp<CR>zz
 nnoremap <leader>+ :copen<CR>
 nnoremap <leader>_ :cclose<CR>
+nnoremap <leader>a <Esc>:Ack!<CR>
 vnoremap > >gv
 vnoremap < <gv
 cnoreabbrev spch setlocal spell spelllang=en_us
@@ -827,12 +804,14 @@ inoremap <C-l> <Right>
 
 " lololol
 nmap ; :
+" OLOLOLOLOLOLOLOLO
+imap jj <Esc>
 
 nnoremap n nzz
 nnoremap ]] ]]zz
 nnoremap [[ [[zz
 nnoremap ]m ]mzz
-nnoremap [m []zz
+nnoremap [m [mzz
 
 
 " buffer navigation
