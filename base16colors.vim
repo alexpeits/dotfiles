@@ -23,4 +23,4 @@ highlight SpellBad cterm=underline ctermbg=237 guibg=#3A3A3A gui=underline
 highlight SpellCap cterm=none ctermbg=none
 highlight SpellLocal cterm=none ctermbg=none
 highlight SpellRare cterm=none ctermbg=none
-highlight Visual ctermbg=240
+highlight Visual ctermbg=240 guibg=#414141

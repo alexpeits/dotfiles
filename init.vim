@@ -161,7 +161,7 @@ set number
 
 set conceallevel=0
 " block select not limited by shortest line
-set virtualedit=
+set virtualedit=block
 set wildmenu
 set laststatus=2
 "set colorcolumn=100
@@ -317,6 +317,7 @@ else
     let base16colorspace=256
     colorscheme base16-default-dark2
     "colorscheme wombat256
+    "colorscheme molokayo
     "autocmd BufRead,BufNewFile *.js,*.html,*.css colorscheme Tomorrow-Night
     so $HOME/.config/nvim/custom/base16colors.vim
     highlight LineNr ctermbg=none ctermfg=241
@@ -508,7 +509,7 @@ if $PYTHONCURRENT == '3'
 endif
 
 " IndentLine
-let g:indentLine_color_term = 239
+let g:indentLine_color_term = 236
 if $VIMCOLOR != 0
     let g:indentLine_color_term = 250
 endif
