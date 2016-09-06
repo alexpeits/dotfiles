@@ -249,7 +249,7 @@ let g:vim_markdown_folding_disabled = 1
 " turn on spelling for markdown files
 autocmd BufRead,BufNewFile *.md,*.rst setlocal spell complete+=kspell
 " highlight bad words in red
-autocmd BufRead,BufNewFile *.md,*.rst hi SpellBad guibg=#ff2929 guifg=#ffffff" ctermbg=224
+autocmd BufRead,BufNewFile *.md,*.rst hi SpellBad guibg=#3A3A3A" ctermbg=224
 " disable markdown auto-preview. Gets annoying
 let g:instant_markdown_autostart = 0
 " Keep my termo window open when I navigate away
