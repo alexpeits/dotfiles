@@ -79,17 +79,20 @@ NeoBundle 'myusuf3/numbers.vim'
 NeoBundle 'jbgutierrez/vim-babel'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'mileszs/ack.vim'
-NeoBundle 'ternjs/tern_for_vim'
 
 " Shougo
 "NeoBundle 'Shougo/neocomplete.vim'
-"NeoBundle 'Shougo/deoplete.nvim'
+NeoBundle 'Shougo/deoplete.nvim'
+NeoBundle 'zchee/deoplete-jedi'
+NeoBundle 'carlitux/deoplete-ternjs'
+"NeoBundle 'ternjs/tern_for_vim', { 'do': 'npm install' }
+NeoBundle 'zchee/deoplete-clang'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/unite-outline'
 NeoBundle 'ujihisa/unite-colorscheme'
 NeoBundle 'junkblocker/unite-codesearch'
 NeoBundle 'Shougo/vimfiler.vim'
-NeoBundle 'Valloric/YouCompleteMe'
+"NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'Shougo/vimproc.vim', {
     \ 'build' : {
     \     'windows' : 'tools\\update-dll-mingw',
@@ -136,6 +139,7 @@ NeoBundleCheck
 
 if pluginsExist
 " System Settings  ----------------------------------------------------------{{{
+
 
 let g:python_host_prog = '/usr/bin/python'
 "let g:deoplete#enable_at_startup = 1
@@ -330,7 +334,7 @@ else
     highlight VertSplit ctermbg=239 ctermfg=246
     "highlight MatchParen ctermbg=251 ctermfg=240 cterm=none
     highlight Comment cterm=italic ctermfg=244 guifg=#666666 gui=italic
-    highlight Todo cterm=italic ctermbg=114 ctermfg=234
+    highlight Todo cterm=italic ctermbg=114 ctermfg=234 guibg=#87d787 guifg=#1c1c1c
     "highlight pythonSelf ctermfg=223
     "highlight pythonClass ctermfg=147
 endif
@@ -507,6 +511,14 @@ let g:jedi#smart_auto_mappings = 0
 if $PYTHONCURRENT == '3'
     let g:jedi#force_py_version = 3
 endif
+
+" deoplete
+let g:deoplete#enable_at_startup = 1
+autocmd CompleteDone * pclose!
+
+" deoplete-jedi
+ let g:python_host_prog = '/home/alex/.virtualenvs/_nv_py2/bin/python'
+ let g:python3_host_prog = '/home/alex/.virtualenvs/_nv_py3/bin/python'
 
 " IndentLine
 let g:indentLine_color_term = 236
