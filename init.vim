@@ -82,17 +82,17 @@ NeoBundle 'mileszs/ack.vim'
 
 " Shougo
 "NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'Shougo/deoplete.nvim'
-NeoBundle 'zchee/deoplete-jedi'
-NeoBundle 'carlitux/deoplete-ternjs'
+"NeoBundle 'Shougo/deoplete.nvim'
+"NeoBundle 'zchee/deoplete-jedi'
+"NeoBundle 'carlitux/deoplete-ternjs', { 'build': { 'mac': 'npm install -g tern', 'unix': 'npm install -g tern' }}
 "NeoBundle 'ternjs/tern_for_vim', { 'do': 'npm install' }
-NeoBundle 'zchee/deoplete-clang'
+"NeoBundle 'zchee/deoplete-clang'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/unite-outline'
 NeoBundle 'ujihisa/unite-colorscheme'
 NeoBundle 'junkblocker/unite-codesearch'
 NeoBundle 'Shougo/vimfiler.vim'
-"NeoBundle 'Valloric/YouCompleteMe'
+NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'Shougo/vimproc.vim', {
     \ 'build' : {
     \     'windows' : 'tools\\update-dll-mingw',
@@ -242,6 +242,12 @@ let [width,height] = split(a:size, 'x')
 execute "normal a<img src=\"".url."\" width=\"".width."\" height=\"".height."\" />"
 endfunction
 command! -nargs=1 PlaceholderImgTag call s:PlaceholderImgTag(<f-args>)
+
+" terminal
+autocmd BufWinEnter,WinEnter term://* startinsert
+autocmd BufLeave term://* stopinsert
+tnoremap <ESC> <C-\><C-n><C-w><C-p>
+
 "}}}"
 
 " Themes, Commands, etc  ----------------------------------------------------{{{
@@ -320,20 +326,21 @@ else
     set background=dark
     let base16colorspace=256
     colorscheme base16-default-dark2
+    "colorscheme OceanicNext
     "colorscheme wombat256
     "colorscheme molokayo
     "autocmd BufRead,BufNewFile *.js,*.html,*.css colorscheme Tomorrow-Night
     so $HOME/.config/nvim/custom/base16colors.vim
-    highlight LineNr ctermbg=none ctermfg=241
-    highlight CursorLineNr ctermbg=239 ctermfg=245 guibg=#666666 guifg=#222222
-    highlight Normal ctermbg=none ctermfg=251 guibg=#212121
+    highlight LineNr ctermbg=none ctermfg=241 guibg=#303030
+    highlight CursorLineNr ctermbg=239 ctermfg=245 guibg=#666666 guifg=#222222 gui=bold
+    highlight Normal ctermbg=none ctermfg=251 guibg=#232323
     "highlight Function ctermfg=105
     "highlight String ctermfg=78
     highlight Search cterm=none ctermbg=222 ctermfg=234
     highlight Error ctermbg=203 cterm=none
     highlight VertSplit ctermbg=239 ctermfg=246
     "highlight MatchParen ctermbg=251 ctermfg=240 cterm=none
-    highlight Comment cterm=italic ctermfg=244 guifg=#666666 gui=italic
+    highlight Comment cterm=italic ctermfg=244 guifg=#696969 gui=italic
     highlight Todo cterm=italic ctermbg=114 ctermfg=234 guibg=#87d787 guifg=#1c1c1c
     "highlight pythonSelf ctermfg=223
     "highlight pythonClass ctermfg=147
@@ -513,12 +520,13 @@ if $PYTHONCURRENT == '3'
 endif
 
 " deoplete
-let g:deoplete#enable_at_startup = 1
-autocmd CompleteDone * pclose!
+"let g:deoplete#enable_at_startup = 1
+"autocmd CompleteDone * pclose!
 
 " deoplete-jedi
- let g:python_host_prog = '/home/alex/.virtualenvs/_nv_py2/bin/python'
- let g:python3_host_prog = '/home/alex/.virtualenvs/_nv_py3/bin/python'
+"let g:python_host_prog = '/home/alex/.virtualenvs/_nv_py2/bin/python'
+"let g:python3_host_prog = '/home/alex/.virtualenvs/_nv_py3/bin/python'
+"let deoplete#sources#jedi#enable_cache=0
 
 " IndentLine
 let g:indentLine_color_term = 236
