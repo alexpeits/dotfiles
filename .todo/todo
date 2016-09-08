@@ -1,0 +1,79 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+
+import os
+import tempfile
+import argparse
+from subprocess import call
+
+EDITOR = '/usr/bin/editor'
+
+# HERE = os.path.abspath(os.path.dirname(__file__))
+HERE = '/home/alex/.todo'
+EXT = '.todo'
+
+
+def text_from_editor():
+    with tempfile.NamedTemporaryFile(suffix=EXT) as tf:
+        code = call([EDITOR, tf.name])
+        if code:
+            raise ValueError('Something went wrong')
+        tf.seek(0)
+        body_text = tf.read()
+
+    return body_text
+
+
+def create(title=None):
+    text = text_from_editor()
+    if title is None:
+        title = text[:text.find('\n')].strip().replace(' ', '_')
+    if title == '' and text == '':
+        return
+    title += EXT
+    fpath = os.path.join(HERE, title)
+    with open(fpath, 'w') as f:
+        f.write(text)
+
+
+def check():
+    files = os.listdir(HERE)
+    files = filter(lambda f: os.path.isfile(os.path.join(HERE, f)), files)
+    files = filter(lambda f: f.endswith(EXT), files)
+    if len(files) == 0:
+        return
+    for i, fn in enumerate(files):
+        print('[{i}] {fn}'.format(i=i+1, fn=fn.rstrip(EXT).replace('_', ' ')))
+    try:
+        while True:
+            print()
+            index = raw_input('Which one to display? ')
+            if index == 'q':
+                return
+            i = int(index)
+            if i < 1 or i > len(files):
+                print()
+                print('Please choose a number from the above')
+                continue
+            with open(files[i - 1]) as f:
+                print()
+                print(f.read())
+    except (KeyboardInterrupt, EOFError):
+        pass
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('-t', '--title', dest='title', action='store',
+                        type=str, required=False, help='Title')
+    group.add_argument('-c', '--check', dest='check', action='store_true',
+                        default=False)
+
+    args = parser.parse_args()
+    if args.check:
+        check()
+    else:
+        title = args.title
+        create(title)
