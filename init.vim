@@ -248,6 +248,25 @@ autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
 tnoremap <ESC> <C-\><C-n><C-w><C-p>
 
+let g:terminal_color_0= "#181818"
+let g:terminal_color_1= "#ab4642"
+let g:terminal_color_2= "#a1b56c"
+let g:terminal_color_3= "#f7ca88"
+let g:terminal_color_4= "#7cafc2"
+let g:terminal_color_5= "#ba8baf"
+let g:terminal_color_6= "#86c1b9"
+let g:terminal_color_7= "#d8d8d8"
+let g:terminal_color_8= "#585858"
+let g:terminal_color_9= "#ab4642"
+let g:terminal_color_10="#a1b56c"
+let g:terminal_color_11="#f7ca88"
+let g:terminal_color_12="#7cafc2"
+let g:terminal_color_13="#ba8baf"
+let g:terminal_color_14="#86c1b9"
+let g:terminal_color_15="#f8f8f8"
+let g:terminal_color_background="#1b2b34"
+let g:terminal_color_foreground="#c1c6cf"
+
 "}}}"
 
 " Themes, Commands, etc  ----------------------------------------------------{{{
@@ -297,6 +316,9 @@ set formatoptions+=r
 
 set updatetime=100
 
+" syntax for .todo files
+au BufRead,BufNewFile *.todo set filetype=rst
+
 set nu
 let python_highlight_all = 1
 "let g:gruvbox_termtrans=1
@@ -325,15 +347,17 @@ if $VIMCOLOR != 0
 else
     set background=dark
     let base16colorspace=256
-    colorscheme base16-default-dark2
-    "colorscheme OceanicNext
+    "colorscheme base16-default-dark2
+    colorscheme hybrid
     "colorscheme wombat256
     "colorscheme molokayo
     "autocmd BufRead,BufNewFile *.js,*.html,*.css colorscheme Tomorrow-Night
-    so $HOME/.config/nvim/custom/base16colors.vim
-    highlight LineNr ctermbg=none ctermfg=241 guibg=#303030
+    "so $HOME/.config/nvim/custom/base16colors.vim
+    "so $HOME/.config/nvim/custom/jellybeanscolors.vim
+    so $HOME/.config/nvim/custom/hybridcolors.vim
+    highlight LineNr ctermbg=none ctermfg=241 guibg=#303030 guifg=#606060
     highlight CursorLineNr ctermbg=239 ctermfg=245 guibg=#666666 guifg=#222222 gui=bold
-    highlight Normal ctermbg=none ctermfg=251 guibg=#232323
+    highlight Normal ctermbg=none ctermfg=251 guibg=#232323 guifg=#d0d0d0
     "highlight Function ctermfg=105
     "highlight String ctermfg=78
     highlight Search cterm=none ctermbg=222 ctermfg=234
@@ -771,6 +795,12 @@ set guifont=UbuntuMonoDerivativePowerline\ Nerd\ Font\ Regular\ 13
   map <F8> :Neomake<CR>
   let g:neomake_open_list = 0
   let g:neomake_verbose = 0
+
+highlight NeomakeWarning ctermfg=223 ctermbg=none guifg=#ffd7af guibg=#303030
+highlight NeomakeError ctermfg=203 ctermbg=none guifg=#ff5f5f guibg=#303030
+let g:neomake_warning_sign={'text': '⚠', 'texthl': 'NeomakeWarning'}
+let g:neomake_error_sign={'text': '✖', 'texthl': 'NeomakeError'}
+
 "}}}
 endif
 
