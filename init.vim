@@ -31,7 +31,8 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " syntax
 NeoBundleLazy 'elzr/vim-json', {'autoload':{'filetypes':['json']}}
 NeoBundle 'tpope/vim-markdown'
-NeoBundle 'dhruvasagar/vim-table-mode'
+"NeoBundle 'junegunn/limelight.vim'
+"NeoBundle 'dhruvasagar/vim-table-mode'
 NeoBundle 'suan/vim-instant-markdown'
 " colorscheme & syntax highlighting
 NeoBundle 'mhartington/oceanic-next'
@@ -51,11 +52,11 @@ NeoBundle 'jreybert/vimagit'
 NeoBundle 'Xuyuanp/nerdtree-git-plugin'
 NeoBundle 'LemonBoy/autobahn'
 " utils
-NeoBundle 'tpope/vim-repeat'
+"NeoBundle 'tpope/vim-repeat'
 NeoBundle 'benekastah/neomake'
-NeoBundle 'editorconfig/editorconfig-vim'
+"NeoBundle 'editorconfig/editorconfig-vim'
 NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'AndrewRadev/switch.vim'
+"NeoBundle 'AndrewRadev/switch.vim'
 NeoBundle 'christoomey/vim-tmux-navigator'
 NeoBundle 'tmux-plugins/vim-tmux'
 NeoBundle 'tmux-plugins/vim-tmux-focus-events'
@@ -64,35 +65,35 @@ NeoBundle 'vim-airline/vim-airline-themes'
 NeoBundle 'tpope/vim-surround'
 "NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'mattn/emmet-vim'
-NeoBundle 'Chiel92/vim-autoformat'
+"NeoBundle 'Chiel92/vim-autoformat'
 " NeoBundle 'gorodinskiy/vim-coloresque'
 NeoBundle 'ap/vim-css-color'
 "NeoBundle 'scrooloose/syntastic'
 NeoBundle 'ctrlpvim/ctrlp.vim'
 NeoBundle 'mbbill/undotree'
 NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'KabbAmine/zeavim.vim'
+"NeoBundle 'KabbAmine/zeavim.vim'
 "NeoBundle 'jmcantrell/vim-virtualenv'
 NeoBundle 'davidhalter/jedi-vim'
 NeoBundle 'majutsushi/tagbar'
-NeoBundle 'myusuf3/numbers.vim'
-NeoBundle 'jbgutierrez/vim-babel'
-NeoBundle 'mattn/webapi-vim'
+"NeoBundle 'myusuf3/numbers.vim'
+"NeoBundle 'jbgutierrez/vim-babel'
+"NeoBundle 'mattn/webapi-vim'
 NeoBundle 'mileszs/ack.vim'
 
 " Shougo
 "NeoBundle 'Shougo/neocomplete.vim'
-"NeoBundle 'Shougo/deoplete.nvim'
-"NeoBundle 'zchee/deoplete-jedi'
+NeoBundle 'Shougo/deoplete.nvim'
+NeoBundle 'zchee/deoplete-jedi'
 "NeoBundle 'carlitux/deoplete-ternjs', { 'build': { 'mac': 'npm install -g tern', 'unix': 'npm install -g tern' }}
 "NeoBundle 'ternjs/tern_for_vim', { 'do': 'npm install' }
 "NeoBundle 'zchee/deoplete-clang'
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/unite-outline'
-NeoBundle 'ujihisa/unite-colorscheme'
-NeoBundle 'junkblocker/unite-codesearch'
+"NeoBundle 'Shougo/unite.vim'
+"NeoBundle 'Shougo/unite-outline'
+"NeoBundle 'ujihisa/unite-colorscheme'
+"NeoBundle 'junkblocker/unite-codesearch'
 NeoBundle 'Shougo/vimfiler.vim'
-NeoBundle 'Valloric/YouCompleteMe'
+"NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'Shougo/vimproc.vim', {
     \ 'build' : {
     \     'windows' : 'tools\\update-dll-mingw',
@@ -112,20 +113,20 @@ NeoBundle 'honza/vim-snippets'
 " NeoBundle 'junegunn/fzf', { 'dir': '~/.fzf' }
 " NeoBundle 'junegunn/fzf.vim'
 " NeoBundle 'ashisha/image.vim'
-NeoBundle 'mhinz/vim-sayonara'
-NeoBundle 'mattn/gist-vim', {'depends': 'mattn/webapi-vim'}
+"NeoBundle 'mhinz/vim-sayonara'
+"NeoBundle 'mattn/gist-vim', {'depends': 'mattn/webapi-vim'}
 NeoBundle 'terryma/vim-multiple-cursors'
-NeoBundle 'rhysd/github-complete.vim'
-NeoBundle 'junegunn/goyo.vim'
-NeoBundle 'https://github.com/danielmiessler/VimBlog'
+"NeoBundle 'rhysd/github-complete.vim'
+"NeoBundle 'junegunn/goyo.vim'
+"NeoBundle 'https://github.com/danielmiessler/VimBlog'
 " NeoBundle 'https://github.com/neovim/node-host'
 NeoBundle 'vim-scripts/SyntaxRange'
 NeoBundle 'ryanoasis/vim-devicons'
 
 " Lang specifics
-NeoBundle 'rust-lang/rust.vim'
-NeoBundle 'fatih/vim-go'
-NeoBundle 'cespare/vim-toml'
+"NeoBundle 'rust-lang/rust.vim'
+"NeoBundle 'fatih/vim-go'
+"NeoBundle 'cespare/vim-toml'
 
 call neobundle#end()
 
@@ -152,6 +153,9 @@ let $NEOVIM_JS_DEBUG='nvimjs.log'
 set noshowmode
 set noswapfile
 filetype on
+
+set splitright
+set splitbelow
 
 " relative numbers in normal mode
 " regular numbers in insert mode and when not focused
@@ -207,7 +211,7 @@ inoremap <silent> <End>  <C-o>g<End>
 " terminal 'normal mode'
 "tmap <esc> <c-\><c-n><esc><cr>
 " ,f to format code, requires formatters: read the docs
-noremap <leader>f :Autoformat<CR>
+"noremap <leader>f :Autoformat<CR>
 "noremap <leader>TM :TableModeToggle<CR>
 noremap H ^
 noremap L g_
@@ -215,7 +219,10 @@ noremap J 5j
 noremap K 5k
 nnoremap ; :
 inoremap <c-f> <c-x><c-f>
-" Copy to osx clipboard
+
+if $TMUX_RUNNING == 1
+    set clipboard=unnamedplus
+endif
 "vnoremap <C-c> "*y<CR>
 "vnoremap y "*y<CR>
 "nnoremap Y "*Y<CR>
@@ -348,13 +355,15 @@ else
     set background=dark
     let base16colorspace=256
     "colorscheme base16-default-dark2
-    colorscheme hybrid
-    "colorscheme wombat256
-    "colorscheme molokayo
+    "colorscheme jellybeans
+    "colorscheme hybrid
+    "colorscheme monokai
+    colorscheme Tomorrow-Night
     "autocmd BufRead,BufNewFile *.js,*.html,*.css colorscheme Tomorrow-Night
     "so $HOME/.config/nvim/custom/base16colors.vim
     "so $HOME/.config/nvim/custom/jellybeanscolors.vim
     so $HOME/.config/nvim/custom/hybridcolors.vim
+    "so $HOME/.config/nvim/custom/kalisicolors.vim
     highlight LineNr ctermbg=none ctermfg=241 guibg=#303030 guifg=#606060
     highlight CursorLineNr ctermbg=239 ctermfg=245 guibg=#666666 guifg=#222222 gui=bold
     highlight Normal ctermbg=none ctermfg=251 guibg=#232323 guifg=#d0d0d0
@@ -362,10 +371,10 @@ else
     "highlight String ctermfg=78
     highlight Search cterm=none ctermbg=222 ctermfg=234
     highlight Error ctermbg=203 cterm=none
-    highlight VertSplit ctermbg=239 ctermfg=246
+    highlight VertSplit ctermbg=239 ctermfg=246 guibg=#3d3d3d guifg=#949494
     "highlight MatchParen ctermbg=251 ctermfg=240 cterm=none
     highlight Comment cterm=italic ctermfg=244 guifg=#696969 gui=italic
-    highlight Todo cterm=italic ctermbg=114 ctermfg=234 guibg=#87d787 guifg=#1c1c1c
+    highlight Todo cterm=italic ctermbg=114 ctermfg=234 gui=italic guibg=#87d787 guifg=#1c1c1c
     "highlight pythonSelf ctermfg=223
     "highlight pythonClass ctermfg=147
 endif
@@ -387,9 +396,14 @@ highlight DiffLine ctermbg=none guibg=none
 highlight DiffNewFile ctermbg=none guibg=none
 highlight DiffRemoved ctermbg=none guibg=none
 
+
 " highlight if line exceeds specified amount
 highlight ColorColumn ctermbg=239 guibg=#404040
-au BufRead,BufNewFile *.py call matchadd('ColorColumn', '\%79v', 100) "set column nr
+if $MAXLEN
+    au BufRead,BufNewFile *.py call matchadd('ColorColumn', '\%' . $MAXLEN . 'v', 100) "set column nr
+else
+    au BufRead,BufNewFile *.py call matchadd('ColorColumn', '\%80v', 100) "set column nr
+endif
 
 "}}}
 
@@ -544,12 +558,14 @@ if $PYTHONCURRENT == '3'
 endif
 
 " deoplete
-"let g:deoplete#enable_at_startup = 1
-"autocmd CompleteDone * pclose!
+let g:deoplete#enable_at_startup = 1
+autocmd CompleteDone * pclose!
+nnoremap <F7> :call deoplete#refresh()<CR>
+inoremap <F7> <C-o>:call deoplete#refresh()<CR>
 
 " deoplete-jedi
-"let g:python_host_prog = '/home/alex/.virtualenvs/_nv_py2/bin/python'
-"let g:python3_host_prog = '/home/alex/.virtualenvs/_nv_py3/bin/python'
+let g:python_host_prog = '/home/alex/.virtualenvs/_nv_py2/bin/python'
+let g:python3_host_prog = '/home/alex/.virtualenvs/_nv_py3/bin/python'
 "let deoplete#sources#jedi#enable_cache=0
 
 " IndentLine
@@ -560,7 +576,7 @@ endif
 "let g:indentLine_char = │
 
 " flake8
-autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
+"autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
 
 " CtrlP
 let g:ctrlp_map = '<c-p>'
@@ -584,8 +600,8 @@ let g:ctrlp_switch_buffer = 0
 let g:ackprg = 'ag --nogroup --column'
 set grepprg=ag\ --nogroup\ --nocolor
 
-" Neocomplete
-"let g:neocomplete#enable_at_startup = 1
+" Tagbar
+let g:tagbar_sort = 0
 
 "}}}
 
@@ -723,10 +739,6 @@ let g:airline_theme='oceanicnext'
 cnoreabbrev <expr> x getcmdtype() == ":" && getcmdline() == 'x' ? 'Sayonara' : 'x'
 "tmap <leader>x <c-\><c-n>:bp! <BAR> bd! #<CR>
 nmap <leader>t :term<cr>
-nmap <leader>, :bnext<CR>
-tmap <leader>, <C-\><C-n>:bnext<cr>
-nmap <leader>. :bprevious<CR>
-tmap <leader>. <C-\><C-n>:bprevious<CR>
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 tmap <leader>1  <C-\><C-n><Plug>AirlineSelectTab1
 tmap <leader>2  <C-\><C-n><Plug>AirlineSelectTab2
@@ -815,11 +827,9 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-"set splitbelow
-"set splitright
 
 "" run python script
-nnoremap <F2> :w !python <CR>
+nnoremap <F2> :w !/usr/bin/env python <CR>
 
 "" tab navigation
 nnoremap <M-PageUp>   <Esc>:tabprevious<CR>
@@ -831,7 +841,7 @@ nnoremap <C-M-PageDown> <Esc>:tabnew<CR>
 map <F3> :NERDTreeToggle<CR>
 map <C-\> :TagbarToggle<CR>
 "map <C-n> :set invnu <CR>
-map <C-p> :PresentingStart<CR>
+"map <C-p> :PresentingStart<CR>
 nnoremap <leader>0 :redraw!<CR>
 nnoremap <F5> :GitGutterSignsToggle<CR>
 nnoremap <leader>u :UndotreeToggle<CR>
@@ -847,6 +857,7 @@ nnoremap <leader>a <Esc>:Ack!<CR>
 vnoremap > >gv
 vnoremap < <gv
 cnoreabbrev spch setlocal spell spelllang=en_us
+cnoreabbrev secret r !python3 -c 'import os, binascii; print(binascii.hexlify(os.urandom(24)).decode())'
 
 inoremap <C-h> <Left>
 inoremap <C-j> <Down>
@@ -870,6 +881,13 @@ nnoremap <leader>h :bp<CR>
 nnoremap <leader>l :bn<CR>
 nnoremap <leader>bq :bp <BAR> bd #<CR>
 nnoremap <leader>bl :ls<CR>
+
+" tab navigation
+unmap <leader>j
+nnoremap <leader>j :tabp<CR>
+nnoremap <leader>k :tabn<CR>
+
+nnoremap <leader>f :Ack TODO\\|FIXME\\|NOTE **<CR>
 
 " Various macros
 let @d = "oimport ipdb; ipdb.set_trace()\e" " python debug trace
