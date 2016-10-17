@@ -114,6 +114,7 @@ alias detach='udisksctl power-off -b'
 alias nv=nvim
 alias nvi=nvim
 alias tmux="env TERM=xterm-256color tmux"
+alias tmux="env TERM=xterm-256color tmux -f /home/alex/.tmux-simple.conf"
 alias rmpyc='find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf'
 alias tree='tree -C'
 
