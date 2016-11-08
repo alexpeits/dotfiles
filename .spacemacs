@@ -347,6 +347,8 @@ you should place your code here."
 
     (define-key evil-normal-state-map (kbd ";") 'evil-ex)
 
+    (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
+
     ;; --------------
     ;; Keybindings
     ;; --------------
