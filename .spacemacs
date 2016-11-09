@@ -330,7 +330,7 @@ you should place your code here."
     ;; --------------
 
     (setq spacemacs-theme-comment-bg nil)
-    (global-hl-line-mode -1) ; Disable current line highlight
+    ;; (global-hl-line-mode -1) ; Disable current line highlight
 
 
     ;; --------------
@@ -359,6 +359,7 @@ you should place your code here."
 
     (define-key global-map (kbd "C-+") 'text-scale-increase)
     (define-key global-map (kbd "C--") 'text-scale-decrease)
+    (define-key global-map "\C-xj" 'eval-print-last-sexp)
     (global-set-key [24 116] (quote ansi-term))  ; C-x t
 
     ;; Leader key
@@ -368,6 +369,8 @@ you should place your code here."
     (spacemacs/set-leader-keys "bc" 'clone-indirect-buffer-other-window)
     ;; SPC g a to view a VCS log tree
     (spacemacs/set-leader-keys "ga" 'magit-log-all)
+    ;; SPC k x for lisp eval
+    (spacemacs/set-leader-keys "kx" 'eval-print-last-sexp)
 
     ;; Others
 
@@ -382,7 +385,7 @@ you should place your code here."
     ;; (setq linum-format "%4d ")
     (unless (display-graphic-p)
         (evil-terminal-cursor-changer-activate) ; or (etcc-on)
-        (set-background-color "#222222")
+        (set-background-color "#212121")
         )
 
     ;; --------------
@@ -395,7 +398,6 @@ you should place your code here."
 
     ;; auto completion
     (setq-default c-c++-enable-clang-support t)
-    (setq-default auto-completion-enable-help-tooltip t)
 
     ;; docs
     (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
