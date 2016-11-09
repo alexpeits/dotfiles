@@ -149,7 +149,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(sanityinc-tomorrow-night
+                         spacemacs-dark
                          spacemacs-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -331,6 +332,7 @@ you should place your code here."
     (setq spacemacs-theme-comment-bg nil)
     (global-hl-line-mode -1) ; Disable current line highlight
 
+
     ;; --------------
     ;; Evil mode
     ;; --------------
@@ -347,21 +349,30 @@ you should place your code here."
 
     (define-key evil-normal-state-map (kbd ";") 'evil-ex)
 
-    (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
+    (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile-find-file)
 
     ;; --------------
     ;; Keybindings
     ;; --------------
 
-    (spacemacs/set-leader-keys "ga" 'magit-log-all)
-
-    (define-key evil-normal-state-map (kbd "<f5>") 'diff-hl-mode)
-    (define-key evil-normal-state-map (kbd "<f8>") 'flycheck-mode)
-
-    (global-set-key [24 116] (quote ansi-term))  ; C-x t
+    ;; Ctrl
 
     (define-key global-map (kbd "C-+") 'text-scale-increase)
     (define-key global-map (kbd "C--") 'text-scale-decrease)
+    (global-set-key [24 116] (quote ansi-term))  ; C-x t
+
+    ;; Leader key
+
+    ;; SPC b c clones window in a vertical split
+    ;; useful for keeping an outline of a document and editing at the same time
+    (spacemacs/set-leader-keys "bc" 'clone-indirect-buffer-other-window)
+    ;; SPC g a to view a VCS log tree
+    (spacemacs/set-leader-keys "ga" 'magit-log-all)
+
+    ;; Others
+
+    (define-key evil-normal-state-map (kbd "<f5>") 'diff-hl-mode)
+    (define-key evil-normal-state-map (kbd "<f8>") 'flycheck-mode)
 
     ;; --------------
     ;; UI
@@ -417,10 +428,20 @@ you should place your code here."
  '(custom-safe-themes
    (quote
     ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
- '(org-agenda-files (quote ("~/notes/test.org")))
+ '(org-agenda-files (quote ("~/todos/vermantia.org" "~/notes/cal.org")))
  '(package-selected-packages
    (quote
-    (ox-twbs solarized-theme molokai-theme pony-mode zenburn-theme csv-mode color-theme-sanityinc-tomorrow company-quickhelp ob-ipython helm dash ox-gfm org-projectile pcache org-present org-pomodoro alert log4e gntp org-download mmm-mode markdown-toc markdown-mode htmlize gnuplot gh-md web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode flycheck-pos-tip pos-tip flycheck evil-tabs elscreen git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl c-eldoc disaster company-c-headers cmake-mode clang-format smartparens highlight projectile helm-core evil-terminal-cursor-changer yapfify vimrc-mode smeargle pyvenv pytest pyenv-mode py-isort pip-requirements orgit org magit-gitflow live-py-mode hy-mode helm-pydoc helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor dactyl-mode cython-mode company-statistics company-anaconda company auto-yasnippet yasnippet anaconda-mode pythonic ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))))
+    (ox-twbs solarized-theme molokai-theme pony-mode zenburn-theme csv-mode color-theme-sanityinc-tomorrow company-quickhelp ob-ipython helm dash ox-gfm org-projectile pcache org-present org-pomodoro alert log4e gntp org-download mmm-mode markdown-toc markdown-mode htmlize gnuplot gh-md web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode flycheck-pos-tip pos-tip flycheck evil-tabs elscreen git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl c-eldoc disaster company-c-headers cmake-mode clang-format smartparens highlight projectile helm-core evil-terminal-cursor-changer yapfify vimrc-mode smeargle pyvenv pytest pyenv-mode py-isort pip-requirements orgit org magit-gitflow live-py-mode hy-mode helm-pydoc helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor dactyl-mode cython-mode company-statistics company-anaconda company auto-yasnippet yasnippet anaconda-mode pythonic ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
+ '(safe-local-variable-values
+   (quote
+    ((org-todo-keyword-faces
+      ("ON_HOLD" . "cyan")
+      (\,
+       ("TESTING" . "magenta")))
+     (org-todo-keyword-faces
+      ("ON_HOLD" . "cyan")
+      (\,
+       ("TESTING" . "yellow")))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
