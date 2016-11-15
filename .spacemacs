@@ -3,8 +3,7 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
-(defun dotspacemacs/layers ()
-  "Configuration Layers declaration.
+(defun dotspacemacs/layers () "Configuration Layers declaration.
 You should not put any user code in this function besides modifying the variable
 values."
   (setq-default
@@ -32,6 +31,8 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     yaml
+     nginx
      csv
      html
      javascript
@@ -71,6 +72,7 @@ values."
      evil-terminal-cursor-changer
      c-eldoc
      ob-ipython
+     dockerfile-mode
 
      ;; themes
      zenburn-theme
@@ -149,7 +151,7 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(sanityinc-tomorrow-night
+   dotspacemacs-themes '(;;sanityinc-tomorrow-night
                          spacemacs-dark
                          spacemacs-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
@@ -314,7 +316,18 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  ;; (setq-default undo-tree-auto-save-history t)
+    ;; (setq-default undo-tree-auto-save-history t)
+    ;; persp-mode issue workaround
+    (setq persp-auto-save-opt 0)
+
+    ;; --------------
+    ;; Org-mode
+    ;; --------------
+
+    ;; org-projectile todos location
+    (setq org-projectile-file "~/org/project_todos.org")
+    ;; hide markup symbols
+    (setq org-hide-emphasis-markers t)
   )
 
 (defun dotspacemacs/user-config ()
@@ -330,7 +343,10 @@ you should place your code here."
     ;; --------------
 
     (setq spacemacs-theme-comment-bg nil)
-    ;; (global-hl-line-mode -1) ; Disable current line highlight
+    (global-hl-line-mode -1) ; Disable current line highlight
+
+    ;; (setq custom-file "~/.emacs-customizations.el")
+    ;; (load custom-file)
 
 
     ;; --------------
@@ -347,7 +363,13 @@ you should place your code here."
     (define-key evil-insert-state-map (kbd "C-k") 'previous-line)
     (define-key evil-insert-state-map (kbd "C-l") 'forward-char)
 
+    (define-key evil-insert-state-map (kbd "M-f") 'forward-word)
+    (define-key evil-insert-state-map (kbd "M-b") 'backward-word)
+
     (define-key evil-normal-state-map (kbd ";") 'evil-ex)
+
+    ;; SPC [ for nohlsearch
+    (spacemacs/set-leader-keys "[" 'spacemacs/evil-search-clear-highlight)
 
     (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile-find-file)
 
@@ -376,6 +398,9 @@ you should place your code here."
 
     (define-key evil-normal-state-map (kbd "<f5>") 'diff-hl-mode)
     (define-key evil-normal-state-map (kbd "<f8>") 'flycheck-mode)
+    (global-set-key (kbd "C-M-S-v") 'scroll-other-window-down)
+
+    ;; (load-file "~/.emacs.my/keybindings.el")
 
     ;; --------------
     ;; UI
@@ -409,6 +434,15 @@ you should place your code here."
     (require 'ox-beamer)
     (require 'ox-icalendar)
 
+    ;; set faces to default height
+    (custom-set-faces
+     '(org-level-1 ((t (:inherit outline-1 :height 1.0))))
+     '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
+     '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
+     '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+     '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+     )
+
     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
     (org-babel-do-load-languages
      'org-babel-load-languages
@@ -430,13 +464,20 @@ you should place your code here."
  '(custom-safe-themes
    (quote
     ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" default)))
- '(org-agenda-files (quote ("~/todos/vermantia.org" "~/notes/cal.org")))
+ '(evil-want-Y-yank-to-eol nil)
+ '(org-agenda-files
+   (quote
+    ("~/org/todos.org" "~/org/vermantia.org" "~/org/oeworks.org")))
  '(package-selected-packages
    (quote
-    (ox-twbs solarized-theme molokai-theme pony-mode zenburn-theme csv-mode color-theme-sanityinc-tomorrow company-quickhelp ob-ipython helm dash ox-gfm org-projectile pcache org-present org-pomodoro alert log4e gntp org-download mmm-mode markdown-toc markdown-mode htmlize gnuplot gh-md web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode flycheck-pos-tip pos-tip flycheck evil-tabs elscreen git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl c-eldoc disaster company-c-headers cmake-mode clang-format smartparens highlight projectile helm-core evil-terminal-cursor-changer yapfify vimrc-mode smeargle pyvenv pytest pyenv-mode py-isort pip-requirements orgit org magit-gitflow live-py-mode hy-mode helm-pydoc helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor dactyl-mode cython-mode company-statistics company-anaconda company auto-yasnippet yasnippet anaconda-mode pythonic ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
+    (dockerfile-mode yaml-mode nginx-mode ox-twbs solarized-theme molokai-theme pony-mode zenburn-theme csv-mode color-theme-sanityinc-tomorrow company-quickhelp ob-ipython helm dash ox-gfm org-projectile pcache org-present org-pomodoro alert log4e gntp org-download mmm-mode markdown-toc markdown-mode htmlize gnuplot gh-md web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode flycheck-pos-tip pos-tip flycheck evil-tabs elscreen git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter diff-hl c-eldoc disaster company-c-headers cmake-mode clang-format smartparens highlight projectile helm-core evil-terminal-cursor-changer yapfify vimrc-mode smeargle pyvenv pytest pyenv-mode py-isort pip-requirements orgit org magit-gitflow live-py-mode hy-mode helm-pydoc helm-gitignore helm-company helm-c-yasnippet gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor dactyl-mode cython-mode company-statistics company-anaconda company auto-yasnippet yasnippet anaconda-mode pythonic ac-ispell auto-complete ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spacemacs-theme spaceline restart-emacs request rainbow-delimiters quelpa popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
  '(safe-local-variable-values
    (quote
     ((org-todo-keyword-faces
+      ("ON_HOLD" . "outline-3")
+      (\,
+       ("TESTING" . "outline-5")))
+     (org-todo-keyword-faces
       ("ON_HOLD" . "cyan")
       (\,
        ("TESTING" . "magenta")))
@@ -449,4 +490,8 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(org-level-1 ((t (:inherit outline-1 :height 1.0))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.0))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.0))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+ '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
