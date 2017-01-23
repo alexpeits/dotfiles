@@ -4,7 +4,6 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom"))
 (setenv "PATH" (concat (getenv "PATH") ":/home/alex/.cabal/bin"))
 (setq exec-path (append exec-path '("/home/alex/.cabal/bin")))
-(setq exec-path (append exec-path '("/usr/lib64")))
 
 ;; ----------------
 ;; Package management
@@ -335,13 +334,13 @@ Return a list of installed packages or nil for every skipped package."
   (add-hook 'c-mode-hook 'irony-mode)
   (add-hook 'objc-mode-hook 'irony-mode)
   :config
-  ;; (defun my-irony-mode-hook ()
-    ;; (define-key irony-mode-map [remap completion-at-point]
-      ;; 'irony-completion-at-point-async)
-    ;; (define-key irony-mode-map [remap complete-symbol]
-      ;; 'irony-completion-at-point-async))
-  ;; (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-  ;; (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  (defun my-irony-mode-hook ()
+    (define-key irony-mode-map [remap completion-at-point]
+      'irony-completion-at-point-async)
+    (define-key irony-mode-map [remap complete-symbol]
+      'irony-completion-at-point-async))
+  (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
   (use-package company-irony-c-headers :ensure t :defer t)
   )
 
@@ -494,6 +493,8 @@ Return a list of installed packages or nil for every skipped package."
   (evil-leader/set-key
     "el" 'my/toggle-flycheck-error-list)
   )
+(eval-after-load 'flycheck
+  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
 
 ;; ----------------
@@ -806,8 +807,9 @@ Return a list of installed packages or nil for every skipped package."
    (unspecified "#272822" "#20240E" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
 
 ;(set-frame-font "Source Code Pro-10" nil t)
-(set-frame-font "Ubuntu Mono-13" nil t)
+;(set-frame-font "Ubuntu Mono-13" nil t)
 ;(set-frame-font "Menlo for Powerline-11" nil t)
+(set-frame-font "DejaVu Sans Mono-10" nil t)
 ;(require 'init-powerline)
 ;(load-theme 'spacemacs-dark)
 (if (display-graphic-p)
