@@ -1,44 +1,37 @@
-@define-color term-win-bg           #262626;
-@define-color term-tab-inactive-bg  #333333;
-@define-color term-tab-active-bg    #424242;
-@define-color ubuntu-orange         #fb9267;
+notebook tab {
+  min-height: 0;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
 
+notebook tab button {
+  min-height: 0;
+  min-width: 0;
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+notebook button {
+  min-height: 0;
+  min-width: 0;
+  padding: 0px;
+}
+
+window.ssd headerbar.titlebar {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  min-height: 0;
+}
+
+window.ssd headerbar.titlebar button.titlebutton {
+  padding: 2px;
+  min-height: 0;
+  min-width: 0;
+}
+
+VteTerminal,
 TerminalScreen {
-    -TerminalScreen-background-darkness: 0.95;
-    background-color: @term-win-bg;
-}
-
-
-TerminalWindow .notebook {
-    border: 0;
-    padding: 0;
-}
-
-
-TerminalWindow .notebook tab {
-    border: 0;
-    border-radius: 0px;
-    border-image: -gtk-gradient (linear, left top, left bottom,
-                                from (alpha (shade (@term-win-bg, 0.9), 0.0)),
-                                to (shade (@term-win-bg, 0.9))) 1;
-    border-image-width: 0 1px;
-    border-color: transparent;
-    border-width: 0;
-    box-shadow: none;
-    background-color: shade(@term-tab-inactive-bg, 1);
-}
-
-
-TerminalWindow .notebook tab:active {
-    border: 0;
-    border-radius: 0px;
-    background-color: shade(@term-tab-active-bg, 1);
-}
-
-
-TerminalTabLabel.active-page .label {
-    /*color: @bg_color;
-    font-weight: bold
-    color: @ubuntu-orange; */
-    color: #EEDDCC;
+  padding: 10px 10px 10px 10px;
+  -VteTerminal-inner-border: 10px 10px 10px 10px;
 }
