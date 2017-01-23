@@ -1,2 +1,3 @@
-# myFiles
-useful linux files
+# dotfiles
+
+dotfiles dotfiles DOTFILES
