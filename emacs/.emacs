@@ -326,7 +326,6 @@ Return a list of installed packages or nil for every skipped package."
 ;; ----------------
 ;; c/c++
 ;; ----------------
-(use-package c-eldoc :ensure t)
 (use-package irony
   :ensure t
   :defer t
