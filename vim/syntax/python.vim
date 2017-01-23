@@ -83,16 +83,19 @@ syn keyword pythonOperator	and in is not or
 syn keyword pythonException	except finally raise try
 syn keyword pythonInclude	from import
 syn keyword pythonAsync		async await
-syn keyword pythonSelf		self cls
+syn keyword pythonSelf		self cls mcs
 
 " Decorators (new in Python 2.4)
-syn match   pythonDecorator	"@" display nextgroup=pythonFunction skipwhite
+syn match   pythonDecorator	"@" display nextgroup=pythonDecoratorName skipwhite
 " The zero-length non-grouping match before the function name is
 " extremely important in pythonFunction.  Without it, everything is
 " interpreted as a function inside the contained environment of
 " doctests.
 " A dot must be allowed because of @MyClass.myfunc decorators.
 syn match   pythonFunction
+      \ "\%(\%(def\s\|@\)\s*\)\@<=\h\%(\w\|\.\)*" contained
+
+syn match   pythonDecoratorName
       \ "\%(\%(def\s\|@\)\s*\)\@<=\h\%(\w\|\.\)*" contained
 
 syn match   pythonClass
@@ -298,7 +301,9 @@ if version >= 508 || !exists("did_python_syn_inits")
   HiLink pythonInclude		Include
   HiLink pythonAsync		Statement
   HiLink pythonDecorator	Define
+  HiLink pythonDecoratorName	Function
   HiLink pythonFunction		Function
+  HiLink pythonClass		Number
   HiLink pythonComment		Comment
   HiLink pythonTodo		Todo
   HiLink pythonString		String

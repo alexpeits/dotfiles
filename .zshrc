@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/home/alex/.oh-my-zsh
+  export ZSH=/home/alex/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -49,9 +49,7 @@ ENABLE_CORRECTION="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
-plugins=(… zsh-completions)
-autoload -U compinit && compinit
+plugins=(git bookmark mercurial)
 
 # User configuration
 
@@ -84,12 +82,14 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+plugins=(… zsh-completions)
+autoload -U compinit && compinit
 #source $HOME/.oh-my-zsh/plugins/git-prompt/git-prompt.plugin.zsh
 source $HOME/git_prompt.zsh
 
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWUNTRACKEDFILES=1
-export GIT_EDITOR=vim
+export GIT_EDITOR=nvim
 
 alias ll='ls -lA'
 alias la='ls -A'
@@ -101,9 +101,8 @@ alias l='ls -CF'
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(echo $history[$HISTCMD] | sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 alias publicip='curl ipv4.icanhazip.com'
-alias rpi='ssh -p 2222 pi@192.168.1.56'
-alias pylib="cd /usr/lib/python2.7/"
-alias pylib3="cd /usr/lib/python3.5/"
+alias pylib="cd /usr/lib64/python2.7/"
+alias pylib3="cd /usr/lib64/python3.5/"
 alias pylib_extern="cd /usr/local/lib/python2.7/dist-packages/"
 alias u='cd ..'
 alias uu='cd ../..'
@@ -113,24 +112,32 @@ alias uuuuu='cd ../../../../..'
 alias detach='udisksctl power-off -b'
 alias nv=nvim
 alias nvi=nvim
-alias tmux="env TERM=xterm-256color tmux"
-alias tmux="env TERM=xterm-256color tmux -f /home/alex/.tmux-simple.conf"
+alias emacs="emacs -nw"
+alias gemacs="env HOME=/home/alex/alt-emacs /usr/bin/emacs"
+alias emacs-classic="env HOME=/home/alex/alt-emacs /usr/bin/emacs -nw"
+alias nview="nvim -R"
+alias tmux="TERM=xterm-256color tmux"
+alias tmux-simple="TERM=xterm-256color tmux -f /home/alex/.tmux-simple.conf"
+alias redis="rm dump.rdb; redis-server"
 alias rmpyc='find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf'
-alias tree='tree -C'
+alias ipy="python -c 'import IPython; IPython.terminal.ipapp.launch_new_instance()'"
+#alias browser="google-chrome"
 
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/devel
-source /usr/local/bin/virtualenvwrapper.sh
+source /usr/bin/virtualenvwrapper.sh
 
-export EDITOR=vim
+export EDITOR=nvim
 export PYTHONCURRENT="2"
-export PATH=$PATH:/home/alex/.localpath
+export PYTHONPATH=$HOME/.python_local_path:$PYTHONPATH
 
-# GO!
+# GO
 #export PATH=$PATH:/usr/local/go/bin
 #export GOPATH=$HOME/go_projects
 
-export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/jre"
+export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+
+export PATH=$PATH:/home/alex/bin:/home/alex/.cabal/bin
 
 # colorize man pages with less
 man() {
@@ -186,20 +193,20 @@ search() {
 
 }
 
-# nsearch() {
+#nsearch() {
 
-    # search $@ | awk '{ print NR ":" $0 }'
+    #search $@ | awk '{ print NR ":" $0 }'
 
-# }
+#}
 
-# vopen() {
+#vopen() {
 
-    # read list <<< EOF
-    # echo $list
-    # nsearch $@ | awk -F":" '/^'$1'/ { print $2 " +" $3 }' | xargs bash -c '</dev/tty nvim $@' ignoreme
-    # cat $* | awk -F":" '/^'$1'/ { print $2 " +" $3 }'
+    ##read list <<< EOF
+    ##echo $list
+    ##nsearch $@ | awk -F":" '/^'$1'/ { print $2 " +" $3 }' | xargs bash -c '</dev/tty nvim $@' ignoreme
+    ##cat $* | awk -F":" '/^'$1'/ { print $2 " +" $3 }'
 
-# }
+#}
 
 # same as search, but open all files in vim and show results in quickfix
 visearch() {
@@ -223,4 +230,7 @@ count() {
 
 }
 export LC_CTYPE=en_US.UTF-8
-#TERM=xterm-256color-italic
+
+export NVM_DIR="/home/alex/.nvm"
+alias startnvm="[ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\""
+#[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm

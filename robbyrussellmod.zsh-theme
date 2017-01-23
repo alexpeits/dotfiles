@@ -1,3 +1,4 @@
+# vim: set ft=zsh:
 prompt_status() {
   local symbols
   symbols=()
@@ -10,7 +11,8 @@ build_prompt() {
   prompt_status
 }
 
-local ret_status="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )"
-local root_ret_status="%(?:%{$fg_bold[green]%}# :%{$fg_bold[red]%}# )"
-PROMPT='$(build_prompt)%(!.${root_ret_status}.${ret_status}) %{$fg[blue]%}%~%{$reset_color%} $(git_super_status) '
-
+local info="%{$fg_bold[white]%}%n@%m%{$reset_color%}"
+local ret_status="%(?:%{$fg_bold[green]%}»:%{$fg_bold[red]%}»)"
+local root_ret_status="%(?:%{$fg_bold[green]%}#:%{$fg_bold[red]%}#)"
+PROMPT='$(build_prompt)%{$fg[cyan]%}%~%{$reset_color%}$(git_super_status) %(!.${root_ret_status}.${ret_status})%{$reset_color%} '
+# PROMPT='%(!.${root_ret_status}.${ret_status}) %{$fg[cyan]%}%~%{$reset_color%} $(git_super_status) '
