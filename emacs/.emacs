@@ -335,7 +335,7 @@ Return a list of installed packages or nil for every skipped package."
   (add-hook 'objc-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
   (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
-  (defvar c-eldoc-includes "-I/usr/include -I/usr/include/python3.5 -I./ -I../ ")
+  (defvar c-eldoc-includes "-I/usr/include -I/usr/include/python3.5m -I./ -I../")
   :config
   (defun my-irony-mode-hook ()
     (defun irony-snippet-available-p () -1)
@@ -820,6 +820,7 @@ Return a list of installed packages or nil for every skipped package."
       ;(setq linum-format "%4d ")
       (setq linum-format 'dynamic)
       (set-face-attribute 'vertical-border nil :foreground "dim gray")
+      (set-face-attribute 'show-paren-match nil :weight 'normal)
       )
   (progn
     (load-theme 'monokai)
