@@ -333,8 +333,12 @@ Return a list of installed packages or nil for every skipped package."
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
   (add-hook 'objc-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
+  (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
+  (defvar c-eldoc-includes "-I/usr/include -I/usr/include/python3.5 -I./ -I../ ")
   :config
   (defun my-irony-mode-hook ()
+    (defun irony-snippet-available-p () -1)
     (define-key irony-mode-map [remap completion-at-point]
       'irony-completion-at-point-async)
     (define-key irony-mode-map [remap complete-symbol]
@@ -427,8 +431,6 @@ Return a list of installed packages or nil for every skipped package."
 ;(ac-config-default)
 (company-quickhelp-mode 1)
 (diminish 'company-mode " Com")
-
-
 
 ;(use-package smartparens-config)
 
