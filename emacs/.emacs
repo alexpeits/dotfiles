@@ -808,8 +808,8 @@ Return a list of installed packages or nil for every skipped package."
 
 ;(set-frame-font "Source Code Pro-10" nil t)
 ;(set-frame-font "Ubuntu Mono-13" nil t)
-;(set-frame-font "Menlo for Powerline-11" nil t)
-(set-frame-font "DejaVu Sans Mono-10" nil t)
+(set-frame-font "Menlo for Powerline-11" nil t)
+;(set-frame-font "DejaVu Sans Mono-10" nil t)
 ;(require 'init-powerline)
 ;(load-theme 'spacemacs-dark)
 (if (display-graphic-p)
