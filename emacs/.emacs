@@ -215,13 +215,13 @@ Return a list of installed packages or nil for every skipped package."
   ;; move state to beginning of modeline
   (setq evil-mode-line-format '(before . mode-line-front-space))
   ;; change state colors
-  (setq evil-normal-state-tag   (propertize " <N> " 'face '((:foreground "#268bd2" :weight extra-bold)))
-        evil-emacs-state-tag    (propertize " <E> " 'face '((:foreground "#dc752f" :weight extra-bold)))
-        evil-insert-state-tag   (propertize " <I> " 'face '((:foreground "#2aa198" :weight extra-bold)))
-        evil-replace-state-tag  (propertize " <R> " 'face '((:foreground "#df005f" :weight extra-bold)))
-        evil-motion-state-tag   (propertize " <M> " 'face '((:foreground "#df005f" :weight extra-bold)))
-        evil-visual-state-tag   (propertize " <V> " 'face '((:foreground "#d75fd7" :weight extra-bold)))
-        evil-operator-state-tag (propertize " <O> " 'face '((:foreground "#df005f" :weight extra-bold))))
+  ;; (setq evil-normal-state-tag   (propertize " <N> " 'face '((:foreground "#268bd2" :weight extra-bold)))
+  ;;       evil-emacs-state-tag    (propertize " <E> " 'face '((:foreground "#dc752f" :weight extra-bold)))
+  ;;       evil-insert-state-tag   (propertize " <I> " 'face '((:foreground "#2aa198" :weight extra-bold)))
+  ;;       evil-replace-state-tag  (propertize " <R> " 'face '((:foreground "#df005f" :weight extra-bold)))
+  ;;       evil-motion-state-tag   (propertize " <M> " 'face '((:foreground "#df005f" :weight extra-bold)))
+  ;;       evil-visual-state-tag   (propertize " <V> " 'face '((:foreground "#d75fd7" :weight extra-bold)))
+  ;;       evil-operator-state-tag (propertize " <O> " 'face '((:foreground "#df005f" :weight extra-bold))))
 
   ;; this is needed to be able to use C-h
   (global-set-key (kbd "C-h") 'undefined)
@@ -531,6 +531,14 @@ Return a list of installed packages or nil for every skipped package."
 (which-key-mode)
 (diminish 'which-key-mode "")
 
+(require 'spaceline-config)
+(setq powerline-height 18)
+;; (setq powerline-default-separator "slant")
+(unless (display-graphic-p)
+  (setq powerline-default-separator 'utf-8)
+  )
+(spaceline-spacemacs-theme)
+
 
 
 ;; ----------------
@@ -697,7 +705,7 @@ Return a list of installed packages or nil for every skipped package."
  '(org-agenda-files (quote ("~/oeworks/oeworks.org" "~/org/vermantia.org")))
  '(package-selected-packages
    (quote
-    (auto-complete-clang neotree company-irony-c-headers imenu-list helm-ag fuzzy-match wc-mode gruvbox-theme powerline sublime-themes org helm-fuzzy-find magit git-gutter-fringe fringe-helper git-gutter-fringe+ org-clock-csv flx-ido company-c-headers ox-twbs solarized-theme auctex org-bullets evil-surround zenburn-theme which-key web-mode use-package spacemacs-theme smartparens pyenv-mode popwin persp-projectile ob-ipython monokai-theme molokai-theme moe-theme material-theme js2-mode jedi intero highlight-numbers highlight-escape-sequences helm-projectile hc-zenburn-theme git-gutter git-gutter+ evil-terminal-cursor-changer evil-nerd-commenter evil-leader esup company-quickhelp company-ghci company-ghc company-anaconda color-theme-sanityinc-tomorrow atom-one-dark-theme ac-anaconda)))
+    (powerline-evil spaceline c-eldoc auto-complete-clang neotree company-irony-c-headers imenu-list helm-ag fuzzy-match wc-mode gruvbox-theme powerline sublime-themes org helm-fuzzy-find magit git-gutter-fringe fringe-helper git-gutter-fringe+ org-clock-csv flx-ido company-c-headers ox-twbs solarized-theme auctex org-bullets evil-surround zenburn-theme which-key web-mode use-package spacemacs-theme smartparens pyenv-mode popwin persp-projectile ob-ipython monokai-theme molokai-theme moe-theme material-theme js2-mode jedi intero highlight-numbers highlight-escape-sequences helm-projectile hc-zenburn-theme git-gutter git-gutter+ evil-terminal-cursor-changer evil-nerd-commenter evil-leader esup company-quickhelp company-ghci company-ghc company-anaconda color-theme-sanityinc-tomorrow atom-one-dark-theme ac-anaconda)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#A6E22E")
  '(pos-tip-foreground-color "#272822")
