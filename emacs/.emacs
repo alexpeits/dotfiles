@@ -146,6 +146,7 @@ Return a list of installed packages or nil for every skipped package."
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
 
+(setq-default show-trailing-whitespace t)
 
 ;; ----------------
 ;; term
@@ -366,7 +367,7 @@ Return a list of installed packages or nil for every skipped package."
 ;; ----------------
 ;; js
 ;; ----------------
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
 (setq
   ;; js2-mode
