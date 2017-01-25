@@ -37,30 +37,30 @@ Return a list of installed packages or nil for every skipped package."
 (or (file-exists-p package-user-dir)
     (package-refresh-contents))
 
-(ensure-package-installed
-  'evil-leader
-  'evil
-  'ghc
-  'cl-lib
-  'company
-  'anaconda-mode
-  'company-anaconda
-  'company-ghc
-  'flycheck
-  'ido
-  'which-key
-  'helm
-  'projectile
-  'helm-projectile
-  'persp-projectile
-  'perspective
-  'popwin
-  'web-mode
-  'js2-mode
-  'ob-ipython
-  'helm-core
-  'smartparens
-  )
+;; (ensure-package-installed
+;;   'evil-leader
+;;   'evil
+;;   'ghc
+;;   'cl-lib
+;;   'company
+;;   'anaconda-mode
+;;   'company-anaconda
+;;   'company-ghc
+;;   'flycheck
+;;   'ido
+;;   'which-key
+;;   'helm
+;;   'projectile
+;;   'helm-projectile
+;;   'persp-projectile
+;;   'perspective
+;;   'popwin
+;;   'web-mode
+;;   'js2-mode
+;;   'ob-ipython
+;;   'helm-core
+;;   'smartparens
+;;   )
 
 (require 'use-package)
 
@@ -367,16 +367,17 @@ Return a list of installed packages or nil for every skipped package."
 ;; js
 ;; ----------------
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(setq-default
- ;; js2-mode
- js2-basic-offset 2
- js-indent-level 2
- ;; web-mode
- css-indent-offset 2
- web-mode-markup-indent-offset 2
- web-mode-css-indent-offset 2
- web-mode-code-indent-offset 2
- web-mode-attr-indent-offset 2)
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+(setq
+  ;; js2-mode
+  js2-basic-offset 2
+  js-indent-level 2
+  ;; web-mode
+  css-indent-offset 2
+  web-mode-markup-indent-offset 2
+  web-mode-css-indent-offset 2
+  web-mode-code-indent-offset 2
+  web-mode-attr-indent-offset 2)
 
 (add-hook 'js2-mode-hook (lambda ()
          (setq evil-shift-width 2)
@@ -384,6 +385,8 @@ Return a list of installed packages or nil for every skipped package."
          (setq jsmd "js")))
 
 (add-hook 'web-mode-hook (lambda ()
+           (setq evil-shift-width 2)
+           (setq-default indent-tabs-mode nil)
            (setq jsmd "web")))
 
 (evil-leader/set-key
@@ -480,7 +483,8 @@ Return a list of installed packages or nil for every skipped package."
   (eval-after-load 'flycheck
       '(progn
         (set-face-background 'flycheck-warning "unspecified-bg")
-        (set-face-foreground 'flycheck-warning "unspecified-fg")))
+        (set-face-foreground 'flycheck-warning "unspecified-fg")
+        (add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
 
   (define-key global-map (kbd "C-c ! t") 'flycheck-mode)
 
@@ -494,9 +498,8 @@ Return a list of installed packages or nil for every skipped package."
 
   (evil-leader/set-key
     "el" 'my/toggle-flycheck-error-list)
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
   )
-(eval-after-load 'flycheck
-  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
 
 ;; ----------------
@@ -532,11 +535,9 @@ Return a list of installed packages or nil for every skipped package."
 (diminish 'which-key-mode "")
 
 (require 'spaceline-config)
-(setq powerline-height 18)
+(setq powerline-height 15)
 ;; (setq powerline-default-separator "slant")
-(unless (display-graphic-p)
-  (setq powerline-default-separator 'utf-8)
-  )
+(setq powerline-default-separator 'utf-8)
 (spaceline-spacemacs-theme)
 
 
@@ -553,8 +554,8 @@ Return a list of installed packages or nil for every skipped package."
 (use-package helm-adaptive
     :config (helm-adaptive-mode 1))
 
-(use-package helm-ring
-    :config (helm-push-mark-mode 1))
+;; (use-package helm-ring
+;;     :config (helm-push-mark-mode 1))
 
 (use-package helm-utils
     ;; Popup buffer-name or filename in grep/moccur/imenu-all etc...
