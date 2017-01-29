@@ -146,7 +146,7 @@ Return a list of installed packages or nil for every skipped package."
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
 
-(setq-default show-trailing-whitespace t)
+(add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
 
 ;; ----------------
 ;; term
@@ -715,10 +715,10 @@ Return a list of installed packages or nil for every skipped package."
    (quote
     (:eval
      (if
-         (file-remote-p default-directory)
-         " Proj"
+	 (file-remote-p default-directory)
+	 " Proj"
        (format " Proj[%s]"
-               (projectile-project-name))))))
+	       (projectile-project-name))))))
  '(safe-local-variable-values
    (quote
     ((org-todo-keyword-faces
@@ -728,8 +728,8 @@ Return a list of installed packages or nil for every skipped package."
  '(sml/mode-width
    (if
        (eq
-        (powerline-current-separator)
-        (quote arrow))
+	(powerline-current-separator)
+	(quote arrow))
        (quote right)
      (quote full)))
  '(sml/pos-id-separator
@@ -738,14 +738,14 @@ Return a list of installed packages or nil for every skipped package."
      (:propertize " " face powerline-active1)
      (:eval
       (propertize " "
-                  (quote display)
-                  (funcall
-                   (intern
-                    (format "powerline-%s-%s"
-                            (powerline-current-separator)
-                            (car powerline-default-separator-dir)))
-                   (quote powerline-active1)
-                   (quote powerline-active2))))
+		  (quote display)
+		  (funcall
+		   (intern
+		    (format "powerline-%s-%s"
+			    (powerline-current-separator)
+			    (car powerline-default-separator-dir)))
+		   (quote powerline-active1)
+		   (quote powerline-active2))))
      (:propertize " " face powerline-active2))))
  '(sml/pos-minor-modes-separator
    (quote
@@ -753,14 +753,14 @@ Return a list of installed packages or nil for every skipped package."
      (:propertize " " face powerline-active1)
      (:eval
       (propertize " "
-                  (quote display)
-                  (funcall
-                   (intern
-                    (format "powerline-%s-%s"
-                            (powerline-current-separator)
-                            (cdr powerline-default-separator-dir)))
-                   (quote powerline-active1)
-                   (quote sml/global))))
+		  (quote display)
+		  (funcall
+		   (intern
+		    (format "powerline-%s-%s"
+			    (powerline-current-separator)
+			    (cdr powerline-default-separator-dir)))
+		   (quote powerline-active1)
+		   (quote sml/global))))
      (:propertize " " face sml/global))))
  '(sml/pre-id-separator
    (quote
@@ -768,14 +768,14 @@ Return a list of installed packages or nil for every skipped package."
      (:propertize " " face sml/global)
      (:eval
       (propertize " "
-                  (quote display)
-                  (funcall
-                   (intern
-                    (format "powerline-%s-%s"
-                            (powerline-current-separator)
-                            (car powerline-default-separator-dir)))
-                   (quote sml/global)
-                   (quote powerline-active1))))
+		  (quote display)
+		  (funcall
+		   (intern
+		    (format "powerline-%s-%s"
+			    (powerline-current-separator)
+			    (car powerline-default-separator-dir)))
+		   (quote sml/global)
+		   (quote powerline-active1))))
      (:propertize " " face powerline-active1))))
  '(sml/pre-minor-modes-separator
    (quote
@@ -783,14 +783,14 @@ Return a list of installed packages or nil for every skipped package."
      (:propertize " " face powerline-active2)
      (:eval
       (propertize " "
-                  (quote display)
-                  (funcall
-                   (intern
-                    (format "powerline-%s-%s"
-                            (powerline-current-separator)
-                            (cdr powerline-default-separator-dir)))
-                   (quote powerline-active2)
-                   (quote powerline-active1))))
+		  (quote display)
+		  (funcall
+		   (intern
+		    (format "powerline-%s-%s"
+			    (powerline-current-separator)
+			    (cdr powerline-default-separator-dir)))
+		   (quote powerline-active2)
+		   (quote powerline-active1))))
      (:propertize " " face powerline-active1))))
  '(sml/pre-modes-separator (propertize " " (quote face) (quote sml/modes)))
  '(vc-annotate-background nil)
@@ -819,17 +819,20 @@ Return a list of installed packages or nil for every skipped package."
    (unspecified "#272822" "#20240E" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
 
 ;(set-frame-font "Source Code Pro-10" nil t)
-;(set-frame-font "Ubuntu Mono-13" nil t)
-;(set-frame-font "Menlo for Powerline-11" nil t)
-(set-frame-font "DejaVu Sans Mono-10" nil t)
+(set-frame-font "Ubuntu Mono-13" nil t)
+;(set-frame-font "Menlo for Powerline:pixelsize=14" nil t)
+;; (set-frame-font "Hack-10.5" nil t)
+;(set-frame-font "DejaVu Sans Mono-10" nil t)
 ;(require 'init-powerline)
 ;(load-theme 'spacemacs-dark)
 (if (display-graphic-p)
     (progn
-      (load-theme 'spolsky t)
+      ;(load-theme 'spolsky t)
+      (load-theme 'sanityinc-tomorrow-night t)
       ;(setq linum-format "%4d ")
       (setq linum-format 'dynamic)
-      (set-face-attribute 'vertical-border nil :foreground "dim gray")
+      ;; (set-face-attribute 'vertical-border nil :foreground "dim gray")
+      (set-face-attribute 'cursor nil :background "gray")
       (set-face-attribute 'show-paren-match nil :weight 'normal)
       )
   (progn
@@ -845,5 +848,7 @@ Return a list of installed packages or nil for every skipped package."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(font-lock-comment-delimiter-face ((t (:inherit font-lock-comment-delimiter-face :background "#1D1F21"))))
+ '(font-lock-comment-face ((t (:inherit font-lock-comment-face :background "#1D1F21"))))
  '(linum ((t (:inherit default))))
  '(trailing-whitespace ((t (:background "#602020")))))
