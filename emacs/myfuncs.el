@@ -149,3 +149,10 @@ Removes the automatic guessing of the initial value based on thing at point. "
     (helm-find-files-1 input)))
 
 (provide 'myfuncs)
+
+
+(defun my/shell-command-to-string ()
+  (interactive)
+  (let ((cmd (read-string "Command: ")))
+  (insert (shell-command-to-string cmd)))
+  )
