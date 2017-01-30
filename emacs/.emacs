@@ -1,5 +1,3 @@
-;; http://blog.aaronbieber.com/2016/01/23/living-in-evil.html
-
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom"))
 (setenv "PATH" (concat (getenv "PATH") ":/home/alex/.cabal/bin"))
@@ -18,66 +16,18 @@
 ;; activate installed packages
 (package-initialize)
 
-(defun ensure-package-installed (&rest packages)
-  "Assure every package is installed, ask for installation if it’s not.
-
-Return a list of installed packages or nil for every skipped package."
-  (mapcar
-   (lambda (package)
-     ;; (package-installed-p 'evil)
-     (if (package-installed-p package)
-         nil
-       (if (y-or-n-p (format "Package %s is missing. Install it? " package))
-           (package-install package)
-         package)))
-   packages))
-
-;; make sure to have downloaded archive description.
-;; Or use package-archive-contents as suggested by Nicolas Dudebout
-(or (file-exists-p package-user-dir)
-    (package-refresh-contents))
-
-;; (ensure-package-installed
-;;   'evil-leader
-;;   'evil
-;;   'ghc
-;;   'cl-lib
-;;   'company
-;;   'anaconda-mode
-;;   'company-anaconda
-;;   'company-ghc
-;;   'flycheck
-;;   'ido
-;;   'which-key
-;;   'helm
-;;   'projectile
-;;   'helm-projectile
-;;   'persp-projectile
-;;   'perspective
-;;   'popwin
-;;   'web-mode
-;;   'js2-mode
-;;   'ob-ipython
-;;   'helm-core
-;;   'smartparens
-;;   )
-
 (require 'use-package)
 
 (require 'myfuncs)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/custom-themes/")
 
+
+
 ;; ----------------
 ;; various
 ;; ----------------
-;; remember last place in file
-;; (use-package saveplace)
-;; (setq-default save-place t)
-;; (save-place-mode 1)
-(global-undo-tree-mode)
-(diminish 'undo-tree-mode "")
-(setq show-paren-delay 0.3)
 
+;; remember last position
 (if (<= emacs-major-version 24)
     (use-package saveplace
        :ensure t
@@ -86,48 +36,56 @@ Return a list of installed packages or nil for every skipped package."
     )
   (save-place-mode 1))
 
-;(show-paren-mode 1)
-(add-hook 'prog-mode-hook 'highlight-numbers-mode)
+;; undo tree
+(use-package undo-tree
+  :ensure t
+  :config
+  (global-undo-tree-mode)
+  (diminish 'undo-tree-mode "")
+  )
 
-;; show column
-(setq column-number-mode t)
-
-;; store all backup and autosave files in the tmp dir
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
+;; highlight numbers
+(use-package highlight-numbers
+  :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'highlight-numbers-mode)
+  )
 
 (use-package neotree
   :ensure t
   )
 
+(setq show-paren-delay 0.3)
+
+;; show column in modeline
+(setq column-number-mode t)
+
+;; store all backup and autosave files in
+;; one dir
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+
 ;; only with this set to nil can org-mode export & open too
 (setq process-connection-type nil)
-
-;; --------------
-;; custom functions
-;; --------------
-
 
 
 
 ;; ----------------
 ;; UI & themes
 ;; ----------------
-; disable annoying stuff
+
+;; disable annoying stuff
 (setq ring-bell-function 'ignore)
 (setq inhibit-startup-screen t)
 (menu-bar-mode -1)
 (toggle-scroll-bar -1)
 (tool-bar-mode -1)
 
+;; linum
 (global-linum-mode t)
 (setq linum-format "%4d ")
-;(defun linum-format-func (line)
-  ;(let ((w (length (number-to-string (count-lines (point-min) (point-max))))))
-     ;(propertize (format (format "%%%dd" w) line) 'face 'linum)))
-;(setq linum-format 'linum-format-func)
 
 ;; always open helm buffers at bottom
 (use-package popwin
@@ -141,12 +99,59 @@ Return a list of installed packages or nil for every skipped package."
   (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
   )
 
-
+;; text scale inc-dec
 (setq text-scale-mode-step 1.05)
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
 
+;; highlight trailing whitespace
 (add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
+
+(use-package smartparens
+  :defer t
+  :commands (sp-split-sexp sp-newline sp-up-sexp)
+  :init
+  (progn
+    ;; settings
+    (setq sp-show-pair-delay 0.2
+          ;; fix paren highlighting in normal mode
+          sp-show-pair-from-inside t
+          sp-cancel-autoskip-on-backward-movement nil
+          sp-highlight-pair-overlay nil
+          sp-highlight-wrap-overlay nil
+          sp-highlight-wrap-tag-overlay nil)
+    (add-hook 'prog-mode-hook 'smartparens-mode)
+    (add-hook 'comint-mode-hook 'smartparens-mode))
+  :config
+  (require 'smartparens-config)
+  (show-smartparens-global-mode +1)
+  ;; don't create a pair with single quote in minibuffer
+  (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
+  (sp-pair "(" nil :post-handlers
+	   '(:add (my/smartparens-pair-newline-and-indent "RET")))
+  (sp-pair "{" nil :post-handlers
+	   '(:add (my/smartparens-pair-newline-and-indent "RET")))
+  (sp-pair "[" nil :post-handlers
+	   '(:add (my/smartparens-pair-newline-and-indent "RET")))
+  (diminish 'smartparens-mode "")
+  )
+
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode)
+  (diminish 'which-key-mode "")
+  )
+
+(use-package spaceline
+  :ensure t
+  :config
+  (require 'spaceline-config)
+  (setq powerline-height 15)
+  ;; (setq powerline-default-separator "slant")
+  (setq powerline-default-separator 'utf-8)
+  (spaceline-spacemacs-theme)
+  )
 
 ;; ----------------
 ;; term
@@ -166,7 +171,6 @@ Return a list of installed packages or nil for every skipped package."
             (kill-buffer ,buff))))))
 
 (add-hook 'term-exec-hook 'oleh-term-exec-hook)
-
 
 
 ;; ----------------
@@ -197,15 +201,19 @@ Return a list of installed packages or nil for every skipped package."
   :config
   (global-evil-leader-mode)
   )
-(setq evil-want-C-i-jump nil)
+
 (use-package evil
   :ensure t
   :config
+  (setq evil-want-C-i-jump nil)
   (evil-mode 1)
 
   ;; emacs mode is default in some modes
   (delete 'term-mode evil-insert-state-modes)
   (add-to-list 'evil-emacs-state-modes 'term-mode)
+
+  ;; magit
+  (evil-define-key 'normal magit-blame-mode-map (kbd "q") 'magit-blame-quit)
 
   ;; neotree
   (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
@@ -232,11 +240,6 @@ Return a list of installed packages or nil for every skipped package."
   (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
   (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
 
-  ;(define-key evil-insert-state-map (kbd "C-h") 'backward-char)
-  ;(define-key evil-insert-state-map (kbd "C-j") 'next-line)
-  ;(define-key evil-insert-state-map (kbd "C-k") 'previous-line)
-  ;(define-key evil-insert-state-map (kbd "C-l") 'forward-char)
-
   (define-key evil-normal-state-map (kbd ";") 'evil-ex)
   (define-key evil-visual-state-map (kbd ";") 'evil-ex)
   (evil-ex-define-cmd "sv" 'split-window-below)
@@ -255,7 +258,7 @@ Return a list of installed packages or nil for every skipped package."
                      (call-interactively 'evil-shift-right)
                      (execute-kbd-macro "gv"))))
 
-  ;; evilnv toggles instead of commenting/uncommenting
+  ;; evilnc toggles instead of commenting/uncommenting
   (setq evilnc-invert-comment-line-by-line t)
 
   (evil-leader/set-leader "<SPC>")
@@ -290,26 +293,19 @@ Return a list of installed packages or nil for every skipped package."
 
     "ft" 'neotree-toggle)
   )
+
 (use-package evil-surround
   :ensure t
   :config
   (global-evil-surround-mode 1)
   (evil-define-key 'visual evil-surround-mode-map "s" 'evil-surround-region)
   )
-;(with-eval-after-load "evil"
-  ;(load "evilhacks"))
-
-
-;; ----------------
-;; magit
-;; ----------------
-(evil-define-key 'normal magit-blame-mode-map (kbd "q") 'magit-blame-quit)
 
 
 ;; ----------------
 ;; python
 ;; ----------------
-(use-package pyvenv)
+(use-package pyvenv) ;; this has to be downloaded
 (setq python-shell-prompt-detect-failure-warning nil)
 (my|define-jump-handlers python-mode)
 (my|define-jump-handlers cython-mode anaconda-mode-goto)
@@ -319,9 +315,8 @@ Return a list of installed packages or nil for every skipped package."
                               (anaconda-eldoc-mode)
                               (diminish 'anaconda-eldoc-mode "")
                               (add-to-list 'my-jump-handlers-python-mode
-                                        '(anaconda-mode-find-definitions :async t))))
+					   '(anaconda-mode-find-definitions :async t))))
 (diminish 'eldoc-mode "")
-
 
 
 ;; ----------------
@@ -370,28 +365,15 @@ Return a list of installed packages or nil for every skipped package."
 (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
 (setq
-  ;; js2-mode
-  js2-basic-offset 2
-  js-indent-level 2
-  ;; web-mode
-  css-indent-offset 2
-  web-mode-markup-indent-offset 2
-  web-mode-css-indent-offset 2
-  web-mode-code-indent-offset 2
-  web-mode-attr-indent-offset 2)
-
-(add-hook 'js2-mode-hook (lambda ()
-         (setq evil-shift-width 2)
-         (setq-default indent-tabs-mode nil)
-         (setq jsmd "js")))
-
-(add-hook 'web-mode-hook (lambda ()
-           (setq evil-shift-width 2)
-           (setq-default indent-tabs-mode nil)
-           (setq jsmd "web")))
-
-(evil-leader/set-key
-  "tj" 'my/toggle-jsmodes)
+ ;; js2-mode
+ js2-basic-offset 2
+ js-indent-level 2
+ ;; web-mode
+ css-indent-offset 2
+ web-mode-markup-indent-offset 2
+ web-mode-css-indent-offset 2
+ web-mode-code-indent-offset 2
+ web-mode-attr-indent-offset 2)
 
 ;; ----------------
 ;; LaTeX
@@ -406,7 +388,8 @@ Return a list of installed packages or nil for every skipped package."
                 (call-process "texcount" nil t nil "-brief" "-nc" this-file)))))
       (string-match "\n$" word-count)
       (message (replace-match "" nil nil word-count))))
-    (define-key LaTeX-mode-map "\C-cw" 'my/texcount))
+  (define-key LaTeX-mode-map "\C-cw" 'my/texcount))
+
 (add-hook 'LaTeX-mode-hook 'my/latex-setup t)
 
 
@@ -419,58 +402,19 @@ Return a list of installed packages or nil for every skipped package."
   :init (add-hook 'after-init-hook 'global-company-mode)
   :config
   (use-package company-irony :ensure t :defer t)
+  (company-quickhelp-mode 1)
+  (diminish 'company-mode " Com")
+  (eval-after-load "company"
+    '(progn
+       (add-to-list 'company-backends 'company-anaconda)
+       (add-to-list 'company-backends '(company-irony-c-headers company-c-headers company-irony))
+       (add-to-list 'company-backends 'company-ghc)
+       (define-key company-active-map (kbd "C-k") 'company-select-previous)
+       (define-key company-active-map (kbd "C-j") 'company-select-next)
+       (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
+       (define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
+       (define-key company-active-map (kbd "C-l") 'company-complete-selection)))
   )
-
-(eval-after-load "company"
-  '(progn
-    (add-to-list 'company-backends 'company-anaconda)
-    (add-to-list 'company-backends '(company-irony-c-headers company-c-headers company-irony))
-    (add-to-list 'company-backends 'company-ghc)
-    (define-key company-active-map (kbd "C-k") 'company-select-previous)
-    (define-key company-active-map (kbd "C-j") 'company-select-next)
-    ;(define-key company-active-map (kbd "TAB") 'company-select-next)
-    (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
-    (define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
-    (define-key company-active-map (kbd "C-l") 'company-complete-selection)))
-;(ac-config-default)
-(company-quickhelp-mode 1)
-(diminish 'company-mode " Com")
-
-;(use-package smartparens-config)
-
-
-(use-package smartparens
-  :defer t
-  :commands (sp-split-sexp sp-newline sp-up-sexp)
-  :init
-  (progn
-    ;; settings
-    (setq sp-show-pair-delay 0.2
-          ;; fix paren highlighting in normal mode
-          sp-show-pair-from-inside t
-          sp-cancel-autoskip-on-backward-movement nil
-          sp-highlight-pair-overlay nil
-          sp-highlight-wrap-overlay nil
-          sp-highlight-wrap-tag-overlay nil)
-    (add-hook 'prog-mode-hook 'smartparens-mode)
-    (add-hook 'comint-mode-hook 'smartparens-mode)
-  :config
-  (progn
-    (require 'smartparens-config)
-    ;; (spacemacs//adaptive-smartparent-pair-overlay-face)
-    ;; (add-hook 'spacemacs-post-theme-change-hook
-    ;;           'spacemacs//adaptive-smartparent-pair-overlay-face)
-    (show-smartparens-global-mode +1)
-    ;; don't create a pair with single quote in minibuffer
-    (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
-    (sp-pair "(" nil :post-handlers
-             '(:add (my/smartparens-pair-newline-and-indent "RET")))
-    (sp-pair "{" nil :post-handlers
-             '(:add (my/smartparens-pair-newline-and-indent "RET")))
-    (sp-pair "[" nil :post-handlers
-             '(:add (my/smartparens-pair-newline-and-indent "RET")))
-    )))
-(diminish 'smartparens-mode "")
 
 
 ;; ----------------
@@ -482,20 +426,18 @@ Return a list of installed packages or nil for every skipped package."
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
   (eval-after-load 'flycheck
-      '(progn
-        (set-face-background 'flycheck-warning "unspecified-bg")
-        (set-face-foreground 'flycheck-warning "unspecified-fg")
-        (add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
-
+    '(progn
+       (set-face-background 'flycheck-warning "unspecified-bg")
+       (set-face-foreground 'flycheck-warning "unspecified-fg")
+       (add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
   (define-key global-map (kbd "C-c ! t") 'flycheck-mode)
-
   (add-to-list 'display-buffer-alist
-              `(,(rx bos "*Flycheck errors*" eos)
-                (display-buffer-reuse-window
-                 display-buffer-in-side-window)
-                (side            . bottom)
-                (reusable-frames . visible)
-                (window-height   . 0.33)))
+	       `(,(rx bos "*Flycheck errors*" eos)
+		 (display-buffer-reuse-window
+		  display-buffer-in-side-window)
+		 (side            . bottom)
+		 (reusable-frames . visible)
+		 (window-height   . 0.33)))
 
   (evil-leader/set-key
     "el" 'my/toggle-flycheck-error-list)
@@ -506,18 +448,6 @@ Return a list of installed packages or nil for every skipped package."
 ;; ----------------
 ;; ido mode
 ;; ----------------
-;; (use-package ido
-;;   :ensure t
-;;   :config
-;;   (setq ido-enable-prefix t)
-;;   (ido-mode t)
-;;
-;;   (defun bind-ido-keys ()
-;;     "Keybindings for ido mode."
-;;     (define-key ido-completion-map (kbd "C-h") 'ido-up-directory))
-;;
-;;   (add-hook 'ido-setup-hook #'bind-ido-keys)
-;;   )
 (use-package flx-ido
   :ensure  t
   :config
@@ -528,46 +458,16 @@ Return a list of installed packages or nil for every skipped package."
   )
 
 
-
-;; ----------------
-;; misc
-;; ----------------
-(which-key-mode)
-(diminish 'which-key-mode "")
-
-(require 'spaceline-config)
-(setq powerline-height 15)
-;; (setq powerline-default-separator "slant")
-(setq powerline-default-separator 'utf-8)
-(spaceline-spacemacs-theme)
-
-
-
 ;; ----------------
 ;; helm
 ;; ----------------
 (use-package helm-config)
 (use-package helm-themes)
-
-(use-package helm-mode
-    :config (helm-mode 1))
-
-(use-package helm-adaptive
-    :config (helm-adaptive-mode 1))
-
-;; (use-package helm-ring
-;;     :config (helm-push-mark-mode 1))
-
-(use-package helm-utils
-    ;; Popup buffer-name or filename in grep/moccur/imenu-all etc...
-    :config (helm-popup-tip-mode 1))
-
-(use-package helm-sys
-    :config (helm-top-poll-mode 1))
-
-(use-package helm-fuzzy-find
-  :ensure t
-  )
+(use-package helm-mode :config (helm-mode 1))
+(use-package helm-adaptive :config (helm-adaptive-mode 1))
+(use-package helm-utils :config (helm-popup-tip-mode 1))
+(use-package helm-sys :config (helm-top-poll-mode 1))
+(use-package helm-fuzzy-find :ensure t)
 
 (setq helm-M-x-fuzzy-match t)
 (setq helm-locate-fuzzy-match t)
@@ -575,21 +475,11 @@ Return a list of installed packages or nil for every skipped package."
 ;; Global-map
 (global-set-key (kbd "M-x")                          'undefined)
 (global-set-key (kbd "M-x")                          'helm-M-x)
-;; (global-set-key (kbd "M-y")                          'helm-show-kill-ring)
-;(global-set-key (kbd "C-x C-f")                      'helm-find-files)
 (global-set-key (kbd "C-c <SPC>")                    'helm-all-mark-rings)
 (global-set-key (kbd "C-x r b")                      'helm-filtered-bookmarks)
-;; (global-set-key (kbd "C-h r")                        'helm-info-emacs)
 (global-set-key (kbd "C-:")                          'helm-eval-expression-with-eldoc)
 (global-set-key (kbd "C-,")                          'helm-calcul-expression)
-;; (global-set-key (kbd "C-h d")                        'helm-info-at-point)
-;; (global-set-key (kbd "C-h i")                        'helm-info)
 (global-set-key (kbd "C-x C-d")                      'helm-browse-project)
-(global-set-key (kbd "<f1>")                         'helm-resume)
-;; (global-set-key (kbd "C-h C-f")                      'helm-apropos)
-;; (global-set-key (kbd "C-h a")                        'helm-apropos)
-(global-set-key (kbd "<f5> s")                       'helm-find)
-(global-set-key (kbd "<f2>")                         'helm-execute-kmacro)
 (global-set-key (kbd "C-c i")                        'helm-imenu-in-all-buffers)
 (global-set-key (kbd "C-s")                          'helm-occur)
 (define-key global-map [remap jump-to-register]      'helm-register)
@@ -605,10 +495,6 @@ Return a list of installed packages or nil for every skipped package."
 (define-key helm-map (kbd "C-k") 'helm-previous-line)
 (define-key helm-map (kbd "C-h") 'helm-find-files-up-one-level)
 (define-key helm-map (kbd "C-l") (kbd "RET"))
-;(evil-add-hjkl-bindings helm-map 'emacs (kbd "C-j") 'helm-next-line)
-;(evil-add-hjkl-bindings helm-map 'emacs (kbd "C-k") 'helm-previous-line)
-;(define-key helm-map (kbd "C-h") 'helm-find-files-up-one-level)
-;(evil-add-hjkl-bindings helm-map (kbd "C-l") (kbd "RET"))
 
 (with-eval-after-load 'helm-files
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
@@ -622,12 +508,6 @@ Return a list of installed packages or nil for every skipped package."
     (kbd "S-TAB") 'helm-find-files-up-one-level)
   (define-key helm-map (kbd "C-z") 'helm-select-action))
 
-;(with-eval-after-load 'helm-files
-;  (dolist (keymap (list helm-find-files-map helm-read-file-map))
-;    (define-key keymap (kbd "C-l") 'helm-execute-persistent-action)
-;    (define-key keymap (kbd "C-h") 'helm-find-files-up-one-level)
-;    ;; rebind `describe-key' for convenience
-;    (define-key keymap (kbd "C-S-h") 'describe-key)))
 (when linum-mode
   (add-hook 'helm-after-initialize-hook (lambda ()
                                           (with-helm-buffer
@@ -636,13 +516,20 @@ Return a list of installed packages or nil for every skipped package."
 (global-set-key (kbd "C-x C-f") 'my/helm-find-files)
 (diminish 'helm-mode "")
 
-(projectile-global-mode)
-(use-package helm-projectile)
-(helm-projectile-on)
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-global-mode)
+  )
 
-(persp-mode)
-(use-package persp-projectile)
+(use-package helm-projectile
+  :ensure t
+  :config
+  (helm-projectile-on)
+  )
 
+(persp-mode) ;; install perspective.el
+(use-package persp-projectile :ensure t)
 
 
 ;; ----------------
@@ -660,8 +547,8 @@ Return a list of installed packages or nil for every skipped package."
 
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
 (add-hook 'org-mode-hook (lambda ()
-         (define-key org-mode-map (kbd "TAB") 'org-cycle)
-         (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)
+			   (define-key org-mode-map (kbd "TAB") 'org-cycle)
+			   (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)
 			   (org-bullets-mode 1)
 			   (org-babel-do-load-languages
 			    'org-babel-load-languages
@@ -674,6 +561,7 @@ Return a list of installed packages or nil for every skipped package."
 			   (evil-leader/set-key
 			     "oc" 'org-table-delete-column
 			     "or" 'org-table-kill-row)))
+
 
 ;; ----------------------------------------------------------------------------------------------
 
@@ -819,16 +707,17 @@ Return a list of installed packages or nil for every skipped package."
    (unspecified "#272822" "#20240E" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
 
 ;(set-frame-font "Source Code Pro-10" nil t)
-(set-frame-font "Ubuntu Mono-13" nil t)
+;(set-frame-font "Ubuntu Mono-13" nil t)
 ;(set-frame-font "Menlo for Powerline:pixelsize=14" nil t)
 ;; (set-frame-font "Hack-10.5" nil t)
-;(set-frame-font "DejaVu Sans Mono-10" nil t)
+(set-frame-font "DejaVu Sans Mono-10" nil t)
 ;(require 'init-powerline)
 ;(load-theme 'spacemacs-dark)
 (if (display-graphic-p)
     (progn
       ;(load-theme 'spolsky t)
-      (load-theme 'sanityinc-tomorrow-night t)
+      (load-theme 'spacemacs-dark t)
+      ;(load-theme 'sanityinc-tomorrow-night t)
       ;(setq linum-format "%4d ")
       (setq linum-format 'dynamic)
       ;; (set-face-attribute 'vertical-border nil :foreground "dim gray")
@@ -848,7 +737,7 @@ Return a list of installed packages or nil for every skipped package."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(font-lock-comment-delimiter-face ((t (:inherit font-lock-comment-delimiter-face :background "#1D1F21"))))
- '(font-lock-comment-face ((t (:inherit font-lock-comment-face :background "#1D1F21"))))
  '(linum ((t (:inherit default))))
+ '(show-paren-match ((t (:weight normal))))
+ '(sp-show-pair-match-face ((t (:weight normal))))
  '(trailing-whitespace ((t (:background "#602020")))))
