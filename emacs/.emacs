@@ -565,179 +565,25 @@
 
 ;; ----------------------------------------------------------------------------------------------
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default bold shadow italic underline bold bold-italic bold])
- '(ansi-color-names-vector
-   ["#272822" "#F92672" "#A6E22E" "#E6DB74" "#66D9EF" "#FD5FF0" "#A1EFE4" "#F8F8F2"])
- '(compilation-message-face (quote default))
- '(custom-safe-themes
-   (quote
-    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "84d2f9eeb3f82d619ca4bfffe5f157282f4779732f48a5ac1484d94d5ff5b279" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "a800120841da457aa2f86b98fb9fd8df8ba682cebde033d7dbf8077c1b7d677a" "28130127bbf3072c1bbc7652fca7245f186bb417b3b385a5e4da57b895ffe9d8" default)))
- '(fci-rule-color "#20240E")
- '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
- '(highlight-tail-colors
-   (quote
-    (("#20240E" . 0)
-     ("#679A01" . 20)
-     ("#4BBEAE" . 30)
-     ("#1DB4D0" . 50)
-     ("#9A8F21" . 60)
-     ("#A75B00" . 70)
-     ("#F309DF" . 85)
-     ("#20240E" . 100))))
- '(linum-format " %7i ")
- '(magit-diff-use-overlays nil)
- '(org-agenda-files (quote ("~/oeworks/oeworks.org" "~/org/vermantia.org")))
- '(package-selected-packages
-   (quote
-    (powerline-evil spaceline c-eldoc auto-complete-clang neotree company-irony-c-headers imenu-list helm-ag fuzzy-match wc-mode gruvbox-theme powerline sublime-themes org helm-fuzzy-find magit git-gutter-fringe fringe-helper git-gutter-fringe+ org-clock-csv flx-ido company-c-headers ox-twbs solarized-theme auctex org-bullets evil-surround zenburn-theme which-key web-mode use-package spacemacs-theme smartparens pyenv-mode popwin persp-projectile ob-ipython monokai-theme molokai-theme moe-theme material-theme js2-mode jedi intero highlight-numbers highlight-escape-sequences helm-projectile hc-zenburn-theme git-gutter git-gutter+ evil-terminal-cursor-changer evil-nerd-commenter evil-leader esup company-quickhelp company-ghci company-ghc company-anaconda color-theme-sanityinc-tomorrow atom-one-dark-theme ac-anaconda)))
- '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
- '(pos-tip-background-color "#A6E22E")
- '(pos-tip-foreground-color "#272822")
- '(projectile-mode-line
-   (quote
-    (:eval
-     (if
-	 (file-remote-p default-directory)
-	 " Proj"
-       (format " Proj[%s]"
-	       (projectile-project-name))))))
- '(safe-local-variable-values
-   (quote
-    ((org-todo-keyword-faces
-      ("ON_HOLD" . "cyan")
-      (\,
-       ("TESTING" . "magenta"))))))
- '(sml/mode-width
-   (if
-       (eq
-	(powerline-current-separator)
-	(quote arrow))
-       (quote right)
-     (quote full)))
- '(sml/pos-id-separator
-   (quote
-    (""
-     (:propertize " " face powerline-active1)
-     (:eval
-      (propertize " "
-		  (quote display)
-		  (funcall
-		   (intern
-		    (format "powerline-%s-%s"
-			    (powerline-current-separator)
-			    (car powerline-default-separator-dir)))
-		   (quote powerline-active1)
-		   (quote powerline-active2))))
-     (:propertize " " face powerline-active2))))
- '(sml/pos-minor-modes-separator
-   (quote
-    (""
-     (:propertize " " face powerline-active1)
-     (:eval
-      (propertize " "
-		  (quote display)
-		  (funcall
-		   (intern
-		    (format "powerline-%s-%s"
-			    (powerline-current-separator)
-			    (cdr powerline-default-separator-dir)))
-		   (quote powerline-active1)
-		   (quote sml/global))))
-     (:propertize " " face sml/global))))
- '(sml/pre-id-separator
-   (quote
-    (""
-     (:propertize " " face sml/global)
-     (:eval
-      (propertize " "
-		  (quote display)
-		  (funcall
-		   (intern
-		    (format "powerline-%s-%s"
-			    (powerline-current-separator)
-			    (car powerline-default-separator-dir)))
-		   (quote sml/global)
-		   (quote powerline-active1))))
-     (:propertize " " face powerline-active1))))
- '(sml/pre-minor-modes-separator
-   (quote
-    (""
-     (:propertize " " face powerline-active2)
-     (:eval
-      (propertize " "
-		  (quote display)
-		  (funcall
-		   (intern
-		    (format "powerline-%s-%s"
-			    (powerline-current-separator)
-			    (cdr powerline-default-separator-dir)))
-		   (quote powerline-active2)
-		   (quote powerline-active1))))
-     (:propertize " " face powerline-active1))))
- '(sml/pre-modes-separator (propertize " " (quote face) (quote sml/modes)))
- '(vc-annotate-background nil)
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#F92672")
-     (40 . "#CF4F1F")
-     (60 . "#C26C0F")
-     (80 . "#E6DB74")
-     (100 . "#AB8C00")
-     (120 . "#A18F00")
-     (140 . "#989200")
-     (160 . "#8E9500")
-     (180 . "#A6E22E")
-     (200 . "#729A1E")
-     (220 . "#609C3C")
-     (240 . "#4E9D5B")
-     (260 . "#3C9F79")
-     (280 . "#A1EFE4")
-     (300 . "#299BA6")
-     (320 . "#2896B5")
-     (340 . "#2790C3")
-     (360 . "#66D9EF"))))
- '(vc-annotate-very-old-color nil)
- '(weechat-color-list
-   (unspecified "#272822" "#20240E" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
 
 ;(set-frame-font "Source Code Pro-10" nil t)
 ;(set-frame-font "Ubuntu Mono-13" nil t)
 ;(set-frame-font "Menlo for Powerline:pixelsize=14" nil t)
 ;; (set-frame-font "Hack-10.5" nil t)
 (set-frame-font "DejaVu Sans Mono-10" nil t)
-;(require 'init-powerline)
-;(load-theme 'spacemacs-dark)
 (if (display-graphic-p)
     (progn
-      ;(load-theme 'spolsky t)
       (load-theme 'spacemacs-dark t)
-      ;(load-theme 'sanityinc-tomorrow-night t)
-      ;(setq linum-format "%4d ")
-      (setq linum-format 'dynamic)
-      ;; (set-face-attribute 'vertical-border nil :foreground "dim gray")
-      (set-face-attribute 'cursor nil :background "gray")
-      (set-face-attribute 'show-paren-match nil :weight 'normal)
+      ;(set-face-attribute 'cursor nil :background "gray")
       )
   (progn
     (load-theme 'monokai)
-    (setq linum-format 'dynamic)
-    ;; (my/fix-theme)
     (set-face-attribute 'mode-line nil :background "#404040")
     (set-face-attribute 'mode-line-inactive nil :background "#282828")
-    (set-face-attribute 'sp-show-pair-match-face nil :inverse-video nil)
     ))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(linum ((t (:inherit default))))
- '(show-paren-match ((t (:weight normal))))
- '(sp-show-pair-match-face ((t (:weight normal))))
- '(trailing-whitespace ((t (:background "#602020")))))
+(setq linum-format 'dynamic)
+
+(set-face-attribute 'show-paren-match nil :weight 'normal)
+(set-face-attribute 'trailing-whitespace nil :background "#602020")
