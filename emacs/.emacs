@@ -70,7 +70,8 @@
 ;; only with this set to nil can org-mode export & open too
 (setq process-connection-type nil)
 
-
+;; i love this
+(defalias 'yes-or-no-p #'y-or-n-p)
 
 ;; ----------------
 ;; UI & themes
