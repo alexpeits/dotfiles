@@ -1,7 +1,8 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom"))
 (setenv "PATH" (concat (getenv "PATH") ":/home/alex/.cabal/bin"))
-(setq exec-path (append exec-path '("/home/alex/.cabal/bin")))
+(setq exec-path (append exec-path '("~/.cabal/bin")))
+(setq exec-path (append exec-path '("~/.nvm/versions/node/v6.9.2/bin")))
 
 ;; ----------------
 ;; Package management
@@ -20,7 +21,6 @@
 
 (require 'myfuncs)
 (add-to-list 'custom-theme-load-path "~/.emacs.d/custom-themes/")
-
 
 
 ;; ----------------
@@ -84,7 +84,9 @@
 (tool-bar-mode -1)
 
 ;; linum
-(global-linum-mode t)
+(use-package linum)
+(add-hook 'prog-mode-hook (lambda () (linum-mode t)))
+;; (global-linum-mode t)
 (setq linum-format "%4d ")
 
 ;; always open helm buffers at bottom
@@ -143,15 +145,22 @@
   (diminish 'which-key-mode "")
   )
 
-(use-package spaceline
+(use-package imenu-list
   :ensure t
   :config
-  (require 'spaceline-config)
-  (setq powerline-height 15)
-  ;; (setq powerline-default-separator "slant")
-  (setq powerline-default-separator 'utf-8)
-  (spaceline-spacemacs-theme)
+  (global-set-key (kbd "C-\\") #'imenu-list-minor-mode)
+  ;; (add-hook 'imenu-list-minor-mode-hook (lambda () (linum-mode 0)))
   )
+
+;; (use-package spaceline
+;;   :ensure t
+;;   :config
+;;   (require 'spaceline-config)
+;;   (setq powerline-height 15)
+;;   ;; (setq powerline-default-separator "slant")
+;;   (setq powerline-default-separator 'utf-8)
+;;   (spaceline-spacemacs-theme)
+;;   )
 
 ;; ----------------
 ;; term
@@ -224,13 +233,13 @@
   ;; move state to beginning of modeline
   (setq evil-mode-line-format '(before . mode-line-front-space))
   ;; change state colors
-  ;; (setq evil-normal-state-tag   (propertize " <N> " 'face '((:foreground "#268bd2" :weight extra-bold)))
-  ;;       evil-emacs-state-tag    (propertize " <E> " 'face '((:foreground "#dc752f" :weight extra-bold)))
-  ;;       evil-insert-state-tag   (propertize " <I> " 'face '((:foreground "#2aa198" :weight extra-bold)))
-  ;;       evil-replace-state-tag  (propertize " <R> " 'face '((:foreground "#df005f" :weight extra-bold)))
-  ;;       evil-motion-state-tag   (propertize " <M> " 'face '((:foreground "#df005f" :weight extra-bold)))
-  ;;       evil-visual-state-tag   (propertize " <V> " 'face '((:foreground "#d75fd7" :weight extra-bold)))
-  ;;       evil-operator-state-tag (propertize " <O> " 'face '((:foreground "#df005f" :weight extra-bold))))
+  (setq evil-normal-state-tag   (propertize " <N> " 'face '((:foreground "#268bd2" :weight extra-bold)))
+        evil-emacs-state-tag    (propertize " <E> " 'face '((:foreground "#dc752f" :weight extra-bold)))
+        evil-insert-state-tag   (propertize " <I> " 'face '((:foreground "#2aa198" :weight extra-bold)))
+        evil-replace-state-tag  (propertize " <R> " 'face '((:foreground "#df005f" :weight extra-bold)))
+        evil-motion-state-tag   (propertize " <M> " 'face '((:foreground "#df005f" :weight extra-bold)))
+        evil-visual-state-tag   (propertize " <V> " 'face '((:foreground "#d75fd7" :weight extra-bold)))
+        evil-operator-state-tag (propertize " <O> " 'face '((:foreground "#df005f" :weight extra-bold))))
 
   ;; this is needed to be able to use C-h
   (global-set-key (kbd "C-h") 'undefined)
