@@ -84,10 +84,12 @@
 (tool-bar-mode -1)
 
 ;; linum
-(use-package linum)
-(add-hook 'prog-mode-hook (lambda () (linum-mode t)))
-;; (global-linum-mode t)
-(setq linum-format "%4d ")
+(use-package linum
+  :config
+  ;; (global-linum-mode t)
+  (add-hook 'prog-mode-hook (lambda () (linum-mode t)))
+  (setq linum-format "%4d ")
+  )
 
 ;; always open helm buffers at bottom
 (use-package popwin
