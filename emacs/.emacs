@@ -151,7 +151,7 @@
   :ensure t
   :config
   (global-set-key (kbd "C-\\") #'imenu-list-minor-mode)
-  ;; (add-hook 'imenu-list-minor-mode-hook (lambda () (linum-mode 0)))
+  (setq imenu-list-size 0.15)
   )
 
 ;; (use-package spaceline
