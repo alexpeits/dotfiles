@@ -480,6 +480,7 @@
 (use-package helm-utils :config (helm-popup-tip-mode 1))
 (use-package helm-sys :config (helm-top-poll-mode 1))
 (use-package helm-fuzzy-find :ensure t)
+(use-package helm-ag :ensure t)
 
 (setq helm-M-x-fuzzy-match t)
 (setq helm-locate-fuzzy-match t)
