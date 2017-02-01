@@ -77,6 +77,8 @@
 ;; UI & themes
 ;; ----------------
 
+(setq-default indent-tabs-mode nil)
+
 ;; disable annoying stuff
 (setq ring-bell-function 'ignore)
 (setq inhibit-startup-screen t)
@@ -152,7 +154,7 @@
   :ensure t
   :config
   (global-set-key (kbd "C-\\") #'imenu-list-minor-mode)
-  (setq imenu-list-size 0.15)
+  (setq imenu-list-size 30)
   )
 
 ;; (use-package spaceline
@@ -278,8 +280,11 @@
     "]"  'find-tag-other-window
     ";"  'evilnc-comment-or-uncomment-lines
     ")"  'my/fix-theme
+    "h"  'help
 
     "s"  'shell-command
+
+    "l"  'linum-mode
 
     "bn" 'next-buffer
     "bp" 'previous-buffer
@@ -376,6 +381,8 @@
 ;; ----------------
 (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+(add-hook 'js2-mode-hook (function (lambda () (setq evil-shift-width 2))))
+(add-hook 'web-mode-hook (function (lambda () (setq evil-shift-width 2))))
 (setq
  ;; js2-mode
  js2-basic-offset 2
@@ -421,6 +428,7 @@
        (add-to-list 'company-backends 'company-anaconda)
        (add-to-list 'company-backends '(company-irony-c-headers company-c-headers company-irony))
        (add-to-list 'company-backends 'company-ghc)
+       (add-to-list 'company-backends 'company-tern)
        (define-key company-active-map (kbd "C-k") 'company-select-previous)
        (define-key company-active-map (kbd "C-j") 'company-select-next)
        (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
@@ -563,6 +571,7 @@
 			   (define-key org-mode-map (kbd "TAB") 'org-cycle)
 			   (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)
 			   (org-bullets-mode 1)
+			   (setq org-clock-into-drawer nil)
 			   (org-babel-do-load-languages
 			    'org-babel-load-languages
 			    '((ipython . t)
@@ -582,19 +591,27 @@
 (load custom-file 'noerror)
 
 ;(set-frame-font "Source Code Pro-10" nil t)
-;(set-frame-font "Ubuntu Mono-13" nil t)
-;(set-frame-font "Menlo for Powerline:pixelsize=14" nil t)
+(set-frame-font "Ubuntu Mono-13" nil t)
+;; (set-frame-font "Menlo for Powerline:pixelsize=14" nil t)
 ;; (set-frame-font "Hack-10.5" nil t)
-(set-frame-font "DejaVu Sans Mono-10" nil t)
+;(set-frame-font "DejaVu Sans Mono-10" nil t)
 (if (display-graphic-p)
     (progn
-      (load-theme 'spacemacs-dark t)
+      ;; (load-theme 'spacemacs-dark t)
+      (use-package theme-changer
+	:ensure t
+	:config
+	(setq calendar-latitude 37.98)
+	(setq calendar-longitude 23.72)
+	(change-theme 'spacemacs-light 'spacemacs-dark))
+      ;; (load-theme 'sanityinc-tomorrow-night t)
       ;(set-face-attribute 'cursor nil :background "gray")
       )
   (progn
-    (load-theme 'monokai)
-    (set-face-attribute 'mode-line nil :background "#404040")
-    (set-face-attribute 'mode-line-inactive nil :background "#282828")
+    (load-theme 'spacemacs-dark t)
+    ;; (load-theme 'monokai)
+    ;; (set-face-attribute 'mode-line nil :background "#404040")
+    ;; (set-face-attribute 'mode-line-inactive nil :background "#282828")
     ))
 (setq linum-format 'dynamic)
 
