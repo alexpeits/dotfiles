@@ -122,6 +122,11 @@ sets `my-jump-handlers' in buffers of that mode."
     (js2-mode))
   )
 
+;; org-mode
+(defun my/timesheet-block ()
+  (interactive)
+  (insert-file-contents "~/.emacs.d/timesheet.org"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; error checking
 
