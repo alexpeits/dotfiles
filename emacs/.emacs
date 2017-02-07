@@ -286,6 +286,8 @@
 
     "l"  'linum-mode
 
+    "ur" 'rainbow-delimiters-mode
+
     "bn" 'next-buffer
     "bp" 'previous-buffer
     "bb" 'helm-buffers-list
@@ -561,6 +563,8 @@
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cb" 'org-iswitchb)
 (setq org-log-done 'time)
+(setq org-confirm-babel-evaluate nil)
+(setq org-clock-into-drawer nil)
 ;; format string used when creating CLOCKSUM lines and when generating a
 ;; time duration (avoid showing days)
 (setq org-time-clocksum-format
@@ -570,8 +574,11 @@
 (add-hook 'org-mode-hook (lambda ()
 			   (define-key org-mode-map (kbd "TAB") 'org-cycle)
 			   (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)
+                           (setq python-shell-prompt-detect-failure-warning nil)
+                           (add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter")
+                           (add-to-list 'org-structure-template-alist '("pf" "#+BEGIN_SRC ipython :session :file %file :exports both\n?\n#+END_SRC"))
+                           (add-to-list 'org-structure-template-alist '("po" "#+BEGIN_SRC ipython :session :exports both\n?\n#+END_SRC"))
 			   (org-bullets-mode 1)
-			   (setq org-clock-into-drawer nil)
 			   (org-babel-do-load-languages
 			    'org-babel-load-languages
 			    '((ipython . t)
@@ -591,10 +598,10 @@
 (load custom-file 'noerror)
 
 ;(set-frame-font "Source Code Pro-10" nil t)
-(set-frame-font "Ubuntu Mono-13" nil t)
-;; (set-frame-font "Menlo for Powerline:pixelsize=14" nil t)
-;; (set-frame-font "Hack-10.5" nil t)
-;(set-frame-font "DejaVu Sans Mono-10" nil t)
+;; (set-frame-font "Ubuntu Mono-13" nil t)
+;; (set-frame-font "DejaVu Sans Mono-10.5" nil t)
+(set-frame-font "Liberation Mono-11" nil t)
+(setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
       ;; (load-theme 'spacemacs-dark t)
@@ -603,7 +610,8 @@
 	:config
 	(setq calendar-latitude 37.98)
 	(setq calendar-longitude 23.72)
-	(change-theme 'spacemacs-light 'spacemacs-dark))
+	(change-theme 'spacemacs-light 'spacemacs-dark)
+        )
       ;; (load-theme 'sanityinc-tomorrow-night t)
       ;(set-face-attribute 'cursor nil :background "gray")
       )
