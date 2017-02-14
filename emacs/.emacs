@@ -1,8 +1,11 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom"))
+(add-to-list 'custom-theme-load-path "~/.emacs.d/custom-themes/")
 (setenv "PATH" (concat (getenv "PATH") ":/home/alex/.cabal/bin"))
 (setq exec-path (append exec-path '("~/.cabal/bin")))
-(setq exec-path (append exec-path '("~/.nvm/versions/node/v6.9.2/bin")))
+(setq exec-path (append exec-path '("~/.nvm/versions/node/v6.9.5/bin")))
+(setq user-full-name "Alex Peitsinis"
+      user-mail-address "alexpeitsinis@gmail.com")
 
 ;; ----------------
 ;; Package management
@@ -16,12 +19,11 @@
   (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")))
 ;; activate installed packages
 (package-initialize)
+(setq package-enable-at-startup nil)
 
 (require 'use-package)
 
 (require 'myfuncs)
-(add-to-list 'custom-theme-load-path "~/.emacs.d/custom-themes/")
-
 
 ;; ----------------
 ;; various
@@ -60,6 +62,9 @@
 ;; show column in modeline
 (setq column-number-mode t)
 
+;; use column width 80 to fill (e.g. with gq)
+(setq-default fill-column 80)
+
 ;; store all backup and autosave files in
 ;; one dir
 (setq backup-directory-alist
@@ -78,10 +83,13 @@
 ;; ----------------
 
 (setq-default indent-tabs-mode nil)
+(setq solarized-use-variable-pitch nil)
 
 ;; disable annoying stuff
 (setq ring-bell-function 'ignore)
-(setq inhibit-startup-screen t)
+(setq inhibit-startup-message t)
+(setq inhibit-splash-screen t)
+(setq initial-scratch-message nil)
 (menu-bar-mode -1)
 (toggle-scroll-bar -1)
 (tool-bar-mode -1)
@@ -91,7 +99,8 @@
   :config
   ;; (global-linum-mode t)
   (add-hook 'prog-mode-hook (lambda () (linum-mode t)))
-  (setq linum-format "%4d ")
+  ;; (setq linum-format "%4d ")
+  (setq linum-format 'dynamic)
   )
 
 ;; always open helm buffers at bottom
@@ -115,6 +124,7 @@
 (add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
 
 (use-package smartparens
+  :ensure t
   :defer t
   :commands (sp-split-sexp sp-newline sp-up-sexp)
   :init
@@ -190,21 +200,26 @@
 ;; ----------------
 ;; VCS
 ;; ----------------
+;; (if (display-graphic-p)
+;;     (progn
+;;       (require 'git-gutter-fringe)
+;;       (global-git-gutter-mode +1)
+;;       )
+;;   (progn
+;;     (global-git-gutter-mode +1)
+;;     ;; (set-face-background 'git-gutter:modified "purple")
+;;     ;; (set-face-foreground 'git-gutter:modified "green")
+;;     ;; (set-face-background 'git-gutter:added "purple")
+;;     ;; (set-face-foreground 'git-gutter:added "green")
+;;     ;; (set-face-background 'git-gutter:deleted "purple")
+;;     ;; (set-face-foreground 'git-gutter:deleted "green")
+;;     ))
+;; (diminish 'git-gutter-mode "")
 (if (display-graphic-p)
     (progn
-      (require 'git-gutter-fringe)
-      (global-git-gutter-mode +1)
-      )
-  (progn
-    (global-git-gutter-mode +1)
-    ;; (set-face-background 'git-gutter:modified "purple")
-    ;; (set-face-foreground 'git-gutter:modified "green")
-    ;; (set-face-background 'git-gutter:added "purple")
-    ;; (set-face-foreground 'git-gutter:added "green")
-    ;; (set-face-background 'git-gutter:deleted "purple")
-    ;; (set-face-foreground 'git-gutter:deleted "green")
-    ))
-(diminish 'git-gutter-mode "")
+      (use-package diff-hl :ensure t)
+      (add-hook 'prog-mode-hook 'diff-hl-mode)
+      (add-hook 'vc-dir-mode-hook 'diff-hl-mode)))
 
 
 ;; ----------------
@@ -248,6 +263,7 @@
 
   ;; this is needed to be able to use C-h
   (global-set-key (kbd "C-h") 'undefined)
+  (define-key evil-insert-state-map (kbd "C-k") nil)
 
   (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
   (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
@@ -286,7 +302,9 @@
 
     "l"  'linum-mode
 
-    "ur" 'rainbow-delimiters-mode
+    "um" 'menu-bar-mode
+    "up" 'rainbow-delimiters-mode
+    "uh" 'rainbow-mode
 
     "bn" 'next-buffer
     "bp" 'previous-buffer
@@ -297,6 +315,8 @@
     "ts" 'flycheck-mode
     "tb" 'my/toggle-bg
     "tw" 'my/toggle-scrolling
+    "tg" 'diff-hl-mode
+    "tl" 'hl-line-mode
 
     "j"  'my/jump-to-definition
 
@@ -413,6 +433,18 @@
 
 (add-hook 'LaTeX-mode-hook 'my/latex-setup t)
 
+;; ----------------
+;; markdown & ReST
+;; ----------------
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  )
+
+
 
 ;; ----------------
 ;; company & completions
@@ -451,7 +483,8 @@
     '(progn
        (set-face-background 'flycheck-warning "unspecified-bg")
        (set-face-foreground 'flycheck-warning "unspecified-fg")
-       (add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
+       (add-hook 'flycheck-mode-hook #'flycheck-irony-setup)
+      ))
   (define-key global-map (kbd "C-c ! t") 'flycheck-mode)
   (add-to-list 'display-buffer-alist
 	       `(,(rx bos "*Flycheck errors*" eos)
@@ -464,6 +497,7 @@
   (evil-leader/set-key
     "el" 'my/toggle-flycheck-error-list)
   (flycheck-add-mode 'javascript-eslint 'web-mode)
+  (flycheck-add-mode 'javascript-eslint 'js2-mode)
   )
 
 
@@ -479,6 +513,18 @@
   (setq ido-use-faces nil)
   )
 
+
+;; ----------------
+;; hydra
+;; ----------------
+;; (use-package hydra
+;;   :ensure t
+;;   :config
+;;   (defhydra hydra-common (global-map "<f5>")
+;;     "common functions"
+;;     ("g" text-scale-increase "in")
+;;     ("l" text-scale-decrease "out"))
+;;   )
 
 ;; ----------------
 ;; helm
@@ -574,14 +620,16 @@
 (add-hook 'org-mode-hook (lambda ()
 			   (define-key org-mode-map (kbd "TAB") 'org-cycle)
 			   (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)
-                           (setq python-shell-prompt-detect-failure-warning nil)
-                           (add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter")
                            (add-to-list 'org-structure-template-alist '("pf" "#+BEGIN_SRC ipython :session :file %file :exports both\n?\n#+END_SRC"))
                            (add-to-list 'org-structure-template-alist '("po" "#+BEGIN_SRC ipython :session :exports both\n?\n#+END_SRC"))
+                           (set-face-attribute 'org-block-begin-line nil :background "#073642")
+                           (set-face-attribute 'org-block-end-line nil :background "#073642")
+                           (set-face-attribute 'org-block nil :background "#04303B")
 			   (org-bullets-mode 1)
 			   (org-babel-do-load-languages
 			    'org-babel-load-languages
-			    '((ipython . t)
+			    '((python . t)
+                              (ipython . t)
 			      ;; other languages..
 			      ))
 			   (use-package ox-twbs
@@ -600,18 +648,19 @@
 ;(set-frame-font "Source Code Pro-10" nil t)
 ;; (set-frame-font "Ubuntu Mono-13" nil t)
 ;; (set-frame-font "DejaVu Sans Mono-10.5" nil t)
-(set-frame-font "Liberation Mono-11" nil t)
+;; (set-frame-font "Liberation Mono-11" nil t)
+(set-frame-font "Consolas-12" nil t)
 (setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
-      ;; (load-theme 'spacemacs-dark t)
-      (use-package theme-changer
-	:ensure t
-	:config
-	(setq calendar-latitude 37.98)
-	(setq calendar-longitude 23.72)
-	(change-theme 'spacemacs-light 'spacemacs-dark)
-        )
+      (load-theme 'solarized-dark t)
+      ;; (use-package theme-changer
+	;; :ensure t
+	;; :config
+	;; (setq calendar-latitude 37.98)
+	;; (setq calendar-longitude 23.72)
+	;; (change-theme 'solarized-light 'solarized-dark)
+        ;; )
       ;; (load-theme 'sanityinc-tomorrow-night t)
       ;(set-face-attribute 'cursor nil :background "gray")
       )
