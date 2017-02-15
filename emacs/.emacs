@@ -78,12 +78,26 @@
 ;; i love this
 (defalias 'yes-or-no-p #'y-or-n-p)
 
+;; always scroll to the end of compilation buffers
+(setq compilation-scroll-output t)
+
+(global-set-key (kbd "M-o") 'other-window)
+
 ;; ----------------
 ;; UI & themes
 ;; ----------------
 
+
 (setq-default indent-tabs-mode nil)
-(setq solarized-use-variable-pitch nil)
+(when window-system
+  (setq solarized-use-variable-pitch nil)
+  (setq solarized-height-plus-1 1.0)
+  (setq solarized-height-plus-2 1.0)
+  (setq solarized-height-plus-3 1.0)
+  (setq solarized-height-plus-4 1.0)
+  ;; (setq solarized-high-contrast-mode-line t)
+  ;; (load-theme 'solarized-dark t)
+  )
 
 ;; disable annoying stuff
 (setq ring-bell-function 'ignore)
@@ -117,8 +131,42 @@
 
 ;; text scale inc-dec
 (setq text-scale-mode-step 1.05)
-(define-key global-map (kbd "C-+") 'text-scale-increase)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
+(setq my/default-font "Consolas")
+(setq my/default-font-size 12)
+(setq my/current-font-size my/default-font-size)
+
+(setq my/font-change-increment 1.05)
+
+(defun my/set-font-size ()
+  "Set the font to `my/default-font' at `my/current-font-size'."
+  (set-frame-font
+   (concat my/default-font "-" (number-to-string my/current-font-size))))
+
+(defun my/reset-font-size ()
+  "Change font size back to `my/default-font-size'."
+  (interactive)
+  (setq my/current-font-size my/default-font-size)
+  (my/set-font-size))
+
+(defun my/increase-font-size ()
+  "Increase current font size by a factor of `my/font-change-increment'."
+  (interactive)
+  (setq my/current-font-size
+        (ceiling (* my/current-font-size my/font-change-increment)))
+  (my/set-font-size))
+
+(defun my/decrease-font-size ()
+  "Decrease current font size by a factor of `my/font-change-increment', down to a minimum size of 1."
+  (interactive)
+  (setq my/current-font-size
+        (max 1
+             (floor (/ my/current-font-size my/font-change-increment))))
+  (my/set-font-size))
+
+(define-key global-map (kbd "C-)") 'my/reset-font-size)
+(define-key global-map (kbd "C-+") 'my/increase-font-size)
+(define-key global-map (kbd "C--") 'my/decrease-font-size)
+
 
 ;; highlight trailing whitespace
 (add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
@@ -200,6 +248,12 @@
 ;; ----------------
 ;; VCS
 ;; ----------------
+
+(use-package magit
+  :ensure t
+  :config
+  (global-set-key (kbd "C-x g") 'magit-status))
+
 ;; (if (display-graphic-p)
 ;;     (progn
 ;;       (require 'git-gutter-fringe)
@@ -217,9 +271,14 @@
 ;; (diminish 'git-gutter-mode "")
 (if (display-graphic-p)
     (progn
-      (use-package diff-hl :ensure t)
-      (add-hook 'prog-mode-hook 'diff-hl-mode)
-      (add-hook 'vc-dir-mode-hook 'diff-hl-mode)))
+      (use-package diff-hl
+        :ensure t
+        :config
+        ;; (add-hook 'prog-mode-hook 'diff-hl-mode)
+        ;; (add-hook 'vc-dir-mode-hook 'diff-hl-mode)
+        (global-diff-hl-mode)
+        (diff-hl-flydiff-mode)
+        )))
 
 
 ;; ----------------
@@ -240,6 +299,8 @@
   ;; emacs mode is default in some modes
   (delete 'term-mode evil-insert-state-modes)
   (add-to-list 'evil-emacs-state-modes 'term-mode)
+  (delete 'inferior-python-mode evil-insert-state-modes)
+  (add-to-list 'evil-emacs-state-modes 'inferior-python-mode)
 
   ;; magit
   (evil-define-key 'normal magit-blame-mode-map (kbd "q") 'magit-blame-quit)
@@ -300,8 +361,6 @@
 
     "s"  'shell-command
 
-    "l"  'linum-mode
-
     "um" 'menu-bar-mode
     "up" 'rainbow-delimiters-mode
     "uh" 'rainbow-mode
@@ -312,11 +371,12 @@
     "ws" 'evil-window-split
     "wv" 'evil-window-vsplit
 
-    "ts" 'flycheck-mode
     "tb" 'my/toggle-bg
-    "tw" 'my/toggle-scrolling
     "tg" 'diff-hl-mode
-    "tl" 'hl-line-mode
+    "th" 'global-hl-line-mode
+    "tl"  'linum-mode
+    "ts" 'flycheck-mode
+    "tw" 'my/toggle-scrolling
 
     "j"  'my/jump-to-definition
 
@@ -611,6 +671,9 @@
 (setq org-log-done 'time)
 (setq org-confirm-babel-evaluate nil)
 (setq org-clock-into-drawer nil)
+(setq org-src-fontify-natively t)
+(setq org-src-tab-acts-natively t)
+;; (setq org-src-window-setup 'current-window)
 ;; format string used when creating CLOCKSUM lines and when generating a
 ;; time duration (avoid showing days)
 (setq org-time-clocksum-format
@@ -632,9 +695,7 @@
                               (ipython . t)
 			      ;; other languages..
 			      ))
-			   (use-package ox-twbs
-			     :ensure t
-			     )
+			   (use-package ox-twbs :ensure t)
 			   (evil-leader/set-key
 			     "oc" 'org-table-delete-column
 			     "or" 'org-table-kill-row)))
@@ -649,7 +710,8 @@
 ;; (set-frame-font "Ubuntu Mono-13" nil t)
 ;; (set-frame-font "DejaVu Sans Mono-10.5" nil t)
 ;; (set-frame-font "Liberation Mono-11" nil t)
-(set-frame-font "Consolas-12" nil t)
+;; (set-frame-font "Consolas-12" nil t)
+(my/reset-font-size)
 (setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
