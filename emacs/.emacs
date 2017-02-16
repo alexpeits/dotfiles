@@ -427,11 +427,20 @@
   :ensure t
   :defer t
   :init
+  (use-package ggtags :ensure t)
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
   (add-hook 'objc-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
-  (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
+  ;; (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
+  ;; (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'objc-mode)
+                (ggtags-mode 1)
+                (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
+                (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
+                (turn-on-eldoc-mode)
+                )))
   (defvar c-eldoc-includes "-I/usr/include -I/usr/include/python3.5m -I./ -I../")
   :config
   (defun my-irony-mode-hook ()
