@@ -24,6 +24,7 @@
 (require 'use-package)
 
 (require 'myfuncs)
+(require 'myvars)
 
 ;; ----------------
 ;; various
@@ -78,6 +79,9 @@
 ;; i love this
 (defalias 'yes-or-no-p #'y-or-n-p)
 
+;; vim-like scrolling
+(setq scroll-conservatively 101)
+
 ;; always scroll to the end of compilation buffers
 (setq compilation-scroll-output t)
 
@@ -131,8 +135,6 @@
 
 ;; text scale inc-dec
 (setq text-scale-mode-step 1.05)
-(setq my/default-font "Consolas")
-(setq my/default-font-size 12)
 (setq my/current-font-size my/default-font-size)
 
 (setq my/font-change-increment 1.05)
@@ -476,6 +478,7 @@
  web-mode-code-indent-offset 2
  web-mode-attr-indent-offset 2)
 
+
 ;; ----------------
 ;; LaTeX
 ;; ----------------
@@ -493,6 +496,7 @@
 
 (add-hook 'LaTeX-mode-hook 'my/latex-setup t)
 
+
 ;; ----------------
 ;; markdown & ReST
 ;; ----------------
@@ -503,7 +507,6 @@
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   )
-
 
 
 ;; ----------------
@@ -685,9 +688,9 @@
 			   (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)
                            (add-to-list 'org-structure-template-alist '("pf" "#+BEGIN_SRC ipython :session :file %file :exports both\n?\n#+END_SRC"))
                            (add-to-list 'org-structure-template-alist '("po" "#+BEGIN_SRC ipython :session :exports both\n?\n#+END_SRC"))
-                           (set-face-attribute 'org-block-begin-line nil :background "#073642")
-                           (set-face-attribute 'org-block-end-line nil :background "#073642")
-                           (set-face-attribute 'org-block nil :background "#04303B")
+                           ;; (set-face-attribute 'org-block-begin-line nil :background "#073642")
+                           ;; (set-face-attribute 'org-block-end-line nil :background "#073642")
+                           ;; (set-face-attribute 'org-block nil :background "#04303B")
 			   (org-bullets-mode 1)
 			   (org-babel-do-load-languages
 			    'org-babel-load-languages
@@ -706,32 +709,13 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-;(set-frame-font "Source Code Pro-10" nil t)
-;; (set-frame-font "Ubuntu Mono-13" nil t)
-;; (set-frame-font "DejaVu Sans Mono-10.5" nil t)
-;; (set-frame-font "Liberation Mono-11" nil t)
-;; (set-frame-font "Consolas-12" nil t)
 (my/reset-font-size)
-(setq spacemacs-theme-org-height nil)
+
 (if (display-graphic-p)
-    (progn
-      (load-theme 'solarized-dark t)
-      ;; (use-package theme-changer
-	;; :ensure t
-	;; :config
-	;; (setq calendar-latitude 37.98)
-	;; (setq calendar-longitude 23.72)
-	;; (change-theme 'solarized-light 'solarized-dark)
-        ;; )
-      ;; (load-theme 'sanityinc-tomorrow-night t)
-      ;(set-face-attribute 'cursor nil :background "gray")
-      )
-  (progn
-    (load-theme 'spacemacs-dark t)
-    ;; (load-theme 'monokai)
-    ;; (set-face-attribute 'mode-line nil :background "#404040")
-    ;; (set-face-attribute 'mode-line-inactive nil :background "#282828")
-    ))
+    (load-theme my/xtheme t)
+  (load-theme my/theme t)
+  )
+
 (setq linum-format 'dynamic)
 
 (set-face-attribute 'show-paren-match nil :weight 'normal)

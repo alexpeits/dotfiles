@@ -1,6 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UI
-(setq themebg "default")
 
 ;; (defun my/fix-theme ()
 ;;   (interactive)
@@ -14,43 +13,6 @@
   (interactive)
   (setq linum-format 'dynamic)
   (set-face-attribute 'vertical-border nil :foreground "dim gray")
-  )
-
-(defun my/dark-bg ()
-  (custom-set-faces
-   '(default ((t (:inherit default
-                           :background "#1D1F21" ))))
-   '(font-lock-comment-face ((t (:inherit font-lock-comment-face
-                                          :background "#1D1F21" ))))
-   '(font-lock-comment-delimiter-face ((t (:inherit font-lock-comment-delimiter-face
-                                                    :background "#1D1F21" )))))
-  (setq themebg "dark")
-  (message "Toggled background color: dark")
-  )
-
-(defun my/default-bg ()
-  (custom-set-faces
-   '(default ((t (:inherit default))))
-   '(font-lock-comment-face ((t (:inherit font-lock-comment-face))))
-   '(font-lock-comment-delimiter-face ((t (:inherit font-lock-comment-delimiter-face)))))
-  (setq themebg "default")
-  (message "Toggled background color: default")
-  )
-
-(defun my/toggle-bg ()
-  (interactive)
-  (if (equal themebg "default")
-      (my/dark-bg)
-    (my/default-bg))
-  )
-
-(setq scroll-conservatively 101)
-
-(defun my/toggle-scrolling ()
-  (interactive)
-  (if (equal scroll-conservatively 0)
-      (setq scroll-conservatively 101)
-    (setq scroll-conservatively 0))
   )
 
 (defun my/smartparens-pair-newline (id action context)
@@ -112,16 +74,6 @@ sets `my-jump-handlers' in buffers of that mode."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; major modes
 
-;; JS
-(setq jsmd "none")
-
-(defun my/toggle-jsmodes ()
-  (interactive)
-  (if (equal jsmd "js")
-      (web-mode)
-    (js2-mode))
-  )
-
 ;; org-mode
 (defun my/timesheet-block ()
   (interactive)
@@ -153,11 +105,14 @@ Removes the automatic guessing of the initial value based on thing at point. "
     (set-text-properties 0 (length input) nil input)
     (helm-find-files-1 input)))
 
-(provide 'myfuncs)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; others
 
 (defun my/shell-command-to-string ()
   (interactive)
   (let ((cmd (read-string "Command: ")))
   (insert (shell-command-to-string cmd)))
   )
+
+(provide 'myfuncs)
