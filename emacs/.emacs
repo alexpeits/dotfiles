@@ -24,7 +24,6 @@
 (require 'use-package)
 
 (require 'myfuncs)
-(require 'myvars)
 
 ;; ----------------
 ;; various
@@ -79,9 +78,6 @@
 ;; i love this
 (defalias 'yes-or-no-p #'y-or-n-p)
 
-;; vim-like scrolling
-(setq scroll-conservatively 101)
-
 ;; always scroll to the end of compilation buffers
 (setq compilation-scroll-output t)
 
@@ -133,41 +129,10 @@
   (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
   )
 
-;; text scale inc-dec
+; font size
 (setq text-scale-mode-step 1.05)
-(setq my/current-font-size my/default-font-size)
-
-(setq my/font-change-increment 1.05)
-
-(defun my/set-font-size ()
-  "Set the font to `my/default-font' at `my/current-font-size'."
-  (set-frame-font
-   (concat my/default-font "-" (number-to-string my/current-font-size))))
-
-(defun my/reset-font-size ()
-  "Change font size back to `my/default-font-size'."
-  (interactive)
-  (setq my/current-font-size my/default-font-size)
-  (my/set-font-size))
-
-(defun my/increase-font-size ()
-  "Increase current font size by a factor of `my/font-change-increment'."
-  (interactive)
-  (setq my/current-font-size
-        (ceiling (* my/current-font-size my/font-change-increment)))
-  (my/set-font-size))
-
-(defun my/decrease-font-size ()
-  "Decrease current font size by a factor of `my/font-change-increment', down to a minimum size of 1."
-  (interactive)
-  (setq my/current-font-size
-        (max 1
-             (floor (/ my/current-font-size my/font-change-increment))))
-  (my/set-font-size))
-
-(define-key global-map (kbd "C-)") 'my/reset-font-size)
-(define-key global-map (kbd "C-+") 'my/increase-font-size)
-(define-key global-map (kbd "C--") 'my/decrease-font-size)
+(define-key global-map (kbd "C-+") 'text-scale-increase)
+(define-key global-map (kbd "C--") 'text-scale-decrease)
 
 
 ;; highlight trailing whitespace
@@ -253,7 +218,8 @@
 
 (use-package magit
   :ensure t
-  :config
+  :defer t
+  :init
   (global-set-key (kbd "C-x g") 'magit-status))
 
 ;; (if (display-graphic-p)
@@ -427,12 +393,12 @@
   :ensure t
   :defer t
   :init
-  (use-package ggtags :ensure t)
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
   (add-hook 'objc-mode-hook 'irony-mode)
-  ;; (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
-  ;; (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
+  ;(add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
+  ;(add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
+  (use-package ggtags :ensure t)
   (add-hook 'c-mode-common-hook
             (lambda ()
               (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'objc-mode)
@@ -487,6 +453,17 @@
  web-mode-code-indent-offset 2
  web-mode-attr-indent-offset 2)
 
+;; ----------------
+;; lisps
+;; ----------------
+;; Common LISP
+(use-package slime
+  :ensure t
+  :defer t
+  :config
+  (load (expand-file-name "~/quicklisp/slime-helper.el"))
+  (setq inferior-lisp-program "sbcl")
+  )
 
 ;; ----------------
 ;; LaTeX
@@ -505,7 +482,6 @@
 
 (add-hook 'LaTeX-mode-hook 'my/latex-setup t)
 
-
 ;; ----------------
 ;; markdown & ReST
 ;; ----------------
@@ -516,6 +492,7 @@
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   )
+
 
 
 ;; ----------------
@@ -539,7 +516,9 @@
        (define-key company-active-map (kbd "C-j") 'company-select-next)
        (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
        (define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
-       (define-key company-active-map (kbd "C-l") 'company-complete-selection)))
+       (define-key company-active-map (kbd "C-l") 'company-complete-selection)
+       (setq company-minimum-prefix-length 1)
+       ))
   )
 
 
@@ -548,6 +527,7 @@
 ;; ----------------
 (use-package flycheck
   :ensure t
+  :defer t
   :init (global-flycheck-mode)
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -669,7 +649,7 @@
   (helm-projectile-on)
   )
 
-(persp-mode) ;; install perspective.el
+(use-package perspective :config (persp-mode))
 (use-package persp-projectile :ensure t)
 
 
@@ -697,9 +677,9 @@
 			   (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)
                            (add-to-list 'org-structure-template-alist '("pf" "#+BEGIN_SRC ipython :session :file %file :exports both\n?\n#+END_SRC"))
                            (add-to-list 'org-structure-template-alist '("po" "#+BEGIN_SRC ipython :session :exports both\n?\n#+END_SRC"))
-                           ;; (set-face-attribute 'org-block-begin-line nil :background "#073642")
-                           ;; (set-face-attribute 'org-block-end-line nil :background "#073642")
-                           ;; (set-face-attribute 'org-block nil :background "#04303B")
+                           (set-face-attribute 'org-block-begin-line nil :background "#073642")
+                           (set-face-attribute 'org-block-end-line nil :background "#073642")
+                           (set-face-attribute 'org-block nil :background "#04303B")
 			   (org-bullets-mode 1)
 			   (org-babel-do-load-languages
 			    'org-babel-load-languages
@@ -718,13 +698,31 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-(my/reset-font-size)
-
+;(set-frame-font "Source Code Pro-10" nil t)
+;; (set-frame-font "Ubuntu Mono-13" nil t)
+;; (set-frame-font "DejaVu Sans Mono-10.5" nil t)
+;; (set-frame-font "Liberation Mono-11" nil t)
+(set-frame-font "Consolas-12" nil t)
+(setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
-    (load-theme my/xtheme t)
-  (load-theme my/theme t)
-  )
-
+    (progn
+      (load-theme 'solarized-dark t)
+      ;; (use-package theme-changer
+	;; :ensure t
+	;; :config
+	;; (setq calendar-latitude 37.98)
+	;; (setq calendar-longitude 23.72)
+	;; (change-theme 'solarized-light 'solarized-dark)
+        ;; )
+      ;; (load-theme 'sanityinc-tomorrow-night t)
+      ;(set-face-attribute 'cursor nil :background "gray")
+      )
+  (progn
+    (load-theme 'spacemacs-dark t)
+    ;; (load-theme 'monokai)
+    ;; (set-face-attribute 'mode-line nil :background "#404040")
+    ;; (set-face-attribute 'mode-line-inactive nil :background "#282828")
+    ))
 (setq linum-format 'dynamic)
 
 (set-face-attribute 'show-paren-match nil :weight 'normal)
