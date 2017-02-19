@@ -81,7 +81,15 @@
 ;; always scroll to the end of compilation buffers
 (setq compilation-scroll-output t)
 
+;; some keymaps
 (global-set-key (kbd "M-o") 'other-window)
+(define-key 'help-command (kbd "C-l") 'find-library)
+(define-key 'help-command (kbd "C-k") 'find-function-on-key)
+(define-key 'help-command (kbd "C-f") 'find-function)
+(define-key 'help-command (kbd "C-p") 'find-function-at-point)
+(define-key 'help-command (kbd "C-v") 'find-variable)
+
+
 
 ;; ----------------
 ;; UI & themes
@@ -460,7 +468,9 @@
 (use-package slime
   :ensure t
   :defer t
-  :config
+  :init
+  ;; set up slime according to this link
+  ;; http://www.jonathanfischer.net/modern-common-lisp-on-linux/
   (load (expand-file-name "~/quicklisp/slime-helper.el"))
   (setq inferior-lisp-program "sbcl")
   )
