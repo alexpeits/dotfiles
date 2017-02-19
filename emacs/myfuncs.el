@@ -127,6 +127,21 @@ sets `my-jump-handlers' in buffers of that mode."
   (interactive)
   (insert-file-contents "~/.emacs.d/timesheet.org"))
 
+;; helm-projectile-persp-switch-project!
+(defun my/switch-project ()
+  (interactive)
+  (persp-switch (let ((temp-charset "1234567890abcdefghijklmnopqrstuvwxyz")
+                      (random-string ""))
+                  (dotimes (i 6 random-string)
+                    (setq random-string
+                          (concat
+                           random-string
+                           (char-to-string (elt temp-charset (random (length temp-charset)))))
+                          ))
+                  ))
+  (helm-projectile-switch-project)
+  (persp-rename (projectile-project-name)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; error checking
 
