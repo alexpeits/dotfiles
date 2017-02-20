@@ -130,9 +130,17 @@ sets `my-jump-handlers' in buffers of that mode."
 ;; helm-projectile-persp-switch-project!
 (defun my/switch-project ()
   (interactive)
-  (persp-switch (progn
-                  (helm-projectile-switch-project)
-                  (projectile-project-name))))
+  (persp-switch (let ((temp-charset "1234567890abcdefghijklmnopqrstuvwxyz")
+                      (random-string ""))
+                  (dotimes (i 6 random-string)
+                    (setq random-string
+                          (concat
+                           random-string
+                           (char-to-string (elt temp-charset (random (length temp-charset)))))
+                          ))
+                  ))
+  (helm-projectile-switch-project)
+  (persp-rename (projectile-project-name)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; error checking
