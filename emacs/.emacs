@@ -2,8 +2,8 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom"))
 (add-to-list 'custom-theme-load-path "~/.emacs.d/custom-themes/")
 (setenv "PATH" (concat (getenv "PATH") ":/home/alex/.cabal/bin"))
-(setq exec-path (append exec-path '("~/.cabal/bin")))
-(setq exec-path (append exec-path '("~/.nvm/versions/node/v6.9.2/bin")))
+(setq exec-path (append exec-path '("/home/alex/.cabal/bin")))
+(setq exec-path (append exec-path '("/home/alex/.nvm/versions/node/v6.9.2/bin")))
 (setq user-full-name "Alex Peitsinis"
       user-mail-address "alexpeitsinis@gmail.com")
 
@@ -446,10 +446,20 @@
 ;; ----------------
 ;; js
 ;; ----------------
+(use-package nvm :ensure t)
+(defun nvm-use-ver (version)
+  (interactive "sVersion: ")
+  (nvm-use version))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
-(add-hook 'js2-mode-hook (function (lambda () (setq evil-shift-width 2))))
-(add-hook 'web-mode-hook (function (lambda () (setq evil-shift-width 2))))
+(add-hook 'js2-mode-hook (function (lambda ()
+                                     (nvm-use "v6.9.2")
+                                     (setq evil-shift-width 2)
+                                     (tern-mode))))
+(add-hook 'web-mode-hook (function (lambda ()
+                                     (nvm-use "v6.9.2")
+                                     (setq evil-shift-width 2)
+                                     (tern-mode))))
 (setq
  ;; js2-mode
  js2-basic-offset 2
@@ -526,7 +536,7 @@
        (add-to-list 'company-backends 'company-anaconda)
        (add-to-list 'company-backends '(company-irony-c-headers company-c-headers company-irony))
        (add-to-list 'company-backends 'company-ghc)
-       ;; (add-to-list 'company-backends 'company-tern)
+       (add-to-list 'company-backends 'company-tern)
        (define-key company-active-map (kbd "C-k") 'company-select-previous)
        (define-key company-active-map (kbd "C-j") 'company-select-next)
        (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
