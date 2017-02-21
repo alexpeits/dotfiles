@@ -3,7 +3,7 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/custom-themes/")
 (setenv "PATH" (concat (getenv "PATH") ":/home/alex/.cabal/bin"))
 (setq exec-path (append exec-path '("~/.cabal/bin")))
-(setq exec-path (append exec-path '("~/.nvm/versions/node/v6.9.5/bin")))
+(setq exec-path (append exec-path '("~/.nvm/versions/node/v6.9.2/bin")))
 (setq user-full-name "Alex Peitsinis"
       user-mail-address "alexpeitsinis@gmail.com")
 
@@ -348,7 +348,7 @@
     "wv" 'evil-window-vsplit
 
     "tb" 'my/toggle-bg
-    "tg" 'diff-hl-mode
+    "tg" 'global-diff-hl-mode
     "th" 'global-hl-line-mode
     "tl"  'linum-mode
     "ts" 'flycheck-mode
@@ -473,6 +473,7 @@
   ;; http://www.jonathanfischer.net/modern-common-lisp-on-linux/
   (load (expand-file-name "~/quicklisp/slime-helper.el"))
   (setq inferior-lisp-program "sbcl")
+  (slime-setup '(slime-fancy slime-company))
   )
 
 ;; ----------------
@@ -493,7 +494,7 @@
 (add-hook 'LaTeX-mode-hook 'my/latex-setup t)
 
 ;; ----------------
-;; markdown & ReST
+;; json, yaml, markdown, rst
 ;; ----------------
 (use-package markdown-mode
   :ensure t
@@ -503,6 +504,7 @@
          ("\\.markdown\\'" . markdown-mode))
   )
 
+(use-package yaml-mode :ensure t)
 
 
 ;; ----------------
@@ -511,7 +513,10 @@
 (use-package company
   :ensure t
   :defer t
-  :init (add-hook 'after-init-hook 'global-company-mode)
+  :init
+  (setq company-dabbrev-downcase 0)
+  (setq company-idle-delay 0.3)
+  (add-hook 'after-init-hook 'global-company-mode)
   :config
   (use-package company-irony :ensure t :defer t)
   (company-quickhelp-mode 1)
@@ -521,12 +526,13 @@
        (add-to-list 'company-backends 'company-anaconda)
        (add-to-list 'company-backends '(company-irony-c-headers company-c-headers company-irony))
        (add-to-list 'company-backends 'company-ghc)
-       (add-to-list 'company-backends 'company-tern)
+       ;; (add-to-list 'company-backends 'company-tern)
        (define-key company-active-map (kbd "C-k") 'company-select-previous)
        (define-key company-active-map (kbd "C-j") 'company-select-next)
        (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
        (define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
        (define-key company-active-map (kbd "C-l") 'company-complete-selection)
+       (define-key company-active-map (kbd "C-f") 'company-show-location)
        (setq company-minimum-prefix-length 1)
        ))
   )
@@ -535,12 +541,14 @@
 ;; ----------------
 ;; syntax checking
 ;; ----------------
+
 (use-package flycheck
   :ensure t
   :defer t
   :init (global-flycheck-mode)
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
+  (use-package flymake-yaml :ensure t)
   (eval-after-load 'flycheck
     '(progn
        (set-face-background 'flycheck-warning "unspecified-bg")
@@ -558,8 +566,12 @@
 
   (evil-leader/set-key
     "el" 'my/toggle-flycheck-error-list)
+  (setq-default flycheck-disabled-checkers
+                (append flycheck-disabled-checkers
+                        '(javascript-jshint)))
   (flycheck-add-mode 'javascript-eslint 'web-mode)
   (flycheck-add-mode 'javascript-eslint 'js2-mode)
+  (setq-default flycheck-temp-prefix ".flycheck")
   )
 
 
@@ -687,9 +699,6 @@
 			   (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)
                            (add-to-list 'org-structure-template-alist '("pf" "#+BEGIN_SRC ipython :session :file %file :exports both\n?\n#+END_SRC"))
                            (add-to-list 'org-structure-template-alist '("po" "#+BEGIN_SRC ipython :session :exports both\n?\n#+END_SRC"))
-                           (set-face-attribute 'org-block-begin-line nil :background "#073642")
-                           (set-face-attribute 'org-block-end-line nil :background "#073642")
-                           (set-face-attribute 'org-block nil :background "#04303B")
 			   (org-bullets-mode 1)
 			   (org-babel-do-load-languages
 			    'org-babel-load-languages
@@ -708,15 +717,20 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-;(set-frame-font "Source Code Pro-10" nil t)
+;; (set-frame-font "Source Code Pro-10" nil t)
 ;; (set-frame-font "Ubuntu Mono-13" nil t)
-;; (set-frame-font "DejaVu Sans Mono-10.5" nil t)
 ;; (set-frame-font "Liberation Mono-11" nil t)
-(set-frame-font "Consolas-12" nil t)
+(set-frame-font "DejaVu Sans Mono-10" nil t)
+;; (set-frame-font "Consolas-12" nil t)
 (setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
-      (load-theme 'solarized-dark t)
+      (load-theme 'spacemacs-dark t)
+      ;; (load-theme 'solarized-dark t)
+      ;; (add-hook 'org-mode-hook (lambda ()
+                                 ;; (set-face-attribute 'org-block-begin-line nil :background "#073642")
+                                 ;; (set-face-attribute 'org-block-end-line nil :background "#073642")
+                                 ;; (set-face-attribute 'org-block nil :background "#04303B")))
       ;; (use-package theme-changer
 	;; :ensure t
 	;; :config
