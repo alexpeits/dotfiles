@@ -3,7 +3,7 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/custom-themes/")
 (setenv "PATH" (concat (getenv "PATH") ":/home/alex/.cabal/bin"))
 (setq exec-path (append exec-path '("/home/alex/.cabal/bin")))
-(setq exec-path (append exec-path '("/home/alex/.nvm/versions/node/v6.9.2/bin")))
+(setq exec-path (append exec-path '("/home/alex/.nvm/versions/node/v6.9.5/bin")))
 (setq user-full-name "Alex Peitsinis"
       user-mail-address "alexpeitsinis@gmail.com")
 
@@ -453,11 +453,11 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
 (add-hook 'js2-mode-hook (function (lambda ()
-                                     (nvm-use "v6.9.2")
+                                     (nvm-use "v6.9.5")
                                      (setq evil-shift-width 2)
                                      (tern-mode))))
 (add-hook 'web-mode-hook (function (lambda ()
-                                     (nvm-use "v6.9.2")
+                                     (nvm-use "v6.9.5")
                                      (setq evil-shift-width 2)
                                      (tern-mode))))
 (setq
@@ -483,6 +483,7 @@
   ;; http://www.jonathanfischer.net/modern-common-lisp-on-linux/
   (load (expand-file-name "~/quicklisp/slime-helper.el"))
   (setq inferior-lisp-program "sbcl")
+  (use-package slime-company :ensure t :defer t)
   (slime-setup '(slime-fancy slime-company))
   )
 
@@ -543,7 +544,7 @@
        (define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
        (define-key company-active-map (kbd "C-l") 'company-complete-selection)
        (define-key company-active-map (kbd "C-f") 'company-show-location)
-       (setq company-minimum-prefix-length 1)
+       (setq company-minimum-prefix-length 3)
        ))
   )
 
@@ -649,6 +650,10 @@
 (define-key helm-map (kbd "C-h") 'helm-find-files-up-one-level)
 (define-key helm-map (kbd "C-l") (kbd "RET"))
 
+;; splitting
+(define-key helm-map (kbd "C-c s") 'my/helm-switch-other-window-horizontally)
+(define-key helm-map (kbd "C-c v") 'my/helm-switch-other-window-vertically)
+
 (with-eval-after-load 'helm-files
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
   (define-key helm-find-files-map
@@ -730,17 +735,17 @@
 ;; (set-frame-font "Source Code Pro-10" nil t)
 ;; (set-frame-font "Ubuntu Mono-13" nil t)
 ;; (set-frame-font "Liberation Mono-11" nil t)
-(set-frame-font "DejaVu Sans Mono-10" nil t)
-;; (set-frame-font "Consolas-12" nil t)
+;; (set-frame-font "DejaVu Sans Mono-10" nil t)
+(set-frame-font "Consolas-12" nil t)
 (setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
-      (load-theme 'spacemacs-dark t)
-      ;; (load-theme 'solarized-dark t)
-      ;; (add-hook 'org-mode-hook (lambda ()
-                                 ;; (set-face-attribute 'org-block-begin-line nil :background "#073642")
-                                 ;; (set-face-attribute 'org-block-end-line nil :background "#073642")
-                                 ;; (set-face-attribute 'org-block nil :background "#04303B")))
+      ;; (load-theme 'spacemacs-dark t)
+      (load-theme 'solarized-dark t)
+      (add-hook 'org-mode-hook (lambda ()
+                                 (set-face-attribute 'org-block-begin-line nil :background "#073642")
+                                 (set-face-attribute 'org-block-end-line nil :background "#073642")
+                                 (set-face-attribute 'org-block nil :background "#04303B")))
       ;; (use-package theme-changer
 	;; :ensure t
 	;; :config

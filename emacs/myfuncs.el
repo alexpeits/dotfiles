@@ -63,6 +63,15 @@
   (indent-according-to-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Various
+
+(defun my/shell-command-to-string ()
+  (interactive)
+  (let ((cmd (read-string "Command: ")))
+  (insert (shell-command-to-string cmd)))
+  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Jump to definition
 
 (defvar my-default-jump-handlers '()
@@ -127,21 +136,6 @@ sets `my-jump-handlers' in buffers of that mode."
   (interactive)
   (insert-file-contents "~/.emacs.d/timesheet.org"))
 
-;; helm-projectile-persp-switch-project!
-(defun my/switch-project ()
-  (interactive)
-  (persp-switch (let ((temp-charset "1234567890abcdefghijklmnopqrstuvwxyz")
-                      (random-string ""))
-                  (dotimes (i 6 random-string)
-                    (setq random-string
-                          (concat
-                           random-string
-                           (char-to-string (elt temp-charset (random (length temp-charset)))))
-                          ))
-                  ))
-  (helm-projectile-switch-project)
-  (persp-rename (projectile-project-name)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; error checking
 
@@ -168,11 +162,37 @@ Removes the automatic guessing of the initial value based on thing at point. "
     (set-text-properties 0 (length input) nil input)
     (helm-find-files-1 input)))
 
-(provide 'myfuncs)
-
-
-(defun my/shell-command-to-string ()
+;; helm-projectile-persp-switch-project!
+(defun my/switch-project ()
   (interactive)
-  (let ((cmd (read-string "Command: ")))
-  (insert (shell-command-to-string cmd)))
-  )
+  (persp-switch (let ((temp-charset "1234567890abcdefghijklmnopqrstuvwxyz")
+                      (random-string ""))
+                  (dotimes (i 6 random-string)
+                    (setq random-string
+                          (concat
+                           random-string
+                           (char-to-string (elt temp-charset (random (length temp-charset)))))
+                          ))
+                  ))
+  (helm-projectile-switch-project)
+  (persp-rename (projectile-project-name)))
+
+(defun my/helm-switch-other-window-horizontally ()
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action
+     (lambda (candidate)
+       (let ((split-height-threshold 0)
+             (split-width-threshold nil))
+         (helm-find-files-other-window candidate))))))
+
+(defun my/helm-switch-other-window-vertically ()
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action
+     (lambda (candidate)
+       (let ((split-height-threshold nil)
+             (split-width-threshold 0))
+         (helm-find-files-other-window candidate))))))
+
+(provide 'myfuncs)
