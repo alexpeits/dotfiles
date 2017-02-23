@@ -177,7 +177,7 @@ Removes the automatic guessing of the initial value based on thing at point. "
   (helm-projectile-switch-project)
   (persp-rename (projectile-project-name)))
 
-(defun my/helm-switch-other-window-horizontally ()
+(defun my/helm-file-switch-other-window-horizontally ()
   (interactive)
   (with-helm-alive-p
     (helm-exit-and-execute-action
@@ -186,7 +186,7 @@ Removes the automatic guessing of the initial value based on thing at point. "
              (split-width-threshold nil))
          (helm-find-files-other-window candidate))))))
 
-(defun my/helm-switch-other-window-vertically ()
+(defun my/helm-file-switch-other-window-vertically ()
   (interactive)
   (with-helm-alive-p
     (helm-exit-and-execute-action
@@ -194,5 +194,23 @@ Removes the automatic guessing of the initial value based on thing at point. "
        (let ((split-height-threshold nil)
              (split-width-threshold 0))
          (helm-find-files-other-window candidate))))))
+
+(defun my/helm-buffer-switch-other-window-horizontally ()
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action
+     (lambda (candidate)
+       (let ((split-height-threshold 0)
+             (split-width-threshold nil))
+         (helm-switch-to-buffers-other-window candidate))))))
+
+(defun my/helm-buffer-switch-buffer-other-window-vertically ()
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action
+     (lambda (candidate)
+       (let ((split-height-threshold nil)
+             (split-width-threshold 0))
+         (helm-switch-to-buffers-other-window candidate))))))
 
 (provide 'myfuncs)

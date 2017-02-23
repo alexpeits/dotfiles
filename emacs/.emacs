@@ -3,7 +3,7 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/custom-themes/")
 (setenv "PATH" (concat (getenv "PATH") ":/home/alex/.cabal/bin"))
 (setq exec-path (append exec-path '("/home/alex/.cabal/bin")))
-(setq exec-path (append exec-path '("/home/alex/.nvm/versions/node/v6.9.5/bin")))
+(setq exec-path (append exec-path '("/home/alex/.nvm/versions/node/v6.9.2/bin")))
 (setq user-full-name "Alex Peitsinis"
       user-mail-address "alexpeitsinis@gmail.com")
 
@@ -453,11 +453,11 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
 (add-hook 'js2-mode-hook (function (lambda ()
-                                     (nvm-use "v6.9.5")
+                                     (nvm-use "v6.9.2")
                                      (setq evil-shift-width 2)
                                      (tern-mode))))
 (add-hook 'web-mode-hook (function (lambda ()
-                                     (nvm-use "v6.9.5")
+                                     (nvm-use "v6.9.2")
                                      (setq evil-shift-width 2)
                                      (tern-mode))))
 (setq
@@ -651,8 +651,10 @@
 (define-key helm-map (kbd "C-l") (kbd "RET"))
 
 ;; splitting
-(define-key helm-map (kbd "C-c s") 'my/helm-switch-other-window-horizontally)
-(define-key helm-map (kbd "C-c v") 'my/helm-switch-other-window-vertically)
+(define-key helm-map (kbd "C-c s") 'my/helm-file-switch-other-window-horizontally)
+(define-key helm-map (kbd "C-c v") 'my/helm-file-switch-other-window-vertically)
+(define-key helm-buffer-map (kbd "C-c s") 'my/helm-buffer-switch-other-window-horizontally)
+(define-key helm-buffer-map (kbd "C-c v") 'my/helm-buffer-switch-other-window-vertically)
 
 (with-eval-after-load 'helm-files
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
@@ -735,17 +737,17 @@
 ;; (set-frame-font "Source Code Pro-10" nil t)
 ;; (set-frame-font "Ubuntu Mono-13" nil t)
 ;; (set-frame-font "Liberation Mono-11" nil t)
-;; (set-frame-font "DejaVu Sans Mono-10" nil t)
-(set-frame-font "Consolas-12" nil t)
+(set-frame-font "DejaVu Sans Mono-10" nil t)
+;; (set-frame-font "Consolas-12" nil t)
 (setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
-      ;; (load-theme 'spacemacs-dark t)
-      (load-theme 'solarized-dark t)
-      (add-hook 'org-mode-hook (lambda ()
-                                 (set-face-attribute 'org-block-begin-line nil :background "#073642")
-                                 (set-face-attribute 'org-block-end-line nil :background "#073642")
-                                 (set-face-attribute 'org-block nil :background "#04303B")))
+      (load-theme 'spacemacs-dark t)
+      ;; (load-theme 'solarized-dark t)
+      ;; (add-hook 'org-mode-hook (lambda ()
+                                 ;; (set-face-attribute 'org-block-begin-line nil :background "#073642")
+                                 ;; (set-face-attribute 'org-block-end-line nil :background "#073642")
+                                 ;; (set-face-attribute 'org-block nil :background "#04303B")))
       ;; (use-package theme-changer
 	;; :ensure t
 	;; :config
