@@ -89,7 +89,9 @@
 (define-key 'help-command (kbd "C-p") 'find-function-at-point)
 (define-key 'help-command (kbd "C-v") 'find-variable)
 
-
+;; flyspell on pure text buffers
+(dolist (hook '(text-mode-hook change-log-mode-hook log-edit-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
 
 ;; ----------------
 ;; UI & themes
@@ -290,13 +292,13 @@
   ;; move state to beginning of modeline
   (setq evil-mode-line-format '(before . mode-line-front-space))
   ;; change state colors
-  (setq evil-normal-state-tag   (propertize " <N> " 'face '((:foreground "#268bd2" :weight extra-bold)))
-        evil-emacs-state-tag    (propertize " <E> " 'face '((:foreground "#dc752f" :weight extra-bold)))
-        evil-insert-state-tag   (propertize " <I> " 'face '((:foreground "#2aa198" :weight extra-bold)))
-        evil-replace-state-tag  (propertize " <R> " 'face '((:foreground "#df005f" :weight extra-bold)))
-        evil-motion-state-tag   (propertize " <M> " 'face '((:foreground "#df005f" :weight extra-bold)))
-        evil-visual-state-tag   (propertize " <V> " 'face '((:foreground "#d75fd7" :weight extra-bold)))
-        evil-operator-state-tag (propertize " <O> " 'face '((:foreground "#df005f" :weight extra-bold))))
+  ;; (setq evil-normal-state-tag   (propertize " <N> " 'face '((:foreground "#268bd2" :weight extra-bold)))
+  ;;       evil-emacs-state-tag    (propertize " <E> " 'face '((:foreground "#dc752f" :weight extra-bold)))
+  ;;       evil-insert-state-tag   (propertize " <I> " 'face '((:foreground "#2aa198" :weight extra-bold)))
+  ;;       evil-replace-state-tag  (propertize " <R> " 'face '((:foreground "#df005f" :weight extra-bold)))
+  ;;       evil-motion-state-tag   (propertize " <M> " 'face '((:foreground "#df005f" :weight extra-bold)))
+  ;;       evil-visual-state-tag   (propertize " <V> " 'face '((:foreground "#d75fd7" :weight extra-bold)))
+  ;;       evil-operator-state-tag (propertize " <O> " 'face '((:foreground "#df005f" :weight extra-bold))))
 
   ;; this is needed to be able to use C-h
   (global-set-key (kbd "C-h") 'undefined)
@@ -486,6 +488,16 @@
   (use-package slime-company :ensure t :defer t)
   (slime-setup '(slime-fancy slime-company))
   )
+
+(dolist (hook '(lisp-mode-hook
+                emacs-lisp-mode-hook
+                common-lisp-mode-hook
+                lisp-interaction-mode-hook
+                clojure-mode-hook))
+  (add-hook hook #'(lambda() (smartparens-mode 0))))
+
+;; expand macros in another window
+(global-set-key (kbd "C-c C-m") '(lambda () (interactive) (macrostep-expand t)))
 
 ;; ----------------
 ;; LaTeX
@@ -736,14 +748,19 @@
 
 ;; (set-frame-font "Source Code Pro-10" nil t)
 ;; (set-frame-font "Ubuntu Mono-13" nil t)
-;; (set-frame-font "Liberation Mono-11" nil t)
+;; (set-frame-font "Liberation Mono-10" nil t)
 (set-frame-font "DejaVu Sans Mono-10" nil t)
-;; (set-frame-font "Consolas-12" nil t)
+;; (set-frame-font "Consolas-10.5" nil t)
 (setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
-      (load-theme 'spacemacs-dark t)
-      ;; (load-theme 'solarized-dark t)
+      ;; (load-theme 'spacemacs-dark t)
+      (setq solarized-high-contrast-mode-line t)
+      (load-theme 'solarized-dark t)
+      ;; (load-theme 'zenburn t)
+      (add-hook 'org-mode-hook (lambda ()
+                                 (set-face-attribute 'org-block-begin-line nil :background "#373737")
+                                 (set-face-attribute 'org-block-end-line nil :background "#373737")))
       ;; (add-hook 'org-mode-hook (lambda ()
                                  ;; (set-face-attribute 'org-block-begin-line nil :background "#073642")
                                  ;; (set-face-attribute 'org-block-end-line nil :background "#073642")
