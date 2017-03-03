@@ -3,7 +3,7 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/custom-themes/")
 (setenv "PATH" (concat (getenv "PATH") ":/home/alex/.cabal/bin"))
 (setq exec-path (append exec-path '("/home/alex/.cabal/bin")))
-(setq exec-path (append exec-path '("/home/alex/.nvm/versions/node/v6.9.2/bin")))
+(setq exec-path (append exec-path '("/home/alex/.nvm/versions/node/v6.9.5/bin")))
 (setq user-full-name "Alex Peitsinis"
       user-mail-address "alexpeitsinis@gmail.com")
 
@@ -24,6 +24,7 @@
 (require 'use-package)
 
 (require 'myfuncs)
+(require 'myengines)
 
 ;; ----------------
 ;; various
@@ -292,13 +293,13 @@
   ;; move state to beginning of modeline
   (setq evil-mode-line-format '(before . mode-line-front-space))
   ;; change state colors
-  ;; (setq evil-normal-state-tag   (propertize " <N> " 'face '((:foreground "#268bd2" :weight extra-bold)))
-  ;;       evil-emacs-state-tag    (propertize " <E> " 'face '((:foreground "#dc752f" :weight extra-bold)))
-  ;;       evil-insert-state-tag   (propertize " <I> " 'face '((:foreground "#2aa198" :weight extra-bold)))
-  ;;       evil-replace-state-tag  (propertize " <R> " 'face '((:foreground "#df005f" :weight extra-bold)))
-  ;;       evil-motion-state-tag   (propertize " <M> " 'face '((:foreground "#df005f" :weight extra-bold)))
-  ;;       evil-visual-state-tag   (propertize " <V> " 'face '((:foreground "#d75fd7" :weight extra-bold)))
-  ;;       evil-operator-state-tag (propertize " <O> " 'face '((:foreground "#df005f" :weight extra-bold))))
+  (setq evil-normal-state-tag   (propertize " <N> " 'face '((:foreground "#268bd2" :weight extra-bold)))
+        evil-emacs-state-tag    (propertize " <E> " 'face '((:foreground "#dc752f" :weight extra-bold)))
+        evil-insert-state-tag   (propertize " <I> " 'face '((:foreground "#2aa198" :weight extra-bold)))
+        evil-replace-state-tag  (propertize " <R> " 'face '((:foreground "#df005f" :weight extra-bold)))
+        evil-motion-state-tag   (propertize " <M> " 'face '((:foreground "#df005f" :weight extra-bold)))
+        evil-visual-state-tag   (propertize " <V> " 'face '((:foreground "#d75fd7" :weight extra-bold)))
+        evil-operator-state-tag (propertize " <O> " 'face '((:foreground "#df005f" :weight extra-bold))))
 
   ;; this is needed to be able to use C-h
   (global-set-key (kbd "C-h") 'undefined)
@@ -455,11 +456,11 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
 (add-hook 'js2-mode-hook (function (lambda ()
-                                     (nvm-use "v6.9.2")
+                                     (nvm-use "v6.9.5")
                                      (setq evil-shift-width 2)
                                      (tern-mode))))
 (add-hook 'web-mode-hook (function (lambda ()
-                                     (nvm-use "v6.9.2")
+                                     (nvm-use "v6.9.5")
                                      (setq evil-shift-width 2)
                                      (tern-mode))))
 (setq
@@ -487,6 +488,7 @@
   (setq inferior-lisp-program "sbcl")
   (use-package slime-company :ensure t :defer t)
   (slime-setup '(slime-fancy slime-company))
+  (put 'if 'common-lisp-indent-function 2)
   )
 
 (dolist (hook '(lisp-mode-hook
@@ -748,23 +750,18 @@
 
 ;; (set-frame-font "Source Code Pro-10" nil t)
 ;; (set-frame-font "Ubuntu Mono-13" nil t)
-;; (set-frame-font "Liberation Mono-10" nil t)
-(set-frame-font "DejaVu Sans Mono-10" nil t)
-;; (set-frame-font "Consolas-10.5" nil t)
+;; (set-frame-font "Liberation Mono-11" nil t)
+;; (set-frame-font "DejaVu Sans Mono-10" nil t)
+(set-frame-font "Consolas-12" nil t)
 (setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
       ;; (load-theme 'spacemacs-dark t)
-      (setq solarized-high-contrast-mode-line t)
       (load-theme 'solarized-dark t)
-      ;; (load-theme 'zenburn t)
       (add-hook 'org-mode-hook (lambda ()
-                                 (set-face-attribute 'org-block-begin-line nil :background "#373737")
-                                 (set-face-attribute 'org-block-end-line nil :background "#373737")))
-      ;; (add-hook 'org-mode-hook (lambda ()
-                                 ;; (set-face-attribute 'org-block-begin-line nil :background "#073642")
-                                 ;; (set-face-attribute 'org-block-end-line nil :background "#073642")
-                                 ;; (set-face-attribute 'org-block nil :background "#04303B")))
+                                 (set-face-attribute 'org-block-begin-line nil :background "#073642")
+                                 (set-face-attribute 'org-block-end-line nil :background "#073642")
+                                 (set-face-attribute 'org-block nil :background "#04303B")))
       ;; (use-package theme-changer
 	;; :ensure t
 	;; :config
