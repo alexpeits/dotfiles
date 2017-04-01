@@ -26,6 +26,7 @@
 (require 'myfuncs)
 (require 'myengines)
 
+
 ;; ----------------
 ;; various
 ;; ----------------
@@ -93,6 +94,21 @@
 ;; flyspell on pure text buffers
 (dolist (hook '(text-mode-hook change-log-mode-hook log-edit-mode-hook))
   (add-hook hook (lambda () (flyspell-mode 1))))
+
+;; what it says
+(defun my/revert-all-buffers ()
+  "Refreshes all open buffers from their respective files"
+  (interactive)
+  (let* ((list (buffer-list))
+         (buffer (car list)))
+    (while buffer
+      (when (and (buffer-file-name buffer)
+                 (not (buffer-modified-p buffer)))
+        (set-buffer buffer)
+        (revert-buffer t t t))
+      (setq list (cdr list))
+      (setq buffer (car list))))
+          (message "Refreshed open files"))
 
 ;; ----------------
 ;; UI & themes
@@ -293,13 +309,13 @@
   ;; move state to beginning of modeline
   (setq evil-mode-line-format '(before . mode-line-front-space))
   ;; change state colors
-  (setq evil-normal-state-tag   (propertize " <N> " 'face '((:foreground "#268bd2" :weight extra-bold)))
-        evil-emacs-state-tag    (propertize " <E> " 'face '((:foreground "#dc752f" :weight extra-bold)))
-        evil-insert-state-tag   (propertize " <I> " 'face '((:foreground "#2aa198" :weight extra-bold)))
-        evil-replace-state-tag  (propertize " <R> " 'face '((:foreground "#df005f" :weight extra-bold)))
-        evil-motion-state-tag   (propertize " <M> " 'face '((:foreground "#df005f" :weight extra-bold)))
-        evil-visual-state-tag   (propertize " <V> " 'face '((:foreground "#d75fd7" :weight extra-bold)))
-        evil-operator-state-tag (propertize " <O> " 'face '((:foreground "#df005f" :weight extra-bold))))
+  ;; (setq evil-normal-state-tag   (propertize " <N> " 'face '((:foreground "#268bd2" :weight extra-bold)))
+  ;;       evil-emacs-state-tag    (propertize " <E> " 'face '((:foreground "#dc752f" :weight extra-bold)))
+  ;;       evil-insert-state-tag   (propertize " <I> " 'face '((:foreground "#2aa198" :weight extra-bold)))
+  ;;       evil-replace-state-tag  (propertize " <R> " 'face '((:foreground "#df005f" :weight extra-bold)))
+  ;;       evil-motion-state-tag   (propertize " <M> " 'face '((:foreground "#df005f" :weight extra-bold)))
+  ;;       evil-visual-state-tag   (propertize " <V> " 'face '((:foreground "#d75fd7" :weight extra-bold)))
+  ;;       evil-operator-state-tag (propertize " <O> " 'face '((:foreground "#df005f" :weight extra-bold))))
 
   ;; this is needed to be able to use C-h
   (global-set-key (kbd "C-h") 'undefined)
@@ -404,20 +420,23 @@
   :ensure t
   :defer t
   :init
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'objc-mode-hook 'irony-mode)
-  ;(add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
-  ;(add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
+  ;; (add-hook 'c++-mode-hook 'irony-mode)
+  ;; (add-hook 'c-mode-hook 'irony-mode)
+  ;; (add-hook 'objc-mode-hook 'irony-mode)
+  ;; (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
+  ;; (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
   (use-package ggtags :ensure t)
-  (add-hook 'c-mode-common-hook
-            (lambda ()
-              (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'objc-mode)
-                (ggtags-mode 1)
-                (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
-                (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
-                (turn-on-eldoc-mode)
-                )))
+  (dolist (hook '(c++-mode-hook
+                  c-mode-hook
+                  objc-mode-hook))
+    (add-hook hook #'(lambda()
+                       (irony-mode)
+                       (ggtags-mode 1)
+                       (c-turn-on-eldoc-mode)
+                       ;; (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
+                       ;; (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
+                       ;; (turn-on-eldoc-mode)
+                       )))
   (defvar c-eldoc-includes "-I/usr/include -I/usr/include/python3.5m -I./ -I../")
   :config
   (defun my-irony-mode-hook ()
@@ -453,8 +472,8 @@
 (defun nvm-use-ver (version)
   (interactive "sVersion: ")
   (nvm-use version))
-(add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . js2-mode))
 (add-hook 'js2-mode-hook (function (lambda ()
                                      (nvm-use "v6.9.5")
                                      (setq evil-shift-width 2)
@@ -473,6 +492,21 @@
  web-mode-css-indent-offset 2
  web-mode-code-indent-offset 2
  web-mode-attr-indent-offset 2)
+
+;; Turn off js2 mode errors & warnings (we lean on eslint/standard)
+(setq js2-mode-show-parse-errors nil)
+(setq js2-mode-show-strict-warnings nil)
+
+(defun my/toggle-jsmodes ()
+  (interactive)
+  (with-current-buffer (current-buffer)
+    (let ((mode major-mode))
+      (cond
+       ((string= mode "js2-mode") (web-mode))
+       ((string= mode "web-mode") (js2-mode))
+       ((string= mode "js-mode") (js2-mode))))))
+
+(evil-leader/set-key "tj" 'my/toggle-jsmodes)
 
 ;; ----------------
 ;; lisps
@@ -718,6 +752,9 @@
 (setq org-clock-into-drawer nil)
 (setq org-src-fontify-natively t)
 (setq org-src-tab-acts-natively t)
+
+(setq org-directory (expand-file-name "~/org/"))
+(setq org-default-notes-file (concat org-directory "capture.org"))
 ;; (setq org-src-window-setup 'current-window)
 ;; format string used when creating CLOCKSUM lines and when generating a
 ;; time duration (avoid showing days)
@@ -748,15 +785,17 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-;; (set-frame-font "Source Code Pro-10" nil t)
-;; (set-frame-font "Ubuntu Mono-13" nil t)
-;; (set-frame-font "Liberation Mono-11" nil t)
+(set-frame-font "Source Code Pro-10" nil t)
+;; (set-frame-font "Inconsolata-11" nil t)
+;; (set-frame-font "Fira Mono-10" nil t)
+;; (set-frame-font "Ubuntu Mono-11" nil t)
+;; (set-frame-font "Liberation Mono-10" nil t)
 ;; (set-frame-font "DejaVu Sans Mono-10" nil t)
-(set-frame-font "Consolas-12" nil t)
+;; (set-frame-font "Consolas-10.5" nil t)
 (setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
-      ;; (load-theme 'spacemacs-dark t)
+      ;; (load-theme 'tango t)
       (load-theme 'solarized-dark t)
       (add-hook 'org-mode-hook (lambda ()
                                  (set-face-attribute 'org-block-begin-line nil :background "#073642")
