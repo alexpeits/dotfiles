@@ -791,22 +791,23 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-;; (set-frame-font "Source Code Pro-11" nil t)
-;; (set-frame-font "Inconsolata-13" nil t)
+(set-frame-font "Source Code Pro-10" nil t)
+;; (set-frame-font "Inconsolata-11" nil t)
 ;; (set-frame-font "Fira Mono-10" nil t)
-;; (set-frame-font "Ubuntu Mono-13" nil t)
-;; (set-frame-font "Liberation Mono-11" nil t)
+;; (set-frame-font "Ubuntu Mono-12" nil t)
+;; (set-frame-font "Liberation Mono-10" nil t)
 ;; (set-frame-font "DejaVu Sans Mono-10" nil t)
-(set-frame-font "Consolas-12" nil t)
-(setq spacemacs-theme-org-height nil)
+;; (set-frame-font "Consolas-10.5" nil t)
+;; (setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
       ;; (load-theme 'tango t)
       (load-theme 'solarized-dark t)
       (add-hook 'org-mode-hook (lambda ()
+                                 (set-face-attribute 'org-block-background nil :background "#04303B")
+                                 (set-face-attribute 'org-block nil :background "#04303B")
                                  (set-face-attribute 'org-block-begin-line nil :background "#073642")
-                                 (set-face-attribute 'org-block-end-line nil :background "#073642")
-                                 (set-face-attribute 'org-block nil :background "#04303B")))
+                                 (set-face-attribute 'org-block-end-line nil :background "#073642")))
       ;; (use-package theme-changer
 	;; :ensure t
 	;; :config
