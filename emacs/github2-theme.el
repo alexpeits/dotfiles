@@ -1066,8 +1066,8 @@ Also bind `class' to ((class color) (min-colors 89))."
    `(sml/charging ((,class (:foreground ,github2-constant))))
    `(sml/discharging ((,class (:foreground ,github2-comment))))
 ;;;;; smartparens
-   `(sp-show-pair-mismatch-face ((t (:foreground ,github2-comment :background ,github2-white :weight bold))))
-   `(sp-show-pair-match-face ((t (:background ,github2-white :weight bold))))
+   `(sp-show-pair-mismatch-face ((t (:inverse-video t :foreground ,github2-keyword :background ,github2-white :weight bold))))
+   `(sp-show-pair-match-face ((t (:background ,github2-selection :weight bold))))
 ;;;;; sml-mode-line
    '(sml-modeline-end-face ((t :inherit default :width condensed)))
 ;;;;; SLIME
