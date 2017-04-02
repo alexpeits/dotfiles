@@ -474,14 +474,20 @@
   (nvm-use version))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . js2-mode))
+(my|define-jump-handlers js2-mode)
+(my|define-jump-handlers web-mode)
 (add-hook 'js2-mode-hook (function (lambda ()
                                      (nvm-use "v6.9.5")
                                      (setq evil-shift-width 2)
-                                     (tern-mode))))
+                                     (tern-mode)
+                                     (add-to-list 'my-jump-handlers-js2-mode
+                                                  'tern-find-definition))))
 (add-hook 'web-mode-hook (function (lambda ()
                                      (nvm-use "v6.9.5")
                                      (setq evil-shift-width 2)
-                                     (tern-mode))))
+                                     (tern-mode)
+                                     (add-to-list 'my-jump-handlers-web-mode
+                                                  'tern-find-definition))))
 (setq
  ;; js2-mode
  js2-basic-offset 2
@@ -785,13 +791,13 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-(set-frame-font "Source Code Pro-10" nil t)
-;; (set-frame-font "Inconsolata-11" nil t)
+;; (set-frame-font "Source Code Pro-11" nil t)
+;; (set-frame-font "Inconsolata-13" nil t)
 ;; (set-frame-font "Fira Mono-10" nil t)
-;; (set-frame-font "Ubuntu Mono-11" nil t)
-;; (set-frame-font "Liberation Mono-10" nil t)
+;; (set-frame-font "Ubuntu Mono-13" nil t)
+;; (set-frame-font "Liberation Mono-11" nil t)
 ;; (set-frame-font "DejaVu Sans Mono-10" nil t)
-;; (set-frame-font "Consolas-10.5" nil t)
+(set-frame-font "Consolas-12" nil t)
 (setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
