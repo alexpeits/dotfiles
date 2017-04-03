@@ -467,39 +467,55 @@
 ;; ----------------
 ;; js
 ;; ----------------
+
 (use-package nvm
   :ensure t
   :config
   (setq
-   my/nvm-version
+   my/default-node-version
    (car (last (cl-remove-if-not (lambda (el) (s-starts-with? "v6.9" el))
                                 (mapcar #'car
                                         (nvm--installed-versions))))))
-  (setq
-   exec-path
-   (append
-    exec-path
-    `(,(format (expand-file-name "~/.nvm/versions/node/%s/bin") my/nvm-version)))))
+  (setq my/current-node-version nil)
 
-(defun nvm-use-ver (version)
-  (interactive "sVersion: ")
-  (nvm-use version))
+  (defun my/select-node-version ()
+    (interactive)
+    (let ((choice (completing-read
+                   "node version: "
+                   (reverse (mapcar 'car (nvm--installed-versions)))
+                   nil nil nil nil my/default-node-version)))
+      (setq my/current-node-version choice)
+      choice))
+
+  (defun my/add-node-to-path (version)
+    (setq
+     exec-path
+     (append
+      exec-path
+      `(,(format (expand-file-name "~/.nvm/versions/node/%s/bin") version)))))
+
+  (defun my/nvm-use-ver ()
+    (interactive)
+    (nvm-use (my/select-node-version)))
+  )
+
+
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . js2-mode))
 (my|define-jump-handlers js2-mode)
 (my|define-jump-handlers web-mode)
-(add-hook 'js2-mode-hook (function (lambda ()
-                                     (nvm-use my/nvm-version)
-                                     (setq evil-shift-width 2)
-                                     (tern-mode)
-                                     (add-to-list 'my-jump-handlers-js2-mode
-                                                  'tern-find-definition))))
-(add-hook 'web-mode-hook (function (lambda ()
-                                     (nvm-use my/nvm-version)
-                                     (setq evil-shift-width 2)
-                                     (tern-mode)
-                                     (add-to-list 'my-jump-handlers-web-mode
-                                                  'tern-find-definition))))
+
+(dolist (hook '(js2-mode-hook
+                web-mode-hook))
+  (add-hook hook #'(lambda ()
+                     (nvm-use (cond ((null my/current-node-version) (my/select-node-version))
+                                    (t my/current-node-version)))
+                     (my/add-node-to-path my/current-node-version)
+                     (setq evil-shift-width 2)
+                     (tern-mode)
+                     (add-to-list 'my-jump-handlers-web-mode
+                                  'tern-find-definition))))
+
 (setq
  ;; js2-mode
  js2-basic-offset 2
@@ -530,18 +546,18 @@
 ;; lisps
 ;; ----------------
 ;; Common LISP
-(use-package slime
-  :ensure t
-  :defer t
-  :init
-  ;; set up slime according to this link
-  ;; http://www.jonathanfischer.net/modern-common-lisp-on-linux/
-  (load (expand-file-name "~/quicklisp/slime-helper.el"))
-  (setq inferior-lisp-program "sbcl")
-  (use-package slime-company :ensure t :defer t)
-  (slime-setup '(slime-fancy slime-company))
-  (put 'if 'common-lisp-indent-function 2)
-  )
+;; (use-package slime
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;   ;; set up slime according to this link
+;;   ;; http://www.jonathanfischer.net/modern-common-lisp-on-linux/
+;;   (load (expand-file-name "~/quicklisp/slime-helper.el"))
+;;   (setq inferior-lisp-program "sbcl")
+;;   (use-package slime-company :ensure t :defer t)
+;;   (slime-setup '(slime-fancy slime-company))
+;;   (put 'if 'common-lisp-indent-function 2)
+;;   )
 
 (dolist (hook '(lisp-mode-hook
                 emacs-lisp-mode-hook
