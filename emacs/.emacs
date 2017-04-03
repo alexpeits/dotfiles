@@ -179,7 +179,8 @@
           sp-highlight-wrap-overlay nil
           sp-highlight-wrap-tag-overlay nil)
     (add-hook 'prog-mode-hook 'smartparens-mode)
-    (add-hook 'comint-mode-hook 'smartparens-mode))
+    (add-hook 'comint-mode-hook 'smartparens-mode)
+    (add-hook 'css-mode-hook 'smartparens-mode))
   :config
   (require 'smartparens-config)
   (show-smartparens-global-mode +1)
