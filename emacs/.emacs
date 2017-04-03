@@ -488,11 +488,10 @@
       (setq exec-path (cl-remove-if (lambda (el) (string= el pathstr)) exec-path))))
 
   (defun my/select-node-version ()
-    (let ((choice (completing-read
-                   "node version: "
-                   (reverse (mapcar 'car (nvm--installed-versions)))
-                   nil nil nil nil my/default-node-version)))
-      choice))
+    (completing-read
+     "node version: "
+     (reverse (mapcar 'car (nvm--installed-versions)))
+     nil nil nil nil my/default-node-version))
 
   (defun my/nvm-use-ver ()
     (interactive)
