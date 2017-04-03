@@ -1,9 +1,8 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom"))
-(add-to-list 'custom-theme-load-path "~/.emacs.d/custom-themes/")
+(add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/custom-themes/"))
 (setenv "PATH" (concat (getenv "PATH") ":/home/alex/.cabal/bin"))
 (setq exec-path (append exec-path '("/home/alex/.cabal/bin")))
-(setq exec-path (append exec-path '("/home/alex/.nvm/versions/node/v6.9.5/bin")))
 (setq user-full-name "Alex Peitsinis"
       user-mail-address "alexpeitsinis@gmail.com")
 
@@ -468,7 +467,20 @@
 ;; ----------------
 ;; js
 ;; ----------------
-(use-package nvm :ensure t)
+(use-package nvm
+  :ensure t
+  :config
+  (setq
+   my/nvm-version
+   (car (last (cl-remove-if-not (lambda (el) (s-starts-with? "v6.9" el))
+                                (mapcar #'car
+                                        (nvm--installed-versions))))))
+  (setq
+   exec-path
+   (append
+    exec-path
+    `(,(format (expand-file-name "~/.nvm/versions/node/%s/bin") my/nvm-version)))))
+
 (defun nvm-use-ver (version)
   (interactive "sVersion: ")
   (nvm-use version))
@@ -477,13 +489,13 @@
 (my|define-jump-handlers js2-mode)
 (my|define-jump-handlers web-mode)
 (add-hook 'js2-mode-hook (function (lambda ()
-                                     (nvm-use "v6.9.5")
+                                     (nvm-use my/nvm-version)
                                      (setq evil-shift-width 2)
                                      (tern-mode)
                                      (add-to-list 'my-jump-handlers-js2-mode
                                                   'tern-find-definition))))
 (add-hook 'web-mode-hook (function (lambda ()
-                                     (nvm-use "v6.9.5")
+                                     (nvm-use my/nvm-version)
                                      (setq evil-shift-width 2)
                                      (tern-mode)
                                      (add-to-list 'my-jump-handlers-web-mode
