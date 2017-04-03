@@ -478,25 +478,29 @@
                                         (nvm--installed-versions))))))
   (setq my/current-node-version nil)
 
+  (defun my/add-node-to-path (version)
+    (let ((pathstr (format (expand-file-name "~/.nvm/versions/node/%s/bin") version)))
+      (unless (member pathstr exec-path) (setq exec-path (append exec-path (list pathstr))))))
+
+  (defun my/remove-node-from-path (version)
+    (let ((pathstr (format (expand-file-name "~/.nvm/versions/node/%s/bin") version)))
+      (setq exec-path (cl-remove-if (lambda (el) (string= el pathstr)) exec-path))))
+
   (defun my/select-node-version ()
-    (interactive)
     (let ((choice (completing-read
                    "node version: "
                    (reverse (mapcar 'car (nvm--installed-versions)))
                    nil nil nil nil my/default-node-version)))
-      (setq my/current-node-version choice)
       choice))
-
-  (defun my/add-node-to-path (version)
-    (setq
-     exec-path
-     (append
-      exec-path
-      `(,(format (expand-file-name "~/.nvm/versions/node/%s/bin") version)))))
 
   (defun my/nvm-use-ver ()
     (interactive)
-    (nvm-use (my/select-node-version)))
+    (let ((choice (my/select-node-version)))
+      (nvm-use choice)
+      (unless (null my/current-node-version) (my/remove-node-from-path my/current-node-version))
+      (my/add-node-to-path choice)
+      (setq my/current-node-version choice)
+      ))
   )
 
 
@@ -508,9 +512,7 @@
 (dolist (hook '(js2-mode-hook
                 web-mode-hook))
   (add-hook hook #'(lambda ()
-                     (nvm-use (cond ((null my/current-node-version) (my/select-node-version))
-                                    (t my/current-node-version)))
-                     (my/add-node-to-path my/current-node-version)
+                     (if (null my/current-node-version) (my/nvm-use-ver))
                      (setq evil-shift-width 2)
                      (tern-mode)
                      (add-to-list 'my-jump-handlers-web-mode
