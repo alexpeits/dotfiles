@@ -825,13 +825,8 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-(set-frame-font "Source Code Pro-10" nil t)
-;; (set-frame-font "Inconsolata-11" nil t)
-;; (set-frame-font "Fira Mono-10" nil t)
-;; (set-frame-font "Ubuntu Mono-12" nil t)
-;; (set-frame-font "Liberation Mono-10" nil t)
-;; (set-frame-font "DejaVu Sans Mono-10" nil t)
-;; (set-frame-font "Consolas-10.5" nil t)
+(require 'myfonts)
+
 ;; (setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
