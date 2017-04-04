@@ -513,14 +513,14 @@
 (my|define-jump-handlers js2-mode)
 (my|define-jump-handlers web-mode)
 
-(dolist (hook '(js2-mode-hook
-                web-mode-hook))
-  (add-hook hook #'(lambda ()
-                     (if (null my/current-node-version) (my/nvm-use-ver))
-                     (setq evil-shift-width 2)
-                     (tern-mode)
-                     (add-to-list 'my-jump-handlers-web-mode
-                                  'tern-find-definition))))
+(dolist (mode '("js2" "web"))
+  (let ((hook (intern-soft (format "%s-mode-hook" mode)))
+        (handler (intern-soft (format "my-jump-handlers-%s-mode" mode))))
+    (add-hook hook `(lambda ()
+                      (if (null my/current-node-version) (my/nvm-use-ver))
+                      (setq evil-shift-width 2)
+                      (tern-mode)
+                      (add-to-list (quote ,handler) 'tern-find-definition)))))
 
 (setq
  ;; js2-mode
