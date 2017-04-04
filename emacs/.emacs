@@ -472,11 +472,15 @@
 (use-package nvm
   :ensure t
   :config
-  (setq
-   my/default-node-version
-   (car (last (cl-remove-if-not (lambda (el) (s-starts-with? "v6.9" el))
-                                (mapcar #'car
-                                        (nvm--installed-versions))))))
+  ;; (setq
+   ;; my/default-node-version
+   ;; (car (last (cl-remove-if-not (lambda (el) (s-starts-with? "v6.9" el))
+                                ;; (mapcar #'car
+                                        ;; (nvm--installed-versions))))))
+  (setq my/default-node-version (car (split-string
+                                      (with-temp-buffer
+                                        (insert-file-contents (expand-file-name "~/.nvm/alias/default"))
+                                        (buffer-string)))))
   (setq my/current-node-version nil)
 
   (defun my/add-node-to-path (version)
