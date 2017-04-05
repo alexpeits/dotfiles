@@ -410,8 +410,8 @@ tests to exist in `project_root/tests`"
     (projectile-with-default-dir root
       (shell-command (concat "python -m unittest discover " testdir) buff)
       (let ((compilation-window-height 10))
-        (with-current-buffer buff)
-          (compilation-mode)))))
+        (with-current-buffer buff
+          (compilation-mode))))))
 
 (use-package pyvenv) ;; this has to be downloaded
 (setq python-shell-prompt-detect-failure-warning nil)
