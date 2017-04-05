@@ -71,6 +71,14 @@
   (insert (shell-command-to-string cmd)))
   )
 
+(defun face-p (face-symbol)
+  "XE ad Emacs compatibility, checks if the FACE-SYMBOL exists."
+  (cond
+   ((fboundp 'face-list)  ;Emacs
+    (memq face-symbol (funcall (symbol-function 'face-list))))
+   ((fboundp 'facep)      ;Xemacs
+    (funcall (symbol-function 'facep) face-symbol))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Jump to definition
 
