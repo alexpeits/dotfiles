@@ -109,6 +109,11 @@
       (setq buffer (car list))))
           (message "Refreshed open files"))
 
+
+;; add env files to conf-mode alist
+(add-to-list 'auto-mode-alist '(".env\\'" . conf-mode))
+(add-to-list 'auto-mode-alist '("env.example\\'" . conf-mode))
+
 ;; ----------------
 ;; UI & themes
 ;; ----------------
