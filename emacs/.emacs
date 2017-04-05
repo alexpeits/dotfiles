@@ -399,6 +399,20 @@
 ;; ----------------
 ;; python
 ;; ----------------
+(defun my/projectile-test-python-project ()
+  "Tests a python project (requires it to be a project and
+tests to exist in `project_root/tests`"
+  (interactive)
+  (let* ((root (projectile-project-root))
+         (testdir (concat (file-name-as-directory root) "tests"))
+         (buff (get-buffer-create "*python-test*")))
+    (display-buffer buff)
+    (projectile-with-default-dir root
+      (shell-command (concat "python -m unittest discover " testdir) buff)
+      (let ((compilation-window-height 10))
+        (with-current-buffer buff)
+          (compilation-mode)))))
+
 (use-package pyvenv) ;; this has to be downloaded
 (setq python-shell-prompt-detect-failure-warning nil)
 (my|define-jump-handlers python-mode)
@@ -408,9 +422,12 @@
                               (diminish 'anaconda-mode " An")
                               (anaconda-eldoc-mode)
                               (diminish 'anaconda-eldoc-mode "")
+                              (evil-leader/set-key "ct" 'my/projectile-test-python-project)
                               (add-to-list 'my-jump-handlers-python-mode
 					   '(anaconda-mode-find-definitions :async t))))
 (diminish 'eldoc-mode "")
+
+
 
 
 ;; ----------------
