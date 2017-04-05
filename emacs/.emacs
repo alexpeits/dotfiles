@@ -833,8 +833,9 @@
       ;; (load-theme 'tango t)
       (load-theme 'solarized-dark t)
       (add-hook 'org-mode-hook (lambda ()
-                                 (set-face-attribute 'org-block-background nil :background "#04303B")
-                                 (set-face-attribute 'org-block nil :background "#04303B")
+                                 (if (face-p 'org-block-background)
+                                     (set-face-attribute 'org-block-background nil :background "#002F3B"))
+                                 (set-face-attribute 'org-block nil :background "#002F3B")
                                  (set-face-attribute 'org-block-begin-line nil :background "#073642")
                                  (set-face-attribute 'org-block-end-line nil :background "#073642")))
       ;; (use-package theme-changer
