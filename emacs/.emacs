@@ -404,16 +404,18 @@
 ;; ----------------
 ;; python
 ;; ----------------
-(defun my/projectile-test-python-project ()
+(defun my/projectile-test-python-project (verbose)
   "Tests a python project (requires it to be a project and
 tests to exist in `project_root/tests`"
-  (interactive)
+  (interactive "P")
   (let* ((root (projectile-project-root))
          (testdir (concat (file-name-as-directory root) "tests"))
-         (buff (get-buffer-create "*python-test*")))
+         (buff (get-buffer-create "*python-test*"))
+         (verbosity (cond ((null verbose) "")
+                          (t "-v "))))
     (display-buffer buff)
     (projectile-with-default-dir root
-      (shell-command (concat "python -m unittest discover " testdir) buff)
+      (shell-command (concat "python -m unittest discover " verbosity testdir) buff)
       (let ((compilation-window-height 10))
         (with-current-buffer buff
           (compilation-mode))))))
