@@ -589,12 +589,13 @@ tests to exist in `project_root/tests`"
 ;;   (put 'if 'common-lisp-indent-function 2)
 ;;   )
 
-(dolist (hook '(lisp-mode-hook
-                emacs-lisp-mode-hook
-                common-lisp-mode-hook
-                lisp-interaction-mode-hook
-                clojure-mode-hook))
-  (add-hook hook #'(lambda() (smartparens-mode 0))))
+;; TODO: common-lisp, clojure
+(dolist (mode-name '("lisp" "emacs-lisp" "lisp-interaction"))
+  (let ((hook (intern-soft (format "%s-mode-hook" mode-name)))
+        (mode (intern-soft (format "%s-mode" mode-name))))
+    (add-hook hook `(lambda ()
+                      (sp-local-pair (quote ,mode) "(" nil :actions nil)
+                      ))))
 
 ;; expand macros in another window
 (global-set-key (kbd "C-c C-m") '(lambda () (interactive) (macrostep-expand t)))
