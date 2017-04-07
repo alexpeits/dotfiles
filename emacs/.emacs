@@ -228,8 +228,9 @@
 ;; term
 ;; ----------------
 
-;; no line numbers in terminal
-(add-hook 'term-mode-hook (lambda () (linum-mode 0)))
+(add-hook 'term-mode-hook (lambda ()
+                            (linum-mode 0)
+                            (define-key term-raw-map (kbd "M-o") 'other-window)))
 
 ;; automatically close term buffers on EOF
 (defun oleh-term-exec-hook ()
@@ -242,7 +243,6 @@
             (kill-buffer ,buff))))))
 
 (add-hook 'term-exec-hook 'oleh-term-exec-hook)
-(define-key term-raw-map (kbd "M-o") 'other-window)
 
 
 ;; ----------------
@@ -575,18 +575,18 @@ tests to exist in `project_root/tests`"
 ;; lisps
 ;; ----------------
 ;; Common LISP
-;; (use-package slime
-;;   :ensure t
-;;   :defer t
-;;   :init
-;;   ;; set up slime according to this link
-;;   ;; http://www.jonathanfischer.net/modern-common-lisp-on-linux/
-;;   (load (expand-file-name "~/quicklisp/slime-helper.el"))
-;;   (setq inferior-lisp-program "sbcl")
-;;   (use-package slime-company :ensure t :defer t)
-;;   (slime-setup '(slime-fancy slime-company))
-;;   (put 'if 'common-lisp-indent-function 2)
-;;   )
+(use-package slime
+  :ensure t
+  :defer t
+  :init
+  ;; set up slime according to this link
+  ;; http://www.jonathanfischer.net/modern-common-lisp-on-linux/
+  (load (expand-file-name "~/quicklisp/slime-helper.el"))
+  (setq inferior-lisp-program "sbcl")
+  (use-package slime-company :ensure t :defer t)
+  (slime-setup '(slime-fancy slime-company))
+  (put 'if 'common-lisp-indent-function 2)
+  )
 
 ;; TODO: common-lisp, clojure
 (dolist (mode-name '("lisp" "emacs-lisp" "lisp-interaction"))
