@@ -242,6 +242,7 @@
             (kill-buffer ,buff))))))
 
 (add-hook 'term-exec-hook 'oleh-term-exec-hook)
+(define-key term-raw-map (kbd "M-o") 'other-window)
 
 
 ;; ----------------
@@ -546,9 +547,7 @@ tests to exist in `project_root/tests`"
                       (tern-mode)
                       (add-to-list (quote ,handler) 'tern-find-definition)))))
 
-(setq
- ;; js2-mode
- js2-basic-offset 2
+(setq ;; js2-mode js2-basic-offset 2
  js-indent-level 2
  ;; web-mode
  css-indent-offset 2
@@ -860,8 +859,10 @@ tests to exist in `project_root/tests`"
       (load-theme 'solarized-dark t)
       (add-hook 'org-mode-hook (lambda ()
                                  (if (face-p 'org-block-background)
-                                     (set-face-attribute 'org-block-background nil :background "#002F3B"))
-                                 (set-face-attribute 'org-block nil :background "#002F3B")
+                                     (set-face-attribute
+                                      'org-block-background nil
+                                      :background "#002F3B" :foreground "#839496"))
+                                 (set-face-attribute 'org-block nil :background "#002F3B" :foreground "#839496")
                                  (set-face-attribute 'org-block-begin-line nil :background "#073642")
                                  (set-face-attribute 'org-block-end-line nil :background "#073642")))
       ;; (use-package theme-changer
