@@ -594,7 +594,7 @@ tests to exist in `project_root/tests`"
   (let ((hook (intern-soft (format "%s-mode-hook" mode-name)))
         (mode (intern-soft (format "%s-mode" mode-name))))
     (add-hook hook `(lambda ()
-                      (sp-local-pair (quote ,mode) "(" nil :actions nil)
+                      (sp-local-pair (quote ,mode) "(" nil :actions `(:rem insert))
                       ))))
 
 ;; expand macros in another window
@@ -696,6 +696,7 @@ tests to exist in `project_root/tests`"
   (flycheck-add-mode 'javascript-eslint 'web-mode)
   (flycheck-add-mode 'javascript-eslint 'js2-mode)
   (setq-default flycheck-temp-prefix ".flycheck")
+  (setq-default flycheck-emacs-lisp-load-path 'inherit)
   )
 
 
@@ -792,7 +793,7 @@ tests to exist in `project_root/tests`"
 (use-package projectile
   :ensure t
   :config
-  (projectile-global-mode)
+  (projectile-mode)
   )
 
 (use-package helm-projectile
