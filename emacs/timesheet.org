@@ -2,27 +2,27 @@
 #+begin_src elisp :results table
   (nconc
    ;;'(("timestamp" "month" "day" "clockin" "clockout" "duration" "title"))
-   ;'(hline)
+                                          ;'(hline)
    (let ((ast (org-element-parse-buffer 'element)))
      (org-element-map ast 'clock
        (lambda (x)
          (let ((val (org-element-property :value x)))
-       `(,(car (split-string (org-element-property :raw-value val) "--"))
-         ,(calendar-month-name (org-element-property :month-start val) t)
-         ,(number-to-string (org-element-property :day-start val))
-         ,(concat (number-to-string (org-element-property :hour-start val))
-              ":"
-              (format "%02d" (org-element-property :minute-start val)))
-         ,(concat (number-to-string (org-element-property :hour-end val))
-              ":"
-              (format "%02d" (org-element-property :minute-end val)))
-         ,(org-element-property :duration x)
-         ,@(org-element-map
-           (org-element-property :parent (org-element-property :parent x))
-           'headline
-             (lambda (x) (org-element-property :title x))))))))
-	     ;; '(hline)
-	     ;;`(("" "" "" "" "" ":=vsum(@1..@-1);T" ""))
+           `(,(car (split-string (org-element-property :raw-value val) "--"))
+             ,(calendar-month-name (org-element-property :month-start val) t)
+             ,(number-to-string (org-element-property :day-start val))
+             ,(concat (number-to-string (org-element-property :hour-start val))
+                      ":"
+                      (format "%02d" (org-element-property :minute-start val)))
+             ,(concat (number-to-string (org-element-property :hour-end val))
+                      ":"
+                      (format "%02d" (org-element-property :minute-end val)))
+             ,(org-element-property :duration x)
+             ,@(org-element-map
+                   (org-element-property :parent (org-element-property :parent x))
+                   'headline
+                 (lambda (x) (org-element-property :title x))))))))
+   ;; '(hline)
+   ;;`(("" "" "" "" "" ":=vsum(@1..@-1);T" ""))
   )
 #+end_src
 
