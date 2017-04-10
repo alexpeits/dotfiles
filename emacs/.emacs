@@ -547,7 +547,8 @@ tests to exist in `project_root/tests`"
                       (tern-mode)
                       (add-to-list (quote ,handler) 'tern-find-definition)))))
 
-(setq ;; js2-mode js2-basic-offset 2
+(setq ;; js2-mode
+ js2-basic-offset 2
  js-indent-level 2
  ;; web-mode
  css-indent-offset 2
