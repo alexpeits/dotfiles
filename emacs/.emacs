@@ -25,6 +25,7 @@
 (require 'myfuncs)
 (require 'myengines)
 
+(use-package cl :ensure t)
 
 ;; ----------------
 ;; various
@@ -532,6 +533,10 @@ tests to exist in `project_root/tests`"
       ))
   )
 
+(require 'js-doc)
+(add-hook 'js2-mode-hook #'(lambda ()
+                             (define-key js2-mode-map "\C-cd" 'js-doc-insert-function-doc)
+                             (define-key js2-mode-map "\C-c@" 'js-doc-insert-tag)))
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . js2-mode))
