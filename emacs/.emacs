@@ -656,6 +656,7 @@ tests to exist in `project_root/tests`"
        (add-to-list 'company-backends '(company-irony-c-headers company-c-headers company-irony))
        (add-to-list 'company-backends 'company-ghc)
        (add-to-list 'company-backends 'company-tern)
+       (add-to-list 'company-backends 'company-files)
        (define-key company-active-map (kbd "C-k") 'company-select-previous)
        (define-key company-active-map (kbd "C-j") 'company-select-next)
        (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
