@@ -29,4 +29,8 @@
 (defengine youtube
   "http://www.youtube.com/results?aq=f&oq=&search_query=%s")
 
+(defengine hoogle
+  "http://www.haskell.org/hoogle/?q=%s"
+  :keybinding "h")
+
 (provide 'myengines)
