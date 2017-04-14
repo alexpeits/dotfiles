@@ -57,6 +57,9 @@
 
 (use-package neotree
   :ensure t
+  :config
+  (setq neo-smart-open t)
+  (setq neo-theme 'nerd)
   )
 
 (setq show-paren-delay 0.3)
@@ -109,6 +112,13 @@
       (setq list (cdr list))
       (setq buffer (car list))))
           (message "Refreshed open files"))
+
+
+;; read file as string
+(defun my/read-file-contents (path)
+  (with-temp-buffer
+    (insert-file-contents (expand-file-name path))
+    (buffer-string)))
 
 
 ;; add env files to conf-mode alist
@@ -310,8 +320,10 @@
   ;; neotree
   (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
   (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-enter)
-  (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
   (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+  (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+  (evil-define-key 'normal neotree-mode-map (kbd "|") 'neotree-enter-vertical-split)
+  (evil-define-key 'normal neotree-mode-map (kbd "-") 'neotree-enter-horizontal-split)
 
   ;; move state to beginning of modeline
   (setq evil-mode-line-format '(before . mode-line-front-space))
@@ -363,6 +375,8 @@
 
     "s"  'shell-command
 
+    "n"  'neotree-toggle
+
     "um" 'menu-bar-mode
     "up" 'rainbow-delimiters-mode
     "uh" 'rainbow-mode
@@ -391,8 +405,7 @@
     "Ts" 'helm-themes
     "ff" 'helm-find
     "fa" 'helm-ag
-
-    "ft" 'neotree-toggle)
+    )
   )
 
 (use-package evil-surround
@@ -503,10 +516,7 @@ tests to exist in `project_root/tests`"
    ;; (car (last (cl-remove-if-not (lambda (el) (s-starts-with? "v6.9" el))
                                 ;; (mapcar #'car
                                         ;; (nvm--installed-versions))))))
-  (setq my/default-node-version (car (split-string
-                                      (with-temp-buffer
-                                        (insert-file-contents (expand-file-name "~/.nvm/alias/default"))
-                                        (buffer-string)))))
+  (setq my/default-node-version (car (split-string (my/read-file-contents "~/.nvm/alias/default"))))
   (setq my/current-node-version nil)
 
   (defun my/add-node-to-path (version)
@@ -684,6 +694,7 @@ tests to exist in `project_root/tests`"
        (set-face-background 'flycheck-warning "unspecified-bg")
        (set-face-foreground 'flycheck-warning "unspecified-fg")
        (add-hook 'flycheck-mode-hook #'flycheck-irony-setup)
+       (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
       ))
   (define-key global-map (kbd "C-c ! t") 'flycheck-mode)
   (add-to-list 'display-buffer-alist
@@ -859,19 +870,27 @@ tests to exist in `project_root/tests`"
 
 (require 'myfonts)
 
+
 ;; (setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
-      ;; (load-theme 'tango t)
+      ;; (defvar zenburn-override-colors-alist '(("zenburn-bg" . "#3B3B3B")))
+      ;; (load-theme 'zenburn t)
+      ;; (setq my/org-block-begin-end-bg "#4C4C4C"
+            ;; my/org-block-fg "#DCDCCC"
+            ;; my/org-block-bg "#424242")
       (load-theme 'solarized-dark t)
+      (setq my/org-block-begin-end-bg "#073642"
+            my/org-block-fg "#839496"
+            my/org-block-bg "#002F3B")
       (add-hook 'org-mode-hook (lambda ()
                                  (if (face-p 'org-block-background)
                                      (set-face-attribute
                                       'org-block-background nil
-                                      :background "#002F3B" :foreground "#839496"))
-                                 (set-face-attribute 'org-block nil :background "#002F3B" :foreground "#839496")
-                                 (set-face-attribute 'org-block-begin-line nil :background "#073642")
-                                 (set-face-attribute 'org-block-end-line nil :background "#073642")))
+                                      :background my/org-block-bg :foreground my/org-block-fg))
+                                 (set-face-attribute 'org-block nil :background my/org-block-bg :foreground my/org-block-fg)
+                                 (set-face-attribute 'org-block-begin-line nil :background my/org-block-begin-end-bg)
+                                 (set-face-attribute 'org-block-end-line nil :background my/org-block-begin-end-bg)))
       ;; (use-package theme-changer
 	;; :ensure t
 	;; :config
