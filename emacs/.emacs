@@ -619,10 +619,10 @@ tests to exist in `project_root/tests`"
 ;; ----------------
 ;; Clojure
 ;; ----------------
-(add-hook 'cider-mode-hook #'(lambda ()
-                               (eldoc-mode)
-                               (define-key cider-repl-mode-map "\C-c\C-l" 'cider-repl-clear-buffer)
-                               (evil-define-key 'normal cider-repl-mode-map (kbd "q") 'cider-popup-buffer-quit-function)))
+(add-hook 'cider-repl-mode-hook #'(lambda ()
+                                    (eldoc-mode)
+                                    (define-key cider-repl-mode-map "\C-c\C-l" 'cider-repl-clear-buffer)
+                                    (evil-define-key 'normal cider-repl-mode-map (kbd "q") 'cider-popup-buffer-quit-function)))
 
 ;; ----------------
 ;; LaTeX
