@@ -615,6 +615,15 @@ tests to exist in `project_root/tests`"
 ;; expand macros in another window
 (global-set-key (kbd "C-c C-m") '(lambda () (interactive) (macrostep-expand t)))
 
+
+;; ----------------
+;; Clojure
+;; ----------------
+(add-hook 'cider-mode-hook #'(lambda ()
+                               (eldoc-mode)
+                               (define-key cider-repl-mode-map "\C-c\C-l" 'cider-repl-clear-buffer)
+                               (evil-define-key 'normal cider-repl-mode-map (kbd "q") 'cider-popup-buffer-quit-function)))
+
 ;; ----------------
 ;; LaTeX
 ;; ----------------
