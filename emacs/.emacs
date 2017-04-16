@@ -628,7 +628,12 @@ tests to exist in `project_root/tests`"
 (add-hook
  'cider-stacktrace-mode-hook
  #'(lambda ()
-     (evil-define-key 'normal cider-repl-mode-map (kbd "q") 'cider-popup-buffer-quit-function)))
+     (evil-define-key 'normal cider-stacktrace-mode-map (kbd "q") 'cider-popup-buffer-quit-function)))
+
+(add-hook
+ 'cider-docview-mode-hook
+ #'(lambda ()
+     (evil-define-key 'normal cider-docview-mode-map (kbd "q") 'cider-popup-buffer-quit-function)))
 
 ;; ----------------
 ;; LaTeX
