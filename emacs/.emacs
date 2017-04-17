@@ -185,6 +185,7 @@
   :defer t
   :commands (sp-split-sexp sp-newline sp-up-sexp)
   :init
+  (setq sp-paredit-bindings t)
   (progn
     ;; settings
     (setq sp-show-pair-delay 0.2
@@ -350,6 +351,14 @@
   (evil-ex-define-cmd "sv" 'split-window-below)
 
   (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile-find-file)
+  (define-key evil-insert-state-map (kbd "C-)") 'sp-forward-slurp-sexp)
+  (define-key evil-insert-state-map (kbd "C-}") 'sp-forward-barf-sexp)
+  (define-key evil-insert-state-map (kbd "C-(") 'sp-backward-slurp-sexp)
+  (define-key evil-insert-state-map (kbd "C-{") 'sp-backward-barf-sexp)
+  (define-key evil-normal-state-map (kbd "C-)") 'sp-forward-slurp-sexp)
+  (define-key evil-normal-state-map (kbd "C-}") 'sp-forward-barf-sexp)
+  (define-key evil-normal-state-map (kbd "C-(") 'sp-backward-slurp-sexp)
+  (define-key evil-normal-state-map (kbd "C-{") 'sp-backward-barf-sexp)
 
   (define-key evil-visual-state-map (kbd "<") '(lambda ()
                  (interactive)
@@ -619,6 +628,12 @@ tests to exist in `project_root/tests`"
 ;; ----------------
 ;; Clojure
 ;; ----------------
+(add-hook
+ 'clojure-mode-hook
+ #'(lambda ()
+     (sp-local-pair 'clojure-mode "(" nil :actions '(:rem insert))))
+
+
 (add-hook
  'cider-repl-mode-hook
  #'(lambda ()
