@@ -724,6 +724,7 @@ tests to exist in `project_root/tests`"
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
   (use-package flymake-yaml :ensure t)
+  (use-package flycheck-haskell :ensure t)
   (eval-after-load 'flycheck
     '(progn
        (set-face-background 'flycheck-warning "unspecified-bg")
