@@ -360,6 +360,8 @@
   (define-key evil-normal-state-map (kbd "C-(") 'sp-backward-slurp-sexp)
   (define-key evil-normal-state-map (kbd "C-{") 'sp-backward-barf-sexp)
 
+  (define-key evil-insert-state-map (kbd "C-M-i") 'company-complete)
+
   (define-key evil-visual-state-map (kbd "<") '(lambda ()
                  (interactive)
                  (progn
