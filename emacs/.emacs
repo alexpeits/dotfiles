@@ -914,27 +914,36 @@ tests to exist in `project_root/tests`"
 (load custom-file 'noerror)
 
 (require 'myfonts)
+(setq x-underline-at-descent-line t)
 
 (if (display-graphic-p)
     (progn
-      (load-theme 'hemingway-dark t)
+      ;; (load-theme 'hemingway-dark t)
+
       ;; (defvar zenburn-override-colors-alist '(("zenburn-bg" . "#3B3B3B")))
       ;; (load-theme 'zenburn t)
       ;; (setq my/org-block-begin-end-bg "#4C4C4C"
             ;; my/org-block-fg "#DCDCCC"
             ;; my/org-block-bg "#424242")
-      ;; (load-theme 'solarized-dark t)
-      ;; (setq my/org-block-begin-end-bg "#073642"
-            ;; my/org-block-fg "#839496"
-            ;; my/org-block-bg "#002F3B")
-      ;; (add-hook 'org-mode-hook (lambda ()
-                                 ;; (if (face-p 'org-block-background)
-                                     ;; (set-face-attribute
-                                      ;; 'org-block-background nil
-                                      ;; :background my/org-block-bg :foreground my/org-block-fg))
-                                 ;; (set-face-attribute 'org-block nil :background my/org-block-bg :foreground my/org-block-fg)
-                                 ;; (set-face-attribute 'org-block-begin-line nil :background my/org-block-begin-end-bg)
-                                 ;; (set-face-attribute 'org-block-end-line nil :background my/org-block-begin-end-bg)))
+
+      (load-theme 'solarized-dark t)
+      (setq my/org-block-begin-end-bg "#073642"
+            my/org-block-fg "#839496"
+            my/org-block-bg "#002F3B")
+
+      ;; (load-theme 'solarized-black t)
+      ;; (setq my/org-block-begin-end-bg "#303030"
+      ;;       my/org-block-fg "#839496"
+      ;;       my/org-block-bg "#292929")
+
+      (add-hook 'org-mode-hook (lambda ()
+                                 (if (face-p 'org-block-background)
+                                     (set-face-attribute
+                                      'org-block-background nil
+                                      :background my/org-block-bg :foreground my/org-block-fg))
+                                 (set-face-attribute 'org-block nil :background my/org-block-bg :foreground my/org-block-fg)
+                                 (set-face-attribute 'org-block-begin-line nil :background my/org-block-begin-end-bg)
+                                 (set-face-attribute 'org-block-end-line nil :background my/org-block-begin-end-bg)))
       ;; (use-package theme-changer
 	;; :ensure t
 	;; :config
