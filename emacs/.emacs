@@ -131,12 +131,18 @@
 
 
 (setq-default indent-tabs-mode nil)
+(setq spacemacs-theme-org-height nil)
 (when window-system
   (setq solarized-use-variable-pitch nil)
   (setq solarized-height-plus-1 1.0)
   (setq solarized-height-plus-2 1.0)
   (setq solarized-height-plus-3 1.0)
   (setq solarized-height-plus-4 1.0)
+  (setq hemingway-use-variable-pitch nil)
+  (setq hemingway-height-plus-1 1.0)
+  (setq hemingway-height-plus-2 1.0)
+  (setq hemingway-height-plus-3 1.0)
+  (setq hemingway-height-plus-4 1.0)
   ;; (setq solarized-high-contrast-mode-line t)
   ;; (load-theme 'solarized-dark t)
   )
@@ -602,18 +608,19 @@ tests to exist in `project_root/tests`"
 ;; lisps
 ;; ----------------
 ;; Common LISP
-(use-package slime
-  :ensure t
-  :defer t
-  :init
-  ;; set up slime according to this link
-  ;; http://www.jonathanfischer.net/modern-common-lisp-on-linux/
-  (load (expand-file-name "~/quicklisp/slime-helper.el"))
-  (setq inferior-lisp-program "sbcl")
-  (use-package slime-company :ensure t :defer t)
-  (slime-setup '(slime-fancy slime-company))
-  (put 'if 'common-lisp-indent-function 2)
-  )
+;; (use-package slime
+;;   :ensure t
+;;   :defer t
+;;   :init
+;;   ;; set up slime according to this link
+;;   ;; http://www.jonathanfischer.net/modern-common-lisp-on-linux/
+
+;;   (load (expand-file-name "~/quicklisp/slime-helper.el"))
+;;   (setq inferior-lisp-program "sbcl")
+;;   (use-package slime-company :ensure t :defer t)
+;;   (slime-setup '(slime-fancy slime-company))
+;;   (put 'if 'common-lisp-indent-function 2)
+;;   )
 
 ;; TODO: common-lisp, clojure
 (dolist (mode-name '("lisp" "emacs-lisp" "lisp-interaction"))
@@ -726,7 +733,6 @@ tests to exist in `project_root/tests`"
   :config
   (add-hook 'after-init-hook #'global-flycheck-mode)
   (use-package flymake-yaml :ensure t)
-  (use-package flycheck-haskell :ensure t)
   (eval-after-load 'flycheck
     '(progn
        (set-face-background 'flycheck-warning "unspecified-bg")
@@ -893,6 +899,7 @@ tests to exist in `project_root/tests`"
 			    'org-babel-load-languages
 			    '((python . t)
                               (ipython . t)
+                              (dot . t)
 			      ;; other languages..
 			      ))
 			   (use-package ox-twbs :ensure t)
@@ -908,27 +915,26 @@ tests to exist in `project_root/tests`"
 
 (require 'myfonts)
 
-
-;; (setq spacemacs-theme-org-height nil)
 (if (display-graphic-p)
     (progn
+      (load-theme 'hemingway-dark t)
       ;; (defvar zenburn-override-colors-alist '(("zenburn-bg" . "#3B3B3B")))
       ;; (load-theme 'zenburn t)
       ;; (setq my/org-block-begin-end-bg "#4C4C4C"
             ;; my/org-block-fg "#DCDCCC"
             ;; my/org-block-bg "#424242")
-      (load-theme 'solarized-dark t)
-      (setq my/org-block-begin-end-bg "#073642"
-            my/org-block-fg "#839496"
-            my/org-block-bg "#002F3B")
-      (add-hook 'org-mode-hook (lambda ()
-                                 (if (face-p 'org-block-background)
-                                     (set-face-attribute
-                                      'org-block-background nil
-                                      :background my/org-block-bg :foreground my/org-block-fg))
-                                 (set-face-attribute 'org-block nil :background my/org-block-bg :foreground my/org-block-fg)
-                                 (set-face-attribute 'org-block-begin-line nil :background my/org-block-begin-end-bg)
-                                 (set-face-attribute 'org-block-end-line nil :background my/org-block-begin-end-bg)))
+      ;; (load-theme 'solarized-dark t)
+      ;; (setq my/org-block-begin-end-bg "#073642"
+            ;; my/org-block-fg "#839496"
+            ;; my/org-block-bg "#002F3B")
+      ;; (add-hook 'org-mode-hook (lambda ()
+                                 ;; (if (face-p 'org-block-background)
+                                     ;; (set-face-attribute
+                                      ;; 'org-block-background nil
+                                      ;; :background my/org-block-bg :foreground my/org-block-fg))
+                                 ;; (set-face-attribute 'org-block nil :background my/org-block-bg :foreground my/org-block-fg)
+                                 ;; (set-face-attribute 'org-block-begin-line nil :background my/org-block-begin-end-bg)
+                                 ;; (set-face-attribute 'org-block-end-line nil :background my/org-block-begin-end-bg)))
       ;; (use-package theme-changer
 	;; :ensure t
 	;; :config
