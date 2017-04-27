@@ -133,17 +133,23 @@
 (setq-default indent-tabs-mode nil)
 (setq spacemacs-theme-org-height nil)
 (when window-system
-  (setq solarized-use-variable-pitch nil)
-  (setq solarized-height-plus-1 1.0)
-  (setq solarized-height-plus-2 1.0)
-  (setq solarized-height-plus-3 1.0)
-  (setq solarized-height-plus-4 1.0)
-  (setq hemingway-use-variable-pitch nil)
-  (setq hemingway-height-plus-1 1.0)
-  (setq hemingway-height-plus-2 1.0)
-  (setq hemingway-height-plus-3 1.0)
-  (setq hemingway-height-plus-4 1.0)
-  ;; (setq solarized-high-contrast-mode-line t)
+   (setq solarized-use-variable-pitch nil
+         solarized-height-plus-1 1.0
+         solarized-height-plus-2 1.0
+         solarized-height-plus-3 1.0
+         solarized-height-plus-4 1.0
+         solarizedarker-use-variable-pitch nil
+         solarizedarker-height-plus-1 1.0
+         solarizedarker-height-plus-2 1.0
+         solarizedarker-height-plus-3 1.0
+         solarizedarker-height-plus-4 1.0
+         hemingway-use-variable-pitch nil
+         hemingway-height-plus-1 1.0
+         hemingway-height-plus-2 1.0
+         hemingway-height-plus-3 1.0
+         hemingway-height-plus-4 1.0
+         ;; solarized-high-contrast-mode-line t
+         )
   ;; (load-theme 'solarized-dark t)
   )
 
