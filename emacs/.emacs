@@ -703,7 +703,7 @@ tests to exist in `project_root/tests`"
   :ensure t
   :defer t
   :init
-  (setq company-dabbrev-downcase 0)
+  (setq company-dabbrev-downcase nil)
   (setq company-idle-delay 0.3)
   (add-hook 'after-init-hook 'global-company-mode)
   :config
@@ -913,6 +913,15 @@ tests to exist in `project_root/tests`"
 			     "oc" 'org-table-delete-column
 			     "or" 'org-table-kill-row)))
 
+(defun my/fix-org-block-colors ()
+  (if (face-p 'org-block-background)
+      (set-face-attribute
+       'org-block-background nil
+       :background my/org-block-bg :foreground my/org-block-fg))
+  (set-face-attribute 'org-block nil :background my/org-block-bg :foreground my/org-block-fg)
+  (set-face-attribute 'org-block-begin-line nil :background my/org-block-begin-end-bg)
+  (set-face-attribute 'org-block-end-line nil :background my/org-block-begin-end-bg))
+
 
 ;; ----------------------------------------------------------------------------------------------
 
@@ -942,23 +951,8 @@ tests to exist in `project_root/tests`"
       ;;       my/org-block-fg "#839496"
       ;;       my/org-block-bg "#292929")
 
-      (add-hook 'org-mode-hook (lambda ()
-                                 (if (face-p 'org-block-background)
-                                     (set-face-attribute
-                                      'org-block-background nil
-                                      :background my/org-block-bg :foreground my/org-block-fg))
-                                 (set-face-attribute 'org-block nil :background my/org-block-bg :foreground my/org-block-fg)
-                                 (set-face-attribute 'org-block-begin-line nil :background my/org-block-begin-end-bg)
-                                 (set-face-attribute 'org-block-end-line nil :background my/org-block-begin-end-bg)))
-      ;; (use-package theme-changer
-	;; :ensure t
-	;; :config
-	;; (setq calendar-latitude 37.98)
-	;; (setq calendar-longitude 23.72)
-	;; (change-theme 'solarized-light 'solarized-dark)
-        ;; )
-      ;; (load-theme 'sanityinc-tomorrow-night t)
-      ;(set-face-attribute 'cursor nil :background "gray")
+      (add-hook 'org-mode-hook (lambda () (my/fix-org-block-colors)))
+
       )
   (progn
     (load-theme 'spacemacs-dark t)
