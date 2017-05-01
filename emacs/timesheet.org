@@ -1,8 +1,6 @@
 #+NAME: timesheet_table
 #+begin_src elisp :results table
   (nconc
-   ;;'(("timestamp" "month" "day" "clockin" "clockout" "duration" "title"))
-                                          ;'(hline)
    (let ((ast (org-element-parse-buffer 'element)))
      (org-element-map ast 'clock
        (lambda (x)
@@ -20,10 +18,13 @@
              ,@(org-element-map
                    (org-element-property :parent (org-element-property :parent x))
                    'headline
-                 (lambda (x) (org-element-property :title x))))))))
-   ;; '(hline)
-   ;;`(("" "" "" "" "" ":=vsum(@1..@-1);T" ""))
-  )
+                 (lambda (x)
+                   (let ((parent (org-element-property :title (org-element-property :parent x))))
+                     (concat
+                      (if (null parent)
+                          ""
+                        (format "[%s] " parent))
+                      (org-element-property :title x)))))))))))
 #+end_src
 
 #+NAME: timesheet_final
