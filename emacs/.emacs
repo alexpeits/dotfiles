@@ -143,6 +143,11 @@
          solarizedarker-height-plus-2 1.0
          solarizedarker-height-plus-3 1.0
          solarizedarker-height-plus-4 1.0
+         solarizedarkerbright-use-variable-pitch nil
+         solarizedarkerbright-height-plus-1 1.0
+         solarizedarkerbright-height-plus-2 1.0
+         solarizedarkerbright-height-plus-3 1.0
+         solarizedarkerbright-height-plus-4 1.0
          hemingway-use-variable-pitch nil
          hemingway-height-plus-1 1.0
          hemingway-height-plus-2 1.0
@@ -415,7 +420,7 @@
     "th" 'global-hl-line-mode
     "tl"  'linum-mode
     "ts" 'flycheck-mode
-    "tw" 'my/toggle-scrolling
+    "tw" 'toggle-truncate-lines
 
     "j"  'my/jump-to-definition
 
@@ -646,6 +651,7 @@ tests to exist in `project_root/tests`"
 (add-hook
  'clojure-mode-hook
  #'(lambda ()
+     (eldoc-mode)
      (sp-local-pair 'clojure-mode "(" nil :actions '(:rem insert))))
 
 
@@ -941,15 +947,16 @@ tests to exist in `project_root/tests`"
             ;; my/org-block-fg "#DCDCCC"
             ;; my/org-block-bg "#424242")
 
-      (load-theme 'solarized-dark t)
-      (setq my/org-block-begin-end-bg "#073642"
-            my/org-block-fg "#839496"
-            my/org-block-bg "#002F3B")
-
-      ;; (load-theme 'solarized-black t)
-      ;; (setq my/org-block-begin-end-bg "#303030"
+      ;; (load-theme 'solarized-dark t)
+      ;; (setq my/org-block-begin-end-bg "#073642"
       ;;       my/org-block-fg "#839496"
-      ;;       my/org-block-bg "#292929")
+      ;;       my/org-block-bg "#002F3B")
+
+      (load-theme 'solarized-black-bright t)
+      (setq my/org-block-begin-end-bg "#303030"
+            ;; my/org-block-fg "#839496"
+            my/org-block-fg "#A1ACAE"
+            my/org-block-bg "#292929")
 
       (add-hook 'org-mode-hook (lambda () (my/fix-org-block-colors)))
 
