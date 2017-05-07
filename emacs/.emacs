@@ -227,6 +227,20 @@
   (sp-pair "[" nil :post-handlers
 	   '(:add (my/smartparens-pair-newline-and-indent "RET")))
   (diminish 'smartparens-mode "")
+
+  (define-key smartparens-mode-map (kbd "C-(") 'sp-backward-slurp-sexp)
+  (define-key smartparens-mode-map (kbd "C-{") 'sp-backward-barf-sexp)
+  (define-key smartparens-mode-map (kbd "C-)") 'sp-forward-slurp-sexp)
+  (define-key smartparens-mode-map (kbd "C-}") 'sp-forward-barf-sexp)
+
+  (define-key smartparens-mode-map (kbd "C-M-b") 'sp-backward-sexp)
+  (define-key smartparens-mode-map (kbd "C-M-f") 'sp-forward-sexp)
+
+  (define-key smartparens-mode-map (kbd "C-M-u") 'sp-backward-up-sexp)
+  (define-key smartparens-mode-map (kbd "C-M-d") 'sp-down-sexp)
+
+  (define-key smartparens-mode-map (kbd "C-M-n") 'sp-backward-down-sexp)
+  (define-key smartparens-mode-map (kbd "C-M-p") 'sp-up-sexp)
   )
 
 (use-package which-key
@@ -368,14 +382,14 @@
   (evil-ex-define-cmd "sv" 'split-window-below)
 
   (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile-find-file)
-  (define-key evil-insert-state-map (kbd "C-)") 'sp-forward-slurp-sexp)
-  (define-key evil-insert-state-map (kbd "C-}") 'sp-forward-barf-sexp)
-  (define-key evil-insert-state-map (kbd "C-(") 'sp-backward-slurp-sexp)
-  (define-key evil-insert-state-map (kbd "C-{") 'sp-backward-barf-sexp)
-  (define-key evil-normal-state-map (kbd "C-)") 'sp-forward-slurp-sexp)
-  (define-key evil-normal-state-map (kbd "C-}") 'sp-forward-barf-sexp)
-  (define-key evil-normal-state-map (kbd "C-(") 'sp-backward-slurp-sexp)
-  (define-key evil-normal-state-map (kbd "C-{") 'sp-backward-barf-sexp)
+  ;; (define-key evil-insert-state-map (kbd "C-)") 'sp-forward-slurp-sexp)
+  ;; (define-key evil-insert-state-map (kbd "C-}") 'sp-forward-barf-sexp)
+  ;; (define-key evil-insert-state-map (kbd "C-(") 'sp-backward-slurp-sexp)
+  ;; (define-key evil-insert-state-map (kbd "C-{") 'sp-backward-barf-sexp)
+  ;; (define-key evil-normal-state-map (kbd "C-)") 'sp-forward-slurp-sexp)
+  ;; (define-key evil-normal-state-map (kbd "C-}") 'sp-forward-barf-sexp)
+  ;; (define-key evil-normal-state-map (kbd "C-(") 'sp-backward-slurp-sexp)
+  ;; (define-key evil-normal-state-map (kbd "C-{") 'sp-backward-barf-sexp)
 
   (define-key evil-insert-state-map (kbd "C-M-i") 'company-complete)
 
@@ -634,12 +648,12 @@ tests to exist in `project_root/tests`"
 ;;   )
 
 ;; TODO: common-lisp, clojure
-(dolist (mode-name '("lisp" "emacs-lisp" "lisp-interaction"))
-  (let ((hook (intern-soft (format "%s-mode-hook" mode-name)))
-        (mode (intern-soft (format "%s-mode" mode-name))))
-    (add-hook hook `(lambda ()
-                      (sp-local-pair (quote ,mode) "(" nil :actions `(:rem insert))
-                      ))))
+;; (dolist (mode-name '("lisp" "emacs-lisp" "lisp-interaction"))
+  ;; (let ((hook (intern-soft (format "%s-mode-hook" mode-name)))
+        ;; (mode (intern-soft (format "%s-mode" mode-name))))
+    ;; (add-hook hook `(lambda ()
+                      ;; (sp-local-pair (quote ,mode) "(" nil :actions `(:rem insert))
+                      ;; ))))
 
 ;; expand macros in another window
 (global-set-key (kbd "C-c C-m") '(lambda () (interactive) (macrostep-expand t)))
@@ -652,7 +666,8 @@ tests to exist in `project_root/tests`"
  'clojure-mode-hook
  #'(lambda ()
      (eldoc-mode)
-     (sp-local-pair 'clojure-mode "(" nil :actions '(:rem insert))))
+     ;; (sp-local-pair 'clojure-mode "(" nil :actions '(:rem insert))
+     ))
 
 
 (add-hook
@@ -952,10 +967,10 @@ tests to exist in `project_root/tests`"
       ;;       my/org-block-fg "#839496"
       ;;       my/org-block-bg "#002F3B")
 
-      (load-theme 'solarized-black-bright t)
+      (load-theme 'solarized-black t)
       (setq my/org-block-begin-end-bg "#303030"
-            ;; my/org-block-fg "#839496"
-            my/org-block-fg "#A1ACAE"
+            my/org-block-fg "#839496"
+            ;; my/org-block-fg "#A1ACAE"
             my/org-block-bg "#292929")
 
       (add-hook 'org-mode-hook (lambda () (my/fix-org-block-colors)))
