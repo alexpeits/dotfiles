@@ -274,6 +274,10 @@
 
 (add-hook 'term-exec-hook 'oleh-term-exec-hook)
 
+(defun eshell/clear ()
+  "Clear the eshell buffer."
+  (let ((inhibit-read-only t))
+    (erase-buffer)))
 
 ;; ----------------
 ;; VCS
