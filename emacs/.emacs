@@ -268,7 +268,7 @@
 ;;   )
 
 ;; ----------------
-;; term
+;; term & eshell
 ;; ----------------
 
 (add-hook 'term-mode-hook (lambda ()
@@ -341,10 +341,9 @@
   (evil-mode 1)
 
   ;; emacs mode is default in some modes
-  (delete 'term-mode evil-insert-state-modes)
-  (add-to-list 'evil-emacs-state-modes 'term-mode)
-  (delete 'inferior-python-mode evil-insert-state-modes)
-  (add-to-list 'evil-emacs-state-modes 'inferior-python-mode)
+  (dolist (mode '(term-mode eshell-mode inferior-python-mode))
+    (delete mode evil-insert-state-modes)
+    (add-to-list 'evil-emacs-state-modes mode))
 
   ;; magit
   (evil-define-key 'normal magit-blame-mode-map (kbd "q") 'magit-blame-quit)
@@ -962,16 +961,16 @@ tests to exist in `project_root/tests`"
             ;; my/org-block-fg "#DCDCCC"
             ;; my/org-block-bg "#424242")
 
-      ;; (load-theme 'solarized-dark t)
-      ;; (setq my/org-block-begin-end-bg "#073642"
-      ;;       my/org-block-fg "#839496"
-      ;;       my/org-block-bg "#002F3B")
-
-      (load-theme 'solarized-black t)
-      (setq my/org-block-begin-end-bg "#303030"
+      (load-theme 'solarized-dark t)
+      (setq my/org-block-begin-end-bg "#073642"
             my/org-block-fg "#839496"
-            ;; my/org-block-fg "#A1ACAE"
-            my/org-block-bg "#292929")
+            my/org-block-bg "#002F3B")
+
+      ;; (load-theme 'solarized-black t)
+      ;; (setq my/org-block-begin-end-bg "#303030"
+      ;;       my/org-block-fg "#839496"
+      ;;       ;; my/org-block-fg "#A1ACAE"
+      ;;       my/org-block-bg "#292929")
 
       (add-hook 'org-mode-hook (lambda () (my/fix-org-block-colors)))
 
