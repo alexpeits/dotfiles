@@ -27,6 +27,10 @@
 
 (use-package cl :ensure t)
 
+(defmacro my/add-hooks (hooks &rest body)
+  `(dolist (hook ,hooks)
+     (add-hook hook (lambda () ,@body))))
+
 ;; ----------------
 ;; various
 ;; ----------------
@@ -52,7 +56,7 @@
 (use-package highlight-numbers
   :ensure t
   :config
-  (add-hook 'prog-mode-hook 'highlight-numbers-mode)
+  (my/add-hooks '(prog-mode-hook css-mode-hook) (highlight-numbers-mode))
   )
 
 (use-package neotree
@@ -62,6 +66,7 @@
   (setq neo-theme 'nerd)
   )
 
+;; visual effect after closing delimiter
 (setq show-paren-delay 0.3)
 
 ;; show column in modeline
@@ -152,11 +157,7 @@
          hemingway-height-plus-1 1.0
          hemingway-height-plus-2 1.0
          hemingway-height-plus-3 1.0
-         hemingway-height-plus-4 1.0
-         ;; solarized-high-contrast-mode-line t
-         )
-  ;; (load-theme 'solarized-dark t)
-  )
+         hemingway-height-plus-4 1.0))
 
 ;; disable annoying stuff
 (setq ring-bell-function 'ignore)
@@ -188,11 +189,10 @@
   (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
   )
 
-; font size
+; font size & scaling
 (setq text-scale-mode-step 1.05)
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
-
 
 ;; highlight trailing whitespace
 (add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
@@ -202,19 +202,15 @@
   :defer t
   :commands (sp-split-sexp sp-newline sp-up-sexp)
   :init
-  (setq sp-paredit-bindings t)
-  (progn
-    ;; settings
-    (setq sp-show-pair-delay 0.2
-          ;; fix paren highlighting in normal mode
-          sp-show-pair-from-inside t
-          sp-cancel-autoskip-on-backward-movement nil
-          sp-highlight-pair-overlay nil
-          sp-highlight-wrap-overlay nil
-          sp-highlight-wrap-tag-overlay nil)
-    (add-hook 'prog-mode-hook 'smartparens-mode)
-    (add-hook 'comint-mode-hook 'smartparens-mode)
-    (add-hook 'css-mode-hook 'smartparens-mode))
+  (setq sp-paredit-bindings t
+        sp-show-pair-delay 0.2
+        ;; fix paren highlighting in normal mode
+        sp-show-pair-from-inside t
+        sp-cancel-autoskip-on-backward-movement nil
+        sp-highlight-pair-overlay nil
+        sp-highlight-wrap-overlay nil
+        sp-highlight-wrap-tag-overlay nil)
+  (my/add-hooks '(prog-mode-hook comint-mode-hook css-mode-hook) (smartparens-mode))
   :config
   (require 'smartparens-config)
   (show-smartparens-global-mode +1)
@@ -228,6 +224,7 @@
 	   '(:add (my/smartparens-pair-newline-and-indent "RET")))
   (diminish 'smartparens-mode "")
 
+  ;; keymaps
   (define-key smartparens-mode-map (kbd "C-(") 'sp-backward-slurp-sexp)
   (define-key smartparens-mode-map (kbd "C-{") 'sp-backward-barf-sexp)
   (define-key smartparens-mode-map (kbd "C-)") 'sp-forward-slurp-sexp)
@@ -256,16 +253,6 @@
   (global-set-key (kbd "C-\\") #'imenu-list-minor-mode)
   (setq imenu-list-size 30)
   )
-
-;; (use-package spaceline
-;;   :ensure t
-;;   :config
-;;   (require 'spaceline-config)
-;;   (setq powerline-height 15)
-;;   ;; (setq powerline-default-separator "slant")
-;;   (setq powerline-default-separator 'utf-8)
-;;   (spaceline-spacemacs-theme)
-;;   )
 
 ;; ----------------
 ;; term & eshell
@@ -298,31 +285,12 @@
   :init
   (global-set-key (kbd "C-x g") 'magit-status))
 
-;; (if (display-graphic-p)
-;;     (progn
-;;       (require 'git-gutter-fringe)
-;;       (global-git-gutter-mode +1)
-;;       )
-;;   (progn
-;;     (global-git-gutter-mode +1)
-;;     ;; (set-face-background 'git-gutter:modified "purple")
-;;     ;; (set-face-foreground 'git-gutter:modified "green")
-;;     ;; (set-face-background 'git-gutter:added "purple")
-;;     ;; (set-face-foreground 'git-gutter:added "green")
-;;     ;; (set-face-background 'git-gutter:deleted "purple")
-;;     ;; (set-face-foreground 'git-gutter:deleted "green")
-;;     ))
-;; (diminish 'git-gutter-mode "")
 (if (display-graphic-p)
-    (progn
-      (use-package diff-hl
-        :ensure t
-        :config
-        ;; (add-hook 'prog-mode-hook 'diff-hl-mode)
-        ;; (add-hook 'vc-dir-mode-hook 'diff-hl-mode)
-        (global-diff-hl-mode)
-        (diff-hl-flydiff-mode)
-        )))
+    (use-package diff-hl
+      :ensure t
+      :config
+      (global-diff-hl-mode)
+      (diff-hl-flydiff-mode)))
 
 
 ;; ----------------
@@ -358,14 +326,6 @@
 
   ;; move state to beginning of modeline
   (setq evil-mode-line-format '(before . mode-line-front-space))
-  ;; change state colors
-  ;; (setq evil-normal-state-tag   (propertize " <N> " 'face '((:foreground "#268bd2" :weight extra-bold)))
-  ;;       evil-emacs-state-tag    (propertize " <E> " 'face '((:foreground "#dc752f" :weight extra-bold)))
-  ;;       evil-insert-state-tag   (propertize " <I> " 'face '((:foreground "#2aa198" :weight extra-bold)))
-  ;;       evil-replace-state-tag  (propertize " <R> " 'face '((:foreground "#df005f" :weight extra-bold)))
-  ;;       evil-motion-state-tag   (propertize " <M> " 'face '((:foreground "#df005f" :weight extra-bold)))
-  ;;       evil-visual-state-tag   (propertize " <V> " 'face '((:foreground "#d75fd7" :weight extra-bold)))
-  ;;       evil-operator-state-tag (propertize " <O> " 'face '((:foreground "#df005f" :weight extra-bold))))
 
   ;; this is needed to be able to use C-h
   (global-set-key (kbd "C-h") 'undefined)
@@ -381,14 +341,6 @@
   (evil-ex-define-cmd "sv" 'split-window-below)
 
   (define-key evil-normal-state-map (kbd "C-p") 'helm-projectile-find-file)
-  ;; (define-key evil-insert-state-map (kbd "C-)") 'sp-forward-slurp-sexp)
-  ;; (define-key evil-insert-state-map (kbd "C-}") 'sp-forward-barf-sexp)
-  ;; (define-key evil-insert-state-map (kbd "C-(") 'sp-backward-slurp-sexp)
-  ;; (define-key evil-insert-state-map (kbd "C-{") 'sp-backward-barf-sexp)
-  ;; (define-key evil-normal-state-map (kbd "C-)") 'sp-forward-slurp-sexp)
-  ;; (define-key evil-normal-state-map (kbd "C-}") 'sp-forward-barf-sexp)
-  ;; (define-key evil-normal-state-map (kbd "C-(") 'sp-backward-slurp-sexp)
-  ;; (define-key evil-normal-state-map (kbd "C-{") 'sp-backward-barf-sexp)
 
   (define-key evil-insert-state-map (kbd "C-M-i") 'company-complete)
 
@@ -491,8 +443,6 @@ tests to exist in `project_root/tests`"
 (diminish 'eldoc-mode "")
 
 
-
-
 ;; ----------------
 ;; c/c++
 ;; ----------------
@@ -506,17 +456,10 @@ tests to exist in `project_root/tests`"
   ;; (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
   ;; (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
   (use-package ggtags :ensure t)
-  (dolist (hook '(c++-mode-hook
-                  c-mode-hook
-                  objc-mode-hook))
-    (add-hook hook #'(lambda()
-                       (irony-mode)
-                       (ggtags-mode 1)
-                       (c-turn-on-eldoc-mode)
-                       ;; (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
-                       ;; (setq-local eldoc-documentation-function #'ggtags-eldoc-function)
-                       ;; (turn-on-eldoc-mode)
-                       )))
+  (my/add-hooks '(c++-mode-hook c-mode-hook objc-mode-hook)
+             (irony-mode)
+             (ggtags-mode 1)
+             (c-turn-on-eldoc-mode))
   (defvar c-eldoc-includes "-I/usr/include -I/usr/include/python3.5m -I./ -I../")
   :config
   (defun my-irony-mode-hook ()
@@ -525,8 +468,9 @@ tests to exist in `project_root/tests`"
       'irony-completion-at-point-async)
     (define-key irony-mode-map [remap complete-symbol]
       'irony-completion-at-point-async))
-  (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  (add-hook 'irony-mode-hook (lambda ()
+                               (my-irony-mode-hook)
+                               (irony-cdb-autosetup-compile-options)))
   (use-package company-irony-c-headers :ensure t :defer t)
   )
 
@@ -552,11 +496,7 @@ tests to exist in `project_root/tests`"
 (use-package nvm
   :ensure t
   :config
-  ;; (setq
-   ;; my/default-node-version
-   ;; (car (last (cl-remove-if-not (lambda (el) (s-starts-with? "v6.9" el))
-                                ;; (mapcar #'car
-                                        ;; (nvm--installed-versions))))))
+
   (setq my/default-node-version (car (split-string (my/read-file-contents "~/.nvm/alias/default"))))
   (setq my/current-node-version nil)
 
@@ -585,9 +525,9 @@ tests to exist in `project_root/tests`"
   )
 
 (require 'js-doc)
-(add-hook 'js2-mode-hook #'(lambda ()
-                             (define-key js2-mode-map "\C-cd" 'js-doc-insert-function-doc)
-                             (define-key js2-mode-map "\C-c@" 'js-doc-insert-tag)))
+(add-hook 'js2-mode-hook (lambda ()
+                           (define-key js2-mode-map "\C-cd" 'js-doc-insert-function-doc)
+                           (define-key js2-mode-map "\C-c@" 'js-doc-insert-tag)))
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . js2-mode))
@@ -646,16 +586,8 @@ tests to exist in `project_root/tests`"
 ;;   (put 'if 'common-lisp-indent-function 2)
 ;;   )
 
-;; TODO: common-lisp, clojure
-;; (dolist (mode-name '("lisp" "emacs-lisp" "lisp-interaction"))
-  ;; (let ((hook (intern-soft (format "%s-mode-hook" mode-name)))
-        ;; (mode (intern-soft (format "%s-mode" mode-name))))
-    ;; (add-hook hook `(lambda ()
-                      ;; (sp-local-pair (quote ,mode) "(" nil :actions `(:rem insert))
-                      ;; ))))
-
 ;; expand macros in another window
-(global-set-key (kbd "C-c C-m") '(lambda () (interactive) (macrostep-expand t)))
+(define-key lisp-mode-map (kbd "C-c C-m") '(lambda () (interactive) (macrostep-expand t)))
 
 
 ;; ----------------
@@ -663,27 +595,27 @@ tests to exist in `project_root/tests`"
 ;; ----------------
 (add-hook
  'clojure-mode-hook
- #'(lambda ()
-     (eldoc-mode)
-     ;; (sp-local-pair 'clojure-mode "(" nil :actions '(:rem insert))
-     ))
+ (lambda ()
+   (eldoc-mode)
+   ;; (sp-local-pair 'clojure-mode "(" nil :actions '(:rem insert))
+   ))
 
 
 (add-hook
  'cider-repl-mode-hook
- #'(lambda ()
-     (eldoc-mode)
-     (define-key cider-repl-mode-map "\C-c\C-l" 'cider-repl-clear-buffer)))
+ (lambda ()
+   (eldoc-mode)
+   (define-key cider-repl-mode-map "\C-c\C-l" 'cider-repl-clear-buffer)))
 
 (add-hook
  'cider-stacktrace-mode-hook
- #'(lambda ()
-     (evil-define-key 'normal cider-stacktrace-mode-map (kbd "q") 'cider-popup-buffer-quit-function)))
+ (lambda ()
+   (evil-define-key 'normal cider-stacktrace-mode-map (kbd "q") 'cider-popup-buffer-quit-function)))
 
 (add-hook
  'cider-docview-mode-hook
- #'(lambda ()
-     (evil-define-key 'normal cider-docview-mode-map (kbd "q") 'cider-popup-buffer-quit-function)))
+ (lambda ()
+   (evil-define-key 'normal cider-docview-mode-map (kbd "q") 'cider-popup-buffer-quit-function)))
 
 ;; ----------------
 ;; LaTeX
@@ -801,18 +733,6 @@ tests to exist in `project_root/tests`"
 
 
 ;; ----------------
-;; hydra
-;; ----------------
-;; (use-package hydra
-;;   :ensure t
-;;   :config
-;;   (defhydra hydra-common (global-map "<f5>")
-;;     "common functions"
-;;     ("g" text-scale-increase "in")
-;;     ("l" text-scale-decrease "out"))
-;;   )
-
-;; ----------------
 ;; helm
 ;; ----------------
 (use-package helm-config)
@@ -900,11 +820,11 @@ tests to exist in `project_root/tests`"
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-cb" 'org-iswitchb)
-(setq org-log-done 'time)
-(setq org-confirm-babel-evaluate nil)
-(setq org-clock-into-drawer nil)
-(setq org-src-fontify-natively t)
-(setq org-src-tab-acts-natively t)
+(setq org-log-done 'time
+      org-confirm-babel-evaluate nil
+      org-clock-into-drawer nil
+      org-src-fontify-natively t
+      org-src-tab-acts-natively t)
 
 (setq org-directory (expand-file-name "~/org/"))
 (setq org-default-notes-file (concat org-directory "capture.org"))
@@ -915,23 +835,30 @@ tests to exist in `project_root/tests`"
     '(:hours "%d" :require-hours t :minutes ":%02d" :require-minutes t))
 
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
-(add-hook 'org-mode-hook (lambda ()
-			   (define-key org-mode-map (kbd "TAB") 'org-cycle)
-			   (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)
-                           (add-to-list 'org-structure-template-alist '("pf" "#+BEGIN_SRC ipython :session :file %file :exports both\n?\n#+END_SRC"))
-                           (add-to-list 'org-structure-template-alist '("po" "#+BEGIN_SRC ipython :session :exports both\n?\n#+END_SRC"))
-			   (org-bullets-mode 1)
-			   (org-babel-do-load-languages
-			    'org-babel-load-languages
-			    '((python . t)
-                              (ipython . t)
-                              (dot . t)
-			      ;; other languages..
-			      ))
-			   (use-package ox-twbs :ensure t)
-			   (evil-leader/set-key
-			     "oc" 'org-table-delete-column
-			     "or" 'org-table-kill-row)))
+(add-hook 'org-mode-hook
+          (lambda ()
+            (define-key org-mode-map (kbd "TAB") 'org-cycle)
+            (define-key evil-normal-state-map (kbd "TAB") 'org-cycle)
+
+            (add-to-list
+             'org-structure-template-alist
+             '("pf" "#+BEGIN_SRC ipython :session :file %file :exports both\n?\n#+END_SRC"))
+            (add-to-list
+             'org-structure-template-alist
+             '("po" "#+BEGIN_SRC ipython :session :exports both\n?\n#+END_SRC"))
+
+            (org-bullets-mode 1)
+            (org-babel-do-load-languages
+             'org-babel-load-languages
+             '((python . t)
+               (ipython . t)
+               (dot . t)
+               ;; other languages..
+               ))
+            (use-package ox-twbs :ensure t)
+            (evil-leader/set-key
+              "oc" 'org-table-delete-column
+              "or" 'org-table-kill-row)))
 
 (defun my/fix-org-block-colors ()
   (if (face-p 'org-block-background)
