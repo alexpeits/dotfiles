@@ -333,6 +333,7 @@
 
   ;; this is needed to be able to use C-h
   (global-set-key (kbd "C-h") 'undefined)
+  (define-key evil-emacs-state-map (kbd "C-h") 'help)
   (define-key evil-insert-state-map (kbd "C-k") nil)
 
   (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
@@ -454,11 +455,6 @@ tests to exist in `project_root/tests`"
   :ensure t
   :defer t
   :init
-  ;; (add-hook 'c++-mode-hook 'irony-mode)
-  ;; (add-hook 'c-mode-hook 'irony-mode)
-  ;; (add-hook 'objc-mode-hook 'irony-mode)
-  ;; (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
-  ;; (add-hook 'c++-mode-hook 'c-turn-on-eldoc-mode)
   (use-package ggtags :ensure t)
   (my/add-hooks '(c++-mode-hook c-mode-hook objc-mode-hook)
              (irony-mode)
@@ -587,11 +583,11 @@ tests to exist in `project_root/tests`"
 ;;   (setq inferior-lisp-program "sbcl")
 ;;   (use-package slime-company :ensure t :defer t)
 ;;   (slime-setup '(slime-fancy slime-company))
-;;   (put 'if 'common-lisp-indent-function 2)
 ;;   )
 
 ;; expand macros in another window
 (define-key lisp-mode-map (kbd "C-c C-m") '(lambda () (interactive) (macrostep-expand t)))
+(my/add-hooks '(lisp-mode-hook emacs-lisp-mode-hook lisp-interaction-mode-hook) (eldoc-mode))
 
 
 ;; ----------------
@@ -828,10 +824,10 @@ tests to exist in `project_root/tests`"
       org-confirm-babel-evaluate nil
       org-clock-into-drawer nil
       org-src-fontify-natively t
-      org-src-tab-acts-natively t)
+      org-src-tab-acts-natively t
+      org-directory (expand-file-name "~/org/")
+      org-default-notes-file (concat org-directory "capture.org"))
 
-(setq org-directory (expand-file-name "~/org/"))
-(setq org-default-notes-file (concat org-directory "capture.org"))
 ;; (setq org-src-window-setup 'current-window)
 ;; format string used when creating CLOCKSUM lines and when generating a
 ;; time duration (avoid showing days)
@@ -865,6 +861,7 @@ tests to exist in `project_root/tests`"
               "or" 'org-table-kill-row)))
 
 (defun my/fix-org-block-colors ()
+  (interactive)
   (if (face-p 'org-block-background)
       (set-face-attribute
        'org-block-background nil
@@ -884,8 +881,6 @@ tests to exist in `project_root/tests`"
 
 (if (display-graphic-p)
     (progn
-      ;; (load-theme 'hemingway-dark t)
-
       ;; (defvar zenburn-override-colors-alist '(("zenburn-bg" . "#3B3B3B")))
       ;; (load-theme 'zenburn t)
       ;; (setq my/org-block-begin-end-bg "#4C4C4C"
@@ -907,12 +902,11 @@ tests to exist in `project_root/tests`"
 
       )
   (progn
-    (load-theme 'spacemacs-dark t)
-    ;; (load-theme 'monokai)
-    ;; (set-face-attribute 'mode-line nil :background "#404040")
-    ;; (set-face-attribute 'mode-line-inactive nil :background "#282828")
+    (load-theme 'monokai)
+    (set-face-attribute 'mode-line nil :background "#404040")
+    (set-face-attribute 'mode-line-inactive nil :background "#282828")
     ))
-(setq linum-format 'dynamic)
 
+(setq linum-format 'dynamic)
 (set-face-attribute 'show-paren-match nil :weight 'normal)
 (set-face-attribute 'trailing-whitespace nil :background "#602020")
