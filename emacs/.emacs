@@ -826,7 +826,8 @@ tests to exist in `project_root/tests`"
       org-src-fontify-natively t
       org-src-tab-acts-natively t
       org-directory (expand-file-name "~/org/")
-      org-default-notes-file (concat org-directory "capture.org"))
+      org-default-notes-file (concat org-directory "capture.org")
+      org-ellipsis "…")
 
 ;; (setq org-src-window-setup 'current-window)
 ;; format string used when creating CLOCKSUM lines and when generating a
