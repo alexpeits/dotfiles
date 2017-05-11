@@ -91,6 +91,9 @@
 ;; always scroll to the end of compilation buffers
 (setq compilation-scroll-output t)
 
+;; vim-like scrolling (emacs=0)
+(setq scroll-conservatively 101)
+
 ;; some keymaps
 (global-set-key (kbd "M-o") 'other-window)
 (define-key 'help-command (kbd "C-l") 'find-library)

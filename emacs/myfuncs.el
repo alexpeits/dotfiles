@@ -1,57 +1,5 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;
 ;; UI
-(setq themebg "default")
-
-;; (defun my/fix-theme ()
-;;   (interactive)
-;;   (set-face-attribute 'mode-line nil :background "#404040")
-;;   (set-face-attribute 'mode-line-inactive nil :background "#282828")
-;;   (set-face-attribute 'sp-show-pair-match-face nil :inverse-video nil)
-;;   (set-face-attribute 'vertical-border nil :foreground "dim gray")
-;;   )
-
-(defun my/fix-theme ()
-  (interactive)
-  (setq linum-format 'dynamic)
-  (set-face-attribute 'vertical-border nil :foreground "dim gray")
-  )
-
-(defun my/dark-bg ()
-  (custom-set-faces
-   '(default ((t (:inherit default
-                           :background "#1D1F21" ))))
-   '(font-lock-comment-face ((t (:inherit font-lock-comment-face
-                                          :background "#1D1F21" ))))
-   '(font-lock-comment-delimiter-face ((t (:inherit font-lock-comment-delimiter-face
-                                                    :background "#1D1F21" )))))
-  (setq themebg "dark")
-  (message "Toggled background color: dark")
-  )
-
-(defun my/default-bg ()
-  (custom-set-faces
-   '(default ((t (:inherit default))))
-   '(font-lock-comment-face ((t (:inherit font-lock-comment-face))))
-   '(font-lock-comment-delimiter-face ((t (:inherit font-lock-comment-delimiter-face)))))
-  (setq themebg "default")
-  (message "Toggled background color: default")
-  )
-
-(defun my/toggle-bg ()
-  (interactive)
-  (if (equal themebg "default")
-      (my/dark-bg)
-    (my/default-bg))
-  )
-
-(setq scroll-conservatively 101)
-
-(defun my/toggle-scrolling ()
-  (interactive)
-  (if (equal scroll-conservatively 0)
-      (setq scroll-conservatively 101)
-    (setq scroll-conservatively 0))
-  )
 
 (defun my/smartparens-pair-newline (id action context)
   (save-excursion
@@ -128,16 +76,6 @@ sets `my-jump-handlers' in buffers of that mode."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; major modes
-
-;; JS
-(setq jsmd "none")
-
-(defun my/toggle-jsmodes ()
-  (interactive)
-  (if (equal jsmd "js")
-      (web-mode)
-    (js2-mode))
-  )
 
 ;; org-mode
 (defun my/timesheet-block ()
@@ -220,5 +158,26 @@ Removes the automatic guessing of the initial value based on thing at point. "
        (let ((split-height-threshold nil)
              (split-width-threshold 0))
          (helm-switch-to-buffers-other-window candidate))))))
+
+;;;;;;;;;;
+;; helpers
+
+(defun my/round-time (time mult)
+  "Return a hh:mm formatted time duration as a decimal (string)
+denoting hours,rounding it to the nearest multiple of `mult'.
+
+For example, the duration 4:47, with rounding to a quarter of
+an hour (mult=25), gives 4,75 hours, and 4:55 gives 5.00"
+  (let* ((hm (mapcar 'string-to-int (split-string time ":")))
+         (h (car hm))
+         (m (cadr hm))
+         (perc (round (* 100 (/ m 60.0))))
+         (rperc (* mult (/ (+ perc (/ mult 2)) mult))))
+    (format "%d.%02d"
+            (if (and (= 0 (mod rperc 100))
+                     (> rperc perc))
+                (1+ h)
+              h)
+            (mod rperc 100))))
 
 (provide 'myfuncs)
