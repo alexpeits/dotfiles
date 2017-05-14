@@ -449,7 +449,6 @@ tests to exist in `project_root/tests`"
                               (evil-leader/set-key "ct" 'my/projectile-test-python-project)
                               (add-to-list 'my-jump-handlers-python-mode
 					   '(anaconda-mode-find-definitions :async t))))
-(diminish 'eldoc-mode "")
 
 
 ;; ----------------
@@ -502,7 +501,8 @@ tests to exist in `project_root/tests`"
   :config
 
   (setq my/default-node-version (car (split-string (my/read-file-contents "~/.nvm/alias/default"))))
-  (setq my/current-node-version nil)
+  (defvar my/current-node-version nil
+    "Currently used node version. Set only after a js file is opened")
 
   (defun my/add-node-to-path (version)
     (let ((pathstr (format (expand-file-name "~/.nvm/versions/node/%s/bin") version)))
@@ -558,8 +558,8 @@ tests to exist in `project_root/tests`"
  web-mode-attr-indent-offset 2)
 
 ;; Turn off js2 mode errors & warnings (we lean on eslint/standard)
-(setq js2-mode-show-parse-errors nil)
-(setq js2-mode-show-strict-warnings nil)
+(setq js2-mode-show-parse-errors nil
+      js2-mode-show-strict-warnings nil)
 
 (defun my/toggle-jsmodes ()
   (interactive)
@@ -604,8 +604,7 @@ tests to exist in `project_root/tests`"
     (save-excursion
       (sp-backward-up-sexp)
       (if (re-search-backward sym (- (point) 2) t)
-          (progn
-            (delete-char 2))
+          (delete-char 2)
         (insert sym))
       (if (fboundp 'cider-format-defun)
           (cider-format-defun)))))
@@ -846,9 +845,11 @@ tests to exist in `project_root/tests`"
       org-src-tab-acts-natively t
       org-directory (expand-file-name "~/org/")
       org-default-notes-file (concat org-directory "capture.org")
-      org-ellipsis "…")
+      org-ellipsis "…"
+      org-src-window-setup 'other-window
+      ;; org-src-window-setup 'current-window
+      )
 
-;; (setq org-src-window-setup 'current-window)
 ;; format string used when creating CLOCKSUM lines and when generating a
 ;; time duration (avoid showing days)
 (setq org-time-clocksum-format
