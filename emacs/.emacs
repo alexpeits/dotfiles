@@ -313,6 +313,7 @@
   :ensure t
   :config
   (setq evil-want-C-i-jump nil)
+  (setq evil-move-cursor-back nil)  ;; works better with lisp navigation
   (evil-mode 1)
 
   ;; emacs mode is default in some modes
@@ -596,10 +597,25 @@ tests to exist in `project_root/tests`"
 ;; ----------------
 ;; Clojure
 ;; ----------------
+
+(defun my/clojure-toggle-ignore-this-sexp ()
+  (interactive)
+  (let ((sym "#_"))
+    (save-excursion
+      (sp-backward-up-sexp)
+      (if (re-search-backward sym (- (point) 2) t)
+          (progn
+            (delete-char 2))
+        (insert sym))
+      (if (fboundp 'cider-format-defun)
+          (cider-format-defun)))))
+
+
 (add-hook
  'clojure-mode-hook
  (lambda ()
    (eldoc-mode)
+   (define-key clojure-mode-map (kbd "C-x C-M-i") #'my/clojure-toggle-ignore-this-sexp)
    ;; (sp-local-pair 'clojure-mode "(" nil :actions '(:rem insert))
    ))
 
@@ -891,16 +907,16 @@ tests to exist in `project_root/tests`"
             ;; my/org-block-fg "#DCDCCC"
             ;; my/org-block-bg "#424242")
 
-      (load-theme 'solarized-dark t)
-      (setq my/org-block-begin-end-bg "#073642"
-            my/org-block-fg "#839496"
-            my/org-block-bg "#002F3B")
+      ;; (load-theme 'solarized-dark t)
+      ;; (setq my/org-block-begin-end-bg "#073642"
+            ;; my/org-block-fg "#839496"
+            ;; my/org-block-bg "#002F3B")
 
-      ;; (load-theme 'solarized-black t)
-      ;; (setq my/org-block-begin-end-bg "#303030"
-      ;;       my/org-block-fg "#839496"
-      ;;       ;; my/org-block-fg "#A1ACAE"
-      ;;       my/org-block-bg "#292929")
+      (load-theme 'solarized-black-bright t)
+      (setq my/org-block-begin-end-bg "#303030"
+            ;; my/org-block-fg "#839496"
+            my/org-block-fg "#A1ACAE"
+            my/org-block-bg "#292929")
 
       (add-hook 'org-mode-hook (lambda () (my/fix-org-block-colors)))
 
