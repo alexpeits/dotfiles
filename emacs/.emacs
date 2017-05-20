@@ -162,6 +162,55 @@
          hemingway-height-plus-3 1.0
          hemingway-height-plus-4 1.0))
 
+(defvar zenburn-override-colors-alist '(("zenburn-bg" . "#3B3B3B")))
+(defvar my/themes '((my/zenburn . ((theme . zenburn)
+                                   (org-block-begin-end-bg . "#4c4c4c")
+                                   (org-block-fg . "#dcdccc")
+                                   (org-block-bg . "#424242")))
+                    (my/solarized-dark . ((theme . solarized-dark)
+                                          (org-block-begin-end-bg . "#073642")
+                                          (org-block-fg . "#839496")
+                                          (org-block-bg . "#002f3b")))
+                    (my/solarized-light . ((theme . solarized-light)
+                                           (org-block-begin-end-bg . "#eee8d5")
+                                           (org-block-fg . "#657b83")
+                                           (org-block-bg . "#f7f0dc")))
+                    (my/solarized-black-bright . ((theme . solarized-black-bright)
+                                                  (org-block-begin-end-bg . "#303030")
+                                                  (org-block-fg . "#a1acae")
+                                                  (org-block-bg . "#292929")))))
+
+(defvar my/dark-theme 'my/solarized-black-bright)
+(defvar my/light-theme 'my/solarized-light)
+(defvar my/current-theme my/dark-theme)
+
+(defun my/set-theme (theme-name)
+  (let* ((config (cdr (assoc theme-name my/themes)))
+         (theme (cdr (assoc 'theme config)))
+         (org-block-begin-end-bg (cdr (assoc 'org-block-begin-end-bg config)))
+         (org-block-fg (cdr (assoc 'org-block-fg config)))
+         (org-block-bg (cdr (assoc 'org-block-bg config))))
+    ;; disable all currently enabled themes (otherwise faces get messed up)
+    (mapc 'disable-theme custom-enabled-themes)
+    (load-theme theme t)
+    ;; set these faces for the specific theme
+    (custom-theme-set-faces
+     theme
+     `(org-block ((t :background ,org-block-bg :foreground ,org-block-fg)))
+     `(org-block-begin-line ((t :background ,org-block-begin-end-bg)))
+     `(org-block-end-line ((t :background ,org-block-begin-end-bg))))
+    (setq my/current-theme theme-name)))
+
+(defun my/toggle-theme ()
+  (interactive)
+  (cond
+   ((null my/current-theme) (my/set-theme my/dark-theme))
+   ((eq my/current-theme my/dark-theme) (my/set-theme my/light-theme))
+   ((eq my/current-theme my/light-theme) (my/set-theme my/dark-theme))
+   (t (my/set-theme my/dark-theme))))
+
+(evil-leader/set-key "tt" 'my/toggle-theme)
+
 ;; disable annoying stuff
 (setq ring-bell-function 'ignore)
 (setq inhibit-startup-message t)
@@ -318,10 +367,14 @@
   ;; (setq evil-move-cursor-back nil)  ;; works better with lisp navigation
   (evil-mode 1)
 
-  ;; emacs mode is default in some modes
-  (dolist (mode '(term-mode eshell-mode inferior-python-mode anaconda-mode-view-mode))
+  (defun my/make-emacs-mode (mode)
+    "Make `mode' use emacs keybindings."
     (delete mode evil-insert-state-modes)
     (add-to-list 'evil-emacs-state-modes mode))
+
+  ;; emacs mode is default in some modes
+  (dolist (mode '(term-mode eshell-mode))
+    (my/make-emacs-mode mode))
 
   ;; magit
   (evil-define-key 'normal magit-blame-mode-map (kbd "q") 'magit-blame-quit)
@@ -445,6 +498,8 @@ tests to exist in `project_root/tests`"
 (setq python-shell-prompt-detect-failure-warning nil)
 (my|define-jump-handlers python-mode)
 (my|define-jump-handlers cython-mode anaconda-mode-goto)
+(my/make-emacs-mode 'inferior-python-mode)
+(my/make-emacs-mode 'anaconda-mode-view-mode)
 (add-hook 'python-mode-hook (lambda ()
                               (anaconda-mode)
                               (diminish 'anaconda-mode " An")
@@ -622,22 +677,14 @@ tests to exist in `project_root/tests`"
    ;; (sp-local-pair 'clojure-mode "(" nil :actions '(:rem insert))
    ))
 
+(my/make-emacs-mode 'cider-stacktrace-mode)
+(my/make-emacs-mode 'cider-docview-mode)
 
 (add-hook
  'cider-repl-mode-hook
  (lambda ()
    (eldoc-mode)
    (define-key cider-repl-mode-map "\C-c\C-l" 'cider-repl-clear-buffer)))
-
-(add-hook
- 'cider-stacktrace-mode-hook
- (lambda ()
-   (evil-define-key 'normal cider-stacktrace-mode-map (kbd "q") 'cider-popup-buffer-quit-function)))
-
-(add-hook
- 'cider-docview-mode-hook
- (lambda ()
-   (evil-define-key 'normal cider-docview-mode-map (kbd "q") 'cider-popup-buffer-quit-function)))
 
 ;; ----------------
 ;; LaTeX
@@ -888,74 +935,17 @@ tests to exist in `project_root/tests`"
               "oc" 'org-table-delete-column
               "or" 'org-table-kill-row)))
 
-(defun my/fix-org-block-colors ()
-  (interactive)
-  (if (face-p 'org-block-background)
-      (set-face-attribute
-       'org-block-background nil
-       :background my/org-block-bg :foreground my/org-block-fg))
-  (set-face-attribute 'org-block nil :background my/org-block-bg :foreground my/org-block-fg)
-  (set-face-attribute 'org-block-begin-line nil :background my/org-block-begin-end-bg)
-  (set-face-attribute 'org-block-end-line nil :background my/org-block-begin-end-bg))
-
-
 ;; ----------------------------------------------------------------------------------------------
 
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
-
-(defvar my/current-theme nil)
-(defun my/toggle-theme ()
-  (interactive)
-  (let ((dark (lambda () (progn (load-theme 'solarized-black-bright t)
-                                (setq my/org-block-begin-end-bg "#303030"
-                                      my/org-block-fg "#A1ACAE"
-                                      my/org-block-bg "#292929"
-                                      my/current-theme "dark")
-                                (my/fix-org-block-colors))))
-        (light (lambda () (progn (load-theme 'solarized-light t)
-                                 (setq my/org-block-begin-end-bg "#eee8d5"
-                                       my/org-block-fg "#657b83"
-                                       my/org-block-bg "#f7f0dc"
-                                       my/current-theme "light")
-                                 (my/fix-org-block-colors)))))
-    (cond
-     ((null my/current-theme) (funcall dark))
-     ((string= my/current-theme "dark") (funcall light))
-     ((string= my/current-theme "light") (funcall dark)))))
-(evil-leader/set-key "tt" 'my/toggle-theme)
 
 (require 'myfonts)
 (setq x-underline-at-descent-line t)
 
 (if (display-graphic-p)
     (progn
-      ;; (defvar zenburn-override-colors-alist '(("zenburn-bg" . "#3B3B3B")))
-      ;; (load-theme 'zenburn t)
-      ;; (setq my/org-block-begin-end-bg "#4C4C4C"
-            ;; my/org-block-fg "#DCDCCC"
-            ;; my/org-block-bg "#424242")
-
-      ;; (load-theme 'solarized-dark t)
-      ;; (setq my/org-block-begin-end-bg "#073642"
-            ;; my/org-block-fg "#839496"
-            ;; my/org-block-bg "#002F3B")
-
-      ;; (load-theme 'solarized-light t)
-      ;; (setq my/org-block-begin-end-bg "#EEE8D5"
-            ;; my/org-block-fg "#657b83"
-            ;; my/org-block-bg "#F7F0DC")
-
-      (load-theme 'solarized-black-bright t)
-      (setq my/current-theme "dark")
-      (setq my/org-block-begin-end-bg "#303030"
-            ;; my/org-block-fg "#839496"
-            my/org-block-fg "#A1ACAE"
-            my/org-block-bg "#292929")
-
-      (add-hook 'org-mode-hook (lambda () (my/fix-org-block-colors)))
-
-      )
+      (my/set-theme my/dark-theme))
   (progn
     (load-theme 'monokai)
     (set-face-attribute 'mode-line nil :background "#404040")
