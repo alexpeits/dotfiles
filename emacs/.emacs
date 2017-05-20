@@ -192,6 +192,7 @@
   (add-hook 'helm-cleanup-hook (lambda () (popwin-mode 1)))
   )
 
+
 ; font size & scaling
 (setq text-scale-mode-step 1.05)
 (define-key global-map (kbd "C-+") 'text-scale-increase)
@@ -282,6 +283,7 @@
   (let ((inhibit-read-only t))
     (erase-buffer)))
 
+
 ;; ----------------
 ;; VCS
 ;; ----------------
@@ -313,11 +315,11 @@
   :ensure t
   :config
   (setq evil-want-C-i-jump nil)
-  (setq evil-move-cursor-back nil)  ;; works better with lisp navigation
+  ;; (setq evil-move-cursor-back nil)  ;; works better with lisp navigation
   (evil-mode 1)
 
   ;; emacs mode is default in some modes
-  (dolist (mode '(term-mode eshell-mode inferior-python-mode))
+  (dolist (mode '(term-mode eshell-mode inferior-python-mode anaconda-mode-view-mode))
     (delete mode evil-insert-state-modes)
     (add-to-list 'evil-emacs-state-modes mode))
 
@@ -339,6 +341,8 @@
   (global-set-key (kbd "C-h") 'undefined)
   (define-key evil-emacs-state-map (kbd "C-h") 'help)
   (define-key evil-insert-state-map (kbd "C-k") nil)
+
+  (define-key evil-normal-state-map (kbd "M-.") nil)
 
   (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
   (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
@@ -375,8 +379,6 @@
     ")"  'my/fix-theme
     "h"  'help
 
-    "s"  'shell-command
-
     "n"  'neotree-toggle
 
     "um" 'menu-bar-mode
@@ -403,6 +405,8 @@
     "ph" 'persp-prev
     "pr" 'persp-rename
     "pq" 'persp-kill
+
+    "ss" 'swiper
 
     "Ts" 'helm-themes
     "ff" 'helm-find
@@ -774,7 +778,6 @@ tests to exist in `project_root/tests`"
 (global-set-key (kbd "C-,")                          'helm-calcul-expression)
 (global-set-key (kbd "C-x C-d")                      'helm-browse-project)
 (global-set-key (kbd "C-c i")                        'helm-imenu-in-all-buffers)
-(global-set-key (kbd "C-s")                          'helm-occur)
 (define-key global-map [remap jump-to-register]      'helm-register)
 (define-key global-map [remap list-buffers]          'helm-mini)
 (define-key global-map [remap dabbrev-expand]        'helm-dabbrev)
@@ -830,6 +833,10 @@ tests to exist in `project_root/tests`"
 (use-package perspective :config (persp-mode))
 (use-package persp-projectile :ensure t)
 
+(use-package swiper
+  :ensure t
+  :config
+  (global-set-key (kbd "C-s") 'swiper))
 
 ;; ----------------
 ;; org mode
@@ -897,6 +904,27 @@ tests to exist in `project_root/tests`"
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
+(defvar my/current-theme nil)
+(defun my/toggle-theme ()
+  (interactive)
+  (let ((dark (lambda () (progn (load-theme 'solarized-black-bright t)
+                                (setq my/org-block-begin-end-bg "#303030"
+                                      my/org-block-fg "#A1ACAE"
+                                      my/org-block-bg "#292929"
+                                      my/current-theme "dark")
+                                (my/fix-org-block-colors))))
+        (light (lambda () (progn (load-theme 'solarized-light t)
+                                 (setq my/org-block-begin-end-bg "#eee8d5"
+                                       my/org-block-fg "#657b83"
+                                       my/org-block-bg "#f7f0dc"
+                                       my/current-theme "light")
+                                 (my/fix-org-block-colors)))))
+    (cond
+     ((null my/current-theme) (funcall dark))
+     ((string= my/current-theme "dark") (funcall light))
+     ((string= my/current-theme "light") (funcall dark)))))
+(evil-leader/set-key "tt" 'my/toggle-theme)
+
 (require 'myfonts)
 (setq x-underline-at-descent-line t)
 
@@ -913,7 +941,13 @@ tests to exist in `project_root/tests`"
             ;; my/org-block-fg "#839496"
             ;; my/org-block-bg "#002F3B")
 
+      ;; (load-theme 'solarized-light t)
+      ;; (setq my/org-block-begin-end-bg "#EEE8D5"
+            ;; my/org-block-fg "#657b83"
+            ;; my/org-block-bg "#F7F0DC")
+
       (load-theme 'solarized-black-bright t)
+      (setq my/current-theme "dark")
       (setq my/org-block-begin-end-bg "#303030"
             ;; my/org-block-fg "#839496"
             my/org-block-fg "#A1ACAE"
