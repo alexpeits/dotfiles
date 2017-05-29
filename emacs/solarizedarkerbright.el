@@ -138,13 +138,13 @@ Alpha should be a float between 0 and 1."
   `(let* ((class '((class color) (min-colors 89)))
          (variant ,variant)
          (s-base03    "#262526")
-         (s-base02    "#3F3F3F")
+         (s-base02    "#373737")
          ;; emphasized content
-         (s-base01    "#707B80")
+         (s-base01    "#647A82")
          ;; primary content
-         (s-base00    "#75858B")
+         (s-base00    "#657b83")
          ;; (s-base0     "#839496")
-         (s-base0     "#C8D3D4")
+         (s-base0     "#AFBBBD")
          ;; comments
          (s-base1     "#93a1a1")
          ;; background highlight light
@@ -153,14 +153,14 @@ Alpha should be a float between 0 and 1."
          (s-base3     "#fdf6e3")
 
          ;; Solarizedarkerbright accented colors
-         (yellow    "#D7A714")
-         (orange    "#E76630")
-         (red       "#F14E4B")
-         (magenta   "#EC519D")
-         (violet    "#9296E2")
-         (blue      "#48AAF1")
-         (cyan      "#3EBBB1")
-         (green     "#A8C00D")
+         (yellow    "#BD9108")
+         (orange    "#D55824")
+         (red       "#E43A37")
+         (magenta   "#DD3F8C")
+         (violet    "#7C81CE")
+         (blue      "#3396DC")
+         (cyan      "#34A9A0")
+         (green     "#95AB05")
 
          ;; Darker and lighter accented colors
          ;; Only use these in exceptional circumstances!
