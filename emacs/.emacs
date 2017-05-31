@@ -1,8 +1,10 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom"))
 (add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/custom-themes/"))
-(setenv "PATH" (concat (getenv "PATH") ":/home/alex/.cabal/bin"))
-(setq exec-path (append exec-path '("/home/alex/.cabal/bin")))
+(setenv "PATH" (concat "/home/alex/.local/bin" path-separator (getenv "PATH")))
+(setenv "PATH" (concat "/home/alex/.cabal/bin" path-separator (getenv "PATH")))
+(add-to-list 'exec-path "/home/alex/.local/bin")
+(add-to-list 'exec-path "/home/alex/.cabal/bin")
 (setq user-full-name "Alex Peitsinis"
       user-mail-address "alexpeitsinis@gmail.com")
 
@@ -164,9 +166,9 @@
 
 (defvar zenburn-override-colors-alist '(("zenburn-bg" . "#3B3B3B")))
 (defvar my/themes '((my/zenburn . ((theme . zenburn)
-                                   (org-block-begin-end-bg . "#4c4c4c")
+                                   (org-block-begin-end-bg . "#454545")
                                    (org-block-fg . "#dcdccc")
-                                   (org-block-bg . "#424242")))
+                                   (org-block-bg . "#3E3E3E")))
                     (my/solarized-dark . ((theme . solarized-dark)
                                           (org-block-begin-end-bg . "#073642")
                                           (org-block-fg . "#839496")
@@ -180,12 +182,14 @@
                                                   (org-block-fg . "#a1acae")
                                                   (org-block-bg . "#292929")))))
 
-(defvar my/dark-theme 'my/solarized-black-bright)
-(defvar my/light-theme 'my/solarized-light)
-(defvar my/current-theme my/dark-theme)
+(defvar my/current-theme 2)
+(defvar my/avail-themes '(my/solarized-black-bright
+                          my/solarized-light
+                          my/zenburn))
 
-(defun my/set-theme (theme-name)
-  (let* ((config (cdr (assoc theme-name my/themes)))
+(defun my/set-theme (&optional theme-name)
+  (let* ((theme-name (if (null theme-name) (elt my/avail-themes my/current-theme) theme-name))
+         (config (cdr (assoc theme-name my/themes)))
          (theme (cdr (assoc 'theme config)))
          (org-block-begin-end-bg (cdr (assoc 'org-block-begin-end-bg config)))
          (org-block-fg (cdr (assoc 'org-block-fg config)))
@@ -198,16 +202,13 @@
      theme
      `(org-block ((t :background ,org-block-bg :foreground ,org-block-fg)))
      `(org-block-begin-line ((t :background ,org-block-begin-end-bg)))
-     `(org-block-end-line ((t :background ,org-block-begin-end-bg))))
-    (setq my/current-theme theme-name)))
+     `(org-block-end-line ((t :background ,org-block-begin-end-bg))))))
 
 (defun my/toggle-theme ()
   (interactive)
-  (cond
-   ((null my/current-theme) (my/set-theme my/dark-theme))
-   ((eq my/current-theme my/dark-theme) (my/set-theme my/light-theme))
-   ((eq my/current-theme my/light-theme) (my/set-theme my/dark-theme))
-   (t (my/set-theme my/dark-theme))))
+  (let ((next-theme (mod (1+ my/current-theme) (length my/avail-themes))))
+    (my/set-theme (elt my/avail-themes next-theme))
+    (setq my/current-theme next-theme)))
 
 (evil-leader/set-key "tt" 'my/toggle-theme)
 
@@ -546,9 +547,14 @@ tests to exist in `project_root/tests`"
 ;; haskell
 ;; ----------------
 
+;; (setq haskell-process-type 'stack-ghci)
 (autoload 'ghc-init "ghc" nil t)
 (autoload 'ghc-debug "ghc" nil t)
-(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+(add-hook 'haskell-mode-hook
+          (lambda ()
+            (ghc-init)
+            (hindent-mode)
+            ))
 
 
 ;; ----------------
@@ -945,7 +951,7 @@ tests to exist in `project_root/tests`"
 
 (if (display-graphic-p)
     (progn
-      (my/set-theme my/dark-theme))
+      (my/set-theme))
   (progn
     (load-theme 'monokai)
     (set-face-attribute 'mode-line nil :background "#404040")
