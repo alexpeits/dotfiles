@@ -40,12 +40,15 @@ NeoBundle 'fmoralesc/molokayo'
 NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'colepeters/spacemacs-theme.vim'
+NeoBundle 'liuchengxu/space-vim-dark'
 NeoBundle 'dracula/vim'
 NeoBundle 'romainl/Apprentice'
 NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'mxw/vim-jsx'
 NeoBundle 'othree/yajs.vim'
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'leafgarland/typescript-vim'
 " Git helpers
 NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'tpope/vim-fugitive'
@@ -53,6 +56,7 @@ NeoBundle 'jreybert/vimagit'
 "NeoBundle 'mhinz/vim-signify'
 NeoBundle 'Xuyuanp/nerdtree-git-plugin'
 NeoBundle 'LemonBoy/autobahn'
+NeoBundle 'google/vim-searchindex'
 " utils
 NeoBundle 'benekastah/neomake'
 NeoBundle 'scrooloose/nerdtree'
@@ -77,6 +81,7 @@ NeoBundle 'majutsushi/tagbar'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'mtth/scratch.vim'
 NeoBundle 'fatih/vim-nginx'
+NeoBundle 'raimon49/requirements.txt.vim'
 NeoBundle 'vim-scripts/Unicode-RST-Tables'
 NeoBundle 'vim-scripts/rfc-syntax', { 'for': 'rfc' }
 "NeoBundle 'dag/vim2hs'
@@ -277,12 +282,13 @@ set nu
 if $VIMCOLOR == 1
     "colorscheme flattened_light
     so $HOME/.config/nvim/colorschemes/kalisi_light.vim
-	highlight VertSplit ctermbg=239 ctermfg=246 guibg=none guifg=#777777
+    highlight VertSplit ctermbg=239 ctermfg=246 guibg=none guifg=#777777
 else
+    "colorscheme flattened_dark
     "so $HOME/.config/nvim/colorschemes/tomorrow.vim
-    so $HOME/.config/nvim/colorschemes/spacemacs.vim
+    "so $HOME/.config/nvim/colorschemes/spacemacs.vim
     "so $HOME/.config/nvim/colorschemes/onedark.vim
-    "so $HOME/.config/nvim/colorschemes/kalisi.vim
+    so $HOME/.config/nvim/colorschemes/kalisi.vim
     "so $HOME/.config/nvim/colorschemes/molokai.vim
     "so $HOME/.config/nvim/colorschemes/apprentice.vim
 endif
@@ -429,8 +435,8 @@ let g:jedi#use_splits_not_buffers = "winwidth"
 
 " deoplete
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#clang#libclang_path = '/usr/lib64/libclang.so.3.8'
-let g:deoplete#sources#clang#clang_header = '/usr/lib64/clang'
+let g:deoplete#sources#clang#libclang_path = '/usr/lib/llvm-3.8/lib/libclang.so'
+let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
 autocmd CompleteDone * pclose!
 nnoremap <F7> :call deoplete#refresh()<CR>
 inoremap <F7> <C-o>:call deoplete#refresh()<CR>
@@ -465,7 +471,7 @@ endif
 
 " CtrlP
 let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_cmd = 'CtrlP .'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " CTRLP & GREP
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -740,7 +746,8 @@ cnoreabbrev r2h !rst2html % out.html
 
 "" various shortcuts
 "map <F3> :NERDTreeToggle<CR>
-map <F3> <plug>NERDTreeTabsToggle<CR>
+"map <F3> <plug>NERDTreeTabsToggle<CR>
+nnoremap <F3> :w !/usr/bin/env python3 <CR>
 nnoremap <leader>f :NERDTreeTabsToggle<CR>
 map <C-\> :TagbarToggle<CR>
 "map <C-n> :set invnu <CR>

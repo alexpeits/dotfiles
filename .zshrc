@@ -49,7 +49,7 @@ ENABLE_CORRECTION="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git bookmark mercurial)
+plugins=(git mercurial)
 
 # User configuration
 
@@ -84,8 +84,11 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 plugins=(… zsh-completions)
 autoload -U compinit && compinit
+autoload -U +X bashcompinit && bashcompinit
 #source $HOME/.oh-my-zsh/plugins/git-prompt/git-prompt.plugin.zsh
 source $HOME/git_prompt.zsh
+
+eval "$(stack --bash-completion-script stack)"
 
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWUNTRACKEDFILES=1
@@ -101,8 +104,8 @@ alias l='ls -CF'
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(echo $history[$HISTCMD] | sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 alias publicip='curl ipv4.icanhazip.com'
-alias pylib="cd /usr/lib64/python2.7/"
-alias pylib3="cd /usr/lib64/python3.5/"
+alias pylib="cd /usr/lib/python2.7/"
+alias pylib3="cd /usr/lib/python3.5/"
 alias pylib_extern="cd /usr/local/lib/python2.7/dist-packages/"
 alias u='cd ..'
 alias uu='cd ../..'
@@ -118,14 +121,14 @@ alias emacs-classic="env HOME=/home/alex/alt-emacs /usr/bin/emacs -nw"
 alias nview="nvim -R"
 alias tmux="TERM=xterm-256color tmux"
 alias tmux-simple="TERM=xterm-256color tmux -f /home/alex/.tmux-simple.conf"
-alias redis="rm dump.rdb; redis-server"
+alias redis="rm dump.rdb; redis-server; rm dump.rdb"
 alias rmpyc='find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf'
 alias ipy="python -c 'import IPython; IPython.terminal.ipapp.launch_new_instance()'"
 #alias browser="google-chrome"
 
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/devel
-source /usr/bin/virtualenvwrapper.sh
+source /usr/local/bin/virtualenvwrapper.sh
 
 export EDITOR=nvim
 export PYTHONCURRENT="2"
@@ -137,7 +140,7 @@ export PYTHONPATH=$HOME/.python_local_path:$PYTHONPATH
 
 export JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
 
-export PATH=$PATH:/home/alex/bin:/home/alex/.cabal/bin
+export PATH=$PATH:$HOME/bin:$HOME/.local/bin:$HOME/.cabal/bin
 
 # colorize man pages with less
 man() {
@@ -231,6 +234,26 @@ count() {
 }
 export LC_CTYPE=en_US.UTF-8
 
-export NVM_DIR="/home/alex/.nvm"
-alias startnvm="[ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\""
-#[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+# GBA dev variables
+export DEVKITPRO=/opt/devkitpro
+export DEVKITARM=/opt/devkitpro/devkitARM
+export PATH=$PATH:/opt/devkitpro/devkitARM/bin
+
+rbinit() {
+    export PATH=$PATH:$HOME/.rbenv/bin
+    eval "$(rbenv init -)"
+}
+
+nvminit() {
+    unset -f npm
+    export NVM_DIR="/home/alex/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+}
+
+npm() {
+    if [ -x npm ]; then
+        command npm $*
+    else
+        nvminit && command npm $*
+    fi
+}

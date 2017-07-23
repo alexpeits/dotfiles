@@ -1,0 +1,17 @@
+# Python
+*.pyc
+*.pyo
+.ropeproject/
+
+# Sphinx
+#docs/_build
+
+# Vim
+*.swp
+
+# emacs
+.projectile
+.dir-locals.el
+
+# tern
+.tern-port
