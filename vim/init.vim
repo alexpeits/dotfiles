@@ -30,32 +30,19 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 " syntax
 NeoBundleLazy 'elzr/vim-json', {'autoload':{'filetypes':['json']}}
-NeoBundle 'jceb/vim-orgmode'
 NeoBundle 'tpope/vim-markdown'
-NeoBundle 'suan/vim-instant-markdown'
 " colorscheme & syntax highlighting
-NeoBundle 'mhartington/oceanic-next'
 NeoBundle 'tomasr/molokai'
-NeoBundle 'fmoralesc/molokayo'
-NeoBundle 'nanotech/jellybeans.vim'
-NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'colepeters/spacemacs-theme.vim'
-NeoBundle 'liuchengxu/space-vim-dark'
-NeoBundle 'dracula/vim'
-NeoBundle 'romainl/Apprentice'
+NeoBundle 'NLKNguyen/papercolor-theme'
+NeoBundle 'rakr/vim-one'
 NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'mxw/vim-jsx'
 NeoBundle 'othree/yajs.vim'
-NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'leafgarland/typescript-vim'
 " Git helpers
 NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'jreybert/vimagit'
-"NeoBundle 'mhinz/vim-signify'
 NeoBundle 'Xuyuanp/nerdtree-git-plugin'
-NeoBundle 'LemonBoy/autobahn'
 NeoBundle 'google/vim-searchindex'
 " utils
 NeoBundle 'benekastah/neomake'
@@ -69,69 +56,27 @@ NeoBundle 'vim-airline/vim-airline-themes'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'ap/vim-css-color'
-NeoBundle 'mattn/calendar-vim'
-"NeoBundle 'scrooloose/syntastic'
 NeoBundle 'ctrlpvim/ctrlp.vim'
 NeoBundle 'mbbill/undotree'
 NeoBundle 'scrooloose/nerdcommenter'
-"NeoBundle 'jmcantrell/vim-virtualenv'
 NeoBundle 'davidhalter/jedi-vim'
 NeoBundle 'majutsushi/tagbar'
-"NeoBundle 'myusuf3/numbers.vim'
 NeoBundle 'mileszs/ack.vim'
-NeoBundle 'mtth/scratch.vim'
-NeoBundle 'fatih/vim-nginx'
-NeoBundle 'raimon49/requirements.txt.vim'
-NeoBundle 'vim-scripts/Unicode-RST-Tables'
-NeoBundle 'vim-scripts/rfc-syntax', { 'for': 'rfc' }
-"NeoBundle 'dag/vim2hs'
 NeoBundle 'vim-expand-region'
 NeoBundle 'michaeljsmith/vim-indent-object'
 NeoBundle 'neovimhaskell/haskell-vim'
 NeoBundle 'dag/vim2hs'
-NeoBundle 'octol/vim-cpp-enhanced-highlight'
 NeoBundle 'ntpeters/vim-better-whitespace'
 
 " Shougo
-"NeoBundle 'Shougo/neocomplete.vim'
 NeoBundle 'Shougo/deoplete.nvim'
 NeoBundle 'zchee/deoplete-jedi'
-NeoBundle 'eagletmt/neco-ghc'
-"NeoBundle 'carlitux/deoplete-ternjs', { 'build': { 'mac': 'npm install -g tern', 'unix': 'npm install -g tern' }}
-"NeoBundle 'ternjs/tern_for_vim', { 'do': 'npm install' }
 NeoBundle 'zchee/deoplete-clang'
 NeoBundle 'Shougo/unite.vim'
-"NeoBundle 'Shougo/unite-outline'
-"NeoBundle 'ujihisa/unite-colorscheme'
-"NeoBundle 'junkblocker/unite-codesearch'
-NeoBundle 'Shougo/vimfiler.vim'
-"NeoBundle 'Valloric/YouCompleteMe'
-NeoBundle 'Shougo/vimproc.vim', {
-    \ 'build' : {
-    \     'windows' : 'tools\\update-dll-mingw',
-    \     'cygwin' : 'make -f make_cygwin.mak',
-    \     'mac' : 'make -f make_mac.mak',
-    \     'linux' : 'make',
-    \     'unix' : 'gmake',
-    \    },
-    \ }
-NeoBundle 'Shougo/neco-vim'
 NeoBundle 'Shougo/neoinclude.vim'
-NeoBundleLazy 'ujihisa/neco-look',{'autoload':{'filetypes':['markdown','md']}}
 
 NeoBundle 'Shougo/neosnippet.vim'
 NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'honza/vim-snippets'
-"NeoBundle 'junegunn/fzf', { 'dir': '~/.fzf' }
-"NeoBundle 'junegunn/fzf.vim'
-NeoBundle 'terryma/vim-multiple-cursors'
-NeoBundle 'vim-scripts/SyntaxRange'
-"NeoBundle 'ryanoasis/vim-devicons'
-
-" Lang specifics
-"NeoBundle 'rust-lang/rust.vim'
-"NeoBundle 'fatih/vim-go'
-"NeoBundle 'cespare/vim-toml'
 
 call neobundle#end()
 
@@ -148,7 +93,6 @@ if pluginsExist
 
 
 let g:python_host_prog = '/usr/bin/python'
-"let g:deoplete#enable_at_startup = 1
 
 " Neovim Settings
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
@@ -183,8 +127,6 @@ let g:gitgutter_max_signs = 1000  " default value
 
 " No need for ex mode
 nnoremap Q <nop>
-" exit insert, dd line, enter insert
-inoremap <c-d> <esc>ddi
 " Navigate between display lines
 noremap  <silent> <Up>   gk
 noremap  <silent> <Down> gj
@@ -194,7 +136,6 @@ noremap  <silent> <Home> g<Home>
 noremap  <silent> <End>  g<End>
 inoremap <silent> <Home> <C-o>g<Home>
 inoremap <silent> <End>  <C-o>g<End>
-inoremap <c-f> <c-x><c-f>
 
 " terminal
 autocmd BufWinEnter,WinEnter term://* startinsert
@@ -285,12 +226,11 @@ if $VIMCOLOR == 1
     highlight VertSplit ctermbg=239 ctermfg=246 guibg=none guifg=#777777
 else
     "colorscheme flattened_dark
-    "so $HOME/.config/nvim/colorschemes/tomorrow.vim
-    "so $HOME/.config/nvim/colorschemes/spacemacs.vim
-    "so $HOME/.config/nvim/colorschemes/onedark.vim
-    so $HOME/.config/nvim/colorschemes/kalisi.vim
+    set background=dark
+    colorscheme PaperColor
+    let g:airline_theme='molokai'
+    "so $HOME/.config/nvim/colorschemes/kalisi.vim
     "so $HOME/.config/nvim/colorschemes/molokai.vim
-    "so $HOME/.config/nvim/colorschemes/apprentice.vim
 endif
 
 highlight Error gui=bold,underline guifg=#e5a5a5 guibg=#602020
@@ -354,27 +294,11 @@ vnoremap <Space> za
 autocmd FileType vim setlocal foldmethod=marker
 autocmd FileType vim setlocal foldlevel=0
 
-" au FileType html call HTMLFold()
-" autocmd FileType html setlocal foldmethod=syntax
 autocmd FileType html setlocal fdl=99
 
-" autocmd FileType javascript call JavaScriptFold()
-autocmd FileType javascript,html,css,scss,typescript setlocal foldlevel=99
-autocmd FileType javascript,typescript,css,scss,json setlocal foldmethod=marker
-autocmd FileType javascript,typescript,css,scss,json setlocal foldmarker={,}
-autocmd FileType coffee setl foldmethod=indent
-" au FileType html nnoremap <buffer> <leader>F zfat
 " }}}
 
-" Snipppets -----------------------------------------------------------------{{{
-
-" Enable snipMate compatibility feature.
-let g:neosnippet#enable_snipmate_compatibility = 1
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-" Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.vim/bundle/neosnippet-snippets/neosnippets, ~/Github/ionic-snippets, ~/.vim/bundle/angular-vim-snippets/snippets'
+" Tab for completion -----------------------------------------------------------------{{{
 
 " SuperTab like snippets behavior.
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
@@ -395,30 +319,6 @@ autocmd StdinReadPre * let s:std_in=1
 let NERDTreeShowHidden=1
 let g:NERDTreeWinSize=30
 let g:NERDTreeAutoDeleteBuffer=1
-
-"Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 0
-"let g:syntastic_check_on_wq = 0
-"let g:syntastic_loc_list_height = 5
-"let g:syntastic_enable_signs = 1
-"let g:syntastic_python_checkers = ["flake8"]
-
-"map <F8> :SyntasticCheck<CR>
-
-" YCM
-"nnoremap <leader>jd :YcmCompleter GoTo<CR>
-"nnoremap <leader>jr :YcmCompleter GoToReferences<CR>
-"if $PYTHONCURRENT == '3'
-    "let g:ycm_python_binary_path = '/usr/bin/python3'
-"endif
-"let g:ycm_autoclose_preview_window_after_completion = 1
-"let g:ycm_global_ycm_extra_conf = '~/.vim/confs/.ycm_extra_conf.py'
 
 " jedi-vim
 let g:jedi#completions_enabled = 0
@@ -454,9 +354,6 @@ let g:python_host_prog = '/home/alex/.virtualenvs/_nv_py2/bin/python'
 let g:python3_host_prog = '/home/alex/.virtualenvs/_nv_py3/bin/python'
 "let deoplete#sources#jedi#enable_cache=0
 
-" neco-ghc
-let g:necoghc_enable_detailed_browse = 1
-
 " IndentLine
 let g:indentLine_color_term = 236
 let g:indentLine_color_gui = '#373737'
@@ -465,9 +362,6 @@ if $VIMCOLOR == 1
     let g:indentLine_color_gui = '#c1c1c1'
 endif
 "let g:indentLine_char = │
-
-" flake8
-"autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
 
 " CtrlP
 let g:ctrlp_map = '<c-p>'
@@ -554,11 +448,6 @@ let g:NERDCustomDelimiters = {
 nmap ]g <Plug>GitGutterNextHunk
 nmap [g <Plug>GitGutterPrevHunk
 
-" scratch.vim
-"let g:scratch_filetype = 'scratch'
-let g:scratch_height = 0.3
-let g:scratch_persistence_file = '/home/alex/.config/nvim/scratchfile'
-
 " haskell-vim
 let g:haskell_indent_if = 0
 let g:haskell_indent_case = 4
@@ -570,27 +459,6 @@ let g:haskell_indent_do = 4
 " delimitMate
 let g:delimitMate_expand_cr = 1
 
-"}}}
-
-" Typescript & Javscript omni complete --------------------------------------{{{
-  let g:vimjs#casesensistive = 1
-  let g:vimjs#smartcomplete = 1
-  let g:tsuquyomi_disable_quickfix = 1
-  let g:vim_json_syntax_conceal = 0
-  " autocmd FileType typescript setlocal completeopt+=menu,preview,noselect
-  autocmd FileType typescript setlocal completeopt+=menu,preview
-  set completeopt+=menu,preview,noselect
-  set splitbelow
-  let g:deoplete#enable_debug = 2
-" set completeopt+=noselect
-" let g:deoplete#omni_patterns = {}
-" let g:deoplete#omni_patterns.typescript=[
-"               \'[^. \t0-9]\.\w*',
-"               \'[^. \t0-9]\->\w*',
-"               \'[^. \t0-9]\::\w*',
-"               \'\s[A-Z][a-z]',
-"               \'^\s*@[A-Z][a-z]'
-"               \]
 "}}}
 
 " Emmet customization -------------------------------------------------------{{{
@@ -619,15 +487,6 @@ let g:delimitMate_expand_cr = 1
   autocmd FileType html,css,js,javascript.jsx EmmetInstall
 "}}}
 
-" unite ---------------------------------------------------------------------{{{
-"
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank'])
-call unite#custom#source('file,file/new,buffer,file_rec,line', 'matchers', 'matcher_fuzzy')
-nnoremap <C-u> :<C-u>Unite -buffer-name=search -start-insert line<cr>
-
-"}}}
-
 " Navigate between vim buffers and tmux panels ------------------------------{{{
 let g:tmux_navigator_no_mappings = 1
 nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
@@ -635,11 +494,6 @@ nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
 nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 nnoremap <silent> <C-h> :TmuxNavigateLeft<CR>
 nnoremap <silent> <C-;> :TmuxNavigatePrevious<cr>
-"tmap <C-j> <C-\><C-n>:TmuxNavigateDown<cr>
-"tmap <C-k> <C-\><C-n>:TmuxNavigateUp<cr>
-"tmap <C-l> <C-\><C-n>:TmuxNavigateRight<cr>
-"tmap <C-h> <C-\><C-n>:TmuxNavigateLeft<CR>
-"tmap <C-;> <C-\><C-n>:TmuxNavigatePrevious<cr>
 "}}}
 
 " vim-airline ---------------------------------------------------------------{{{
@@ -683,15 +537,6 @@ set guifont=UbuntuMonoDerivativePowerline\ Nerd\ Font\ Regular\ 11
 
 " Linting -------------------------------------------------------------------{{{
 
-function! neomake#makers#ft#javascript#eslint()
-    return {
-        \ 'args': ['-f', 'compact'],
-        \ 'errorformat': '%E%f: line %l\, col %c\, Error - %m,' .
-        \ '%W%f: line %l\, col %c\, Warning - %m'
-        \ }
-endfunction
-let g:neomake_javascript_enabled_makers = ['eslint']
-" call pylint using the current python (venv or global)
 let g:neomake_python_venvpylint_maker = {
   \ 'exe': 'python',
   \ 'args': [
@@ -709,18 +554,8 @@ let g:neomake_python_venvpylint_maker = {
   \ }
 
 let g:neomake_python_enabled_makers = ['venvpylint', 'flake8']
-"let g:neomake_python_enabled_makers = ['venvpylint']
-"let g:neomake_python_enabled_makers = ['flake8']
 let g:neomake_java_enabled_makers = []
 autocmd! BufWritePost * Neomake
-function! JscsFix()
-    let l:winview = winsaveview()
-    % ! jscs -x
-    call winrestview(l:winview)
-endfunction
-command JscsFix :call JscsFix()
-noremap <leader>j :JscsFix<CR>
-map <F8> :Neomake<CR>
 let g:neomake_open_list = 0
 let g:neomake_verbose = 0
 
@@ -738,20 +573,9 @@ nnoremap <C-Up> <C-W><C-K>
 nnoremap <C-Right> <C-W><C-L>
 nnoremap <C-Left> <C-W><C-H>
 
-"" run python script
-nnoremap <F2> :w !/usr/bin/env python <CR>
-
-"" export rst to html
-cnoreabbrev r2h !rst2html % out.html
-
 "" various shortcuts
-"map <F3> :NERDTreeToggle<CR>
-"map <F3> <plug>NERDTreeTabsToggle<CR>
-nnoremap <F3> :w !/usr/bin/env python3 <CR>
 nnoremap <leader>f :NERDTreeTabsToggle<CR>
 map <C-\> :TagbarToggle<CR>
-"map <C-n> :set invnu <CR>
-nnoremap <leader>0 :redraw!<CR>
 nnoremap <F5> :GitGutterSignsToggle<CR>
 nnoremap <leader>u :UndotreeToggle<CR>
 nnoremap <C-w>' ciw''<Esc>P
@@ -767,28 +591,10 @@ nnoremap <leader>el :lopen<CR>
 nnoremap <F4> :set invwrap<CR>
 vnoremap > >gv
 vnoremap < <gv
-cnoreabbrev spch setlocal spell! spelllang=en_us
-nnoremap <F6> :setlocal spell! spelllang=en_us<CR>
-inoremap <F6> <C-o>:setlocal spell! spelllang=en_us<CR>
-cnoreabbrev secret r !python3 -c 'import os, binascii; print(binascii.hexlify(os.urandom(24)).decode())'
-cnoreabbrev runc !_TMP=$(python -c 'from subprocess import call; f = "%"; out = f.rsplit(".", 1)[0]; call("gcc -o {} {} && echo {}".format(out, f, out), shell=True)') && bash -c "$(realpath $_TMP)"
-
-inoremap <C-h> <Left>
-inoremap <C-j> <Down>
-inoremap <C-k> <Up>
-inoremap <C-l> <Right>
-inoremap <A-h> <C-Left>
-inoremap <A-l> <C-Right>
-inoremap <A-b> <C-Left>
-inoremap <A-f> <C-Right>
 
 " lololol
 nmap ; :
 vmap ; :
-" OLOLOLOLOLOLOLOLO
-imap jj <Esc>
-
-nnoremap n nzz
 
 " buffer navigation
 nnoremap <leader>h :bp<CR>
@@ -799,21 +605,8 @@ nnoremap <leader>q :bp<CR>
 nnoremap <leader>w :bn<CR>
 
 " tab navigation
-unmap <leader>j
 nnoremap <leader>j :tabp<CR>
 nnoremap <leader>k :tabn<CR>
 
-" nnoremap <leader>f :Ack TODO\\|FIXME\\|NOTE **<CR>
-
 " Various macros
 let @d = "oimport ipdb; ipdb.set_trace()\e"  " python debug trace
-
-" return name of group under cursor
-function! GetGroupName()
-    let name = synIDattr(synID(line('.'),col('.'),1),'name')
-    if name == ''
-        echo ''
-    else
-        echo '[' . name . ']'
-    endif
-endfunction
