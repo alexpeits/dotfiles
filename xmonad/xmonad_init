@@ -1,0 +1,112 @@
+#!/bin/sh
+
+# xmonad specific stuff
+
+XMONAD_DIR=$HOME/.xmonad
+
+#  if no user configuration
+if [ ! -d $XMONAD_DIR ]; then
+    # add a desktop friendly config if possible
+    if [ -r /usr/share/xmonad/xmonad.hs ]; then
+	mkdir $XMONAD_DIR
+	cp -p /usr/share/xmonad/xmonad.hs $XMONAD_DIR
+    else
+	INFO="Install xmonad, xmonad-mate, or xmonad-config to customize xmonad."
+	echo "xmonad-start: $INFO"
+    fi
+else
+    XMONAD_CUSTOM=$XMONAD_DIR/xmonad-$(uname -i)-linux
+    # recompile if broken shared libs after an upgrade
+    if [ -r $XMONAD_DIR/xmonad.hs -a -x $XMONAD_CUSTOM ]; then
+	if ldd $XMONAD_CUSTOM | grep -q "not found"; then
+	    xmonad --recompile
+	fi
+    fi
+fi
+
+XMONADSTART_CACHEDIR=$HOME/.cache/xmonad-start
+NO_DIALOG_FILE=$HOME/.cache/xmonad-start/no-startup-dialog
+if [ -x "/usr/bin/zenity" -a ! -r "$NO_DIALOG_FILE" ]; then
+    if ! zenity --question --text="To open an terminal press: Alt-Shift-Return\n\nFor more keybindings and info see manpage: man xmonad\n\n${INFO:+$INFO\n\n}\nShow this dialog next time?"; then
+	mkdir -p $XMONADSTART_CACHEDIR
+	touch $NO_DIALOG_FILE
+    fi
+fi
+
+if [ -r $XMONAD_DIR/session ]; then
+    sh $XMONAD_DIR/session
+fi
+
+if [ -f ~/.Xresources ]; then
+    xrdb -merge ~/.Xresources
+fi
+
+# gnome-settings-daemon &
+
+# keybindings
+setxkbmap -option caps:escape
+setxkbmap -layout us,gr -option grp:alt_space_toggle
+
+#cursor
+xsetroot -cursor_name left_ptr
+
+# natural scrolling
+xinput set-prop "12" "libinput Natural Scrolling Enabled" 1
+
+# background
+feh --bg-scale ~/Pictures/wallpaper
+
+# applets
+trayer --edge top --align right --SetDockType true --SetPartialStrut true \
+ --expand true --widthtype pixel --width 120 --transparent true --tint 0x0 --height 22 &
+
+eval $(gnome-keyring-daemon --start)
+# gnome-keyring-daemon --daemonize --login &
+# gnome-session &
+# export GNOME_KEYRING_SOCKET
+export GNOME_KEYRING_PID
+
+(cd ~/projects/indicator-redshift && python -m indicator_redshift.indicator) &
+(cd ~/projects/indicator-charge && python -m indicator_charge.indicator) &
+
+if [ -x /usr/bin/caffeine-indicator ]; then
+    /usr/bin/caffeine-indicator &
+fi
+
+if [ -x /usr/bin/dropbox ] ; then
+    /usr/bin/dropbox start &
+fi
+
+if [ -x /usr/bin/blueman-applet ]; then
+    /usr/bin/blueman-applet &
+fi
+
+if [ -x /usr/bin/nm-applet ] ; then
+   /usr/bin/nm-applet --sm-disable &
+fi
+
+if [ -x /usr/bin/xscreensaver ] ; then
+    /usr/bin/xscreensaver -no-splash &
+fi
+
+if [ -x /usr/bin/gnome-power-manager ] ; then
+   sleep 3
+   /usr/bin/gnome-power-manager &
+fi
+
+if [ -x /usr/lib/notification-daemon/notification-daemon ]; then
+    /usr/lib/notification-daemon/notification-daemon &
+fi
+
+
+# start xmonad
+
+if [ -n "$*" ]; then
+    if [ -d $XMONAD_DIR -a "$(ls -t $XMONAD_DIR | head -1)" = "xmonad.hs" ]; then
+	xmonad --recompile
+    fi
+    xmonad &
+    $*
+else
+    xmonad
+fi
