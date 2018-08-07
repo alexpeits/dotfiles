@@ -10,15 +10,17 @@ import XMonad.Layout.Fullscreen
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spiral
 import XMonad.Layout.Tabbed
+import XMonad.Layout.Grid
 import XMonad.Layout.ThreeColumns
+import XMonad.Layout.Accordion
 import XMonad.Util.Run(spawnPipe,safeSpawn)
 import XMonad.Util.EZConfig(additionalKeys)
 import XMonad.Util.NamedWindows
+import XMonad.Util.Ungrab
 import XMonad.Actions.SpawnOn
 import Graphics.X11.ExtraTypes.XF86
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
-
 
 ------------------------------------------------------------------------
 -- Terminal
@@ -34,10 +36,13 @@ myScreensaver = "xscreensaver-command -lock"
 
 -- The command to take a selective screenshot, where you select
 -- what you'd like to capture on the screen.
-mySelectScreenshot = "select-screenshot"
+mySelectScreenshot = "gnome-screenshot -a"
+
+-- The command to take a window screenshot.
+myWindowScreenshot = "scrot ~/Pictures/Screenshots/%Y-%m-%d_%H-%M-%S.png -s"
 
 -- The command to take a fullscreen screenshot.
-myScreenshot = "screenshot"
+myScreenshot = "gnome-screenshot"
 
 -- The command to use as a launcher, to launch commands that don't have
 -- preset keybindings.
@@ -60,7 +65,6 @@ myWorkspaces =
     , "5:music"
     ]
 
-
 ------------------------------------------------------------------------
 -- Window rules
 -- Execute arbitrary actions and WindowSet manipulations when managing
@@ -78,8 +82,11 @@ myWorkspaces =
 myManageHook = composeAll
     [ className =? "Slack" --> doShift (myWorkspaces !! 3)
     , className =? "Skype" --> doShift (myWorkspaces !! 3)
+    , className =? "Pidgin" --> doShift (myWorkspaces !! 3)
+    , className =? "vlc" --> doShift (myWorkspaces !! 4) <+> doFloat
     , className =? "Indicator.py" --> doFloatAt 0.43 0.43
     , className =? "Zenity" --> doFloatAt 0.43 0.43
+    , className =? "Gsimplecal" --> doFloatAt 0.815 0.022
     ]
 
     {-[ className =? "Chromium"       --> doShift "2:web"-}
@@ -105,27 +112,24 @@ myManageHook = composeAll
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = avoidStruts(tiled ||| Mirror tiled ||| Full)
+-- on hold: Accordion, Full
+myLayout = avoidStruts(tiled ||| Mirror tiled ||| simpleTabbed ||| Grid ||| Accordion)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
-
      -- The default number of windows in the master pane
      nmaster = 1
-
      -- Default proportion of screen occupied by master pane
      ratio   = 1/2
-
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
--- myLayout = avoidStruts (
---     ThreeColMid 1 (3/100) (1/2) |||
---     Tall 1 (3/100) (1/2) |||
---     Mirror (Tall 1 (3/100) (1/2)) |||
---     tabbed shrinkText tabConfig |||
---     Full |||
---     spiral (6/7)) |||
---     noBorders (fullscreenFull Full)
+     -- tabTheme = defaultTheme { activeColor =
+     --                         , activeBorderColor =
+     --                         , activeTextColor =
+     --                         , inactiveColor =
+     --                         , inactiveBorderColor =
+     --                         , inactiveTextColor =
+     --                         }
 
 ------------------------------------------------------------------------
 -- Notifications
@@ -135,7 +139,7 @@ data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
 instance UrgencyHook LibNotifyUrgencyHook where
     urgencyHook LibNotifyUrgencyHook w = do
         name     <- getName w
-        Just idx <- fmap (W.findTag w) $ gets windowset
+        Just idx <- W.findTag w <$> gets windowset
 
         safeSpawn "notify-send" [show name, "workspace " ++ idx]
 
@@ -147,16 +151,6 @@ instance UrgencyHook LibNotifyUrgencyHook where
 --
 myNormalBorderColor  = "#7c7c7c"
 myFocusedBorderColor = "#ffb6b0"
-
--- Colors for text and backgrounds of each tab when in "Tabbed" layout.
-tabConfig = defaultTheme {
-    activeBorderColor = "#7C7C7C",
-    activeTextColor = "#CEFFAC",
-    activeColor = "#000000",
-    inactiveBorderColor = "#7C7C7C",
-    inactiveTextColor = "#EEEEEE",
-    inactiveColor = "#000000"
-}
 
 -- Color of current window title in xmobar.
 xmobarTitleColor = "#FFB6B0"
@@ -201,7 +195,11 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask .|. shiftMask, xK_p),
      spawn mySelectScreenshot)
 
-  -- Take a full screenshot using the command specified by myScreenshot.
+  -- take a window screenshot using the command specified by myWindowScreenshot.
+  , ((modMask .|. controlMask, xK_p),
+     unGrab >> spawn myWindowScreenshot)
+
+  -- take a full screenshot using the command specified by myScreenshot.
   , ((modMask .|. controlMask .|. shiftMask, xK_p),
      spawn myScreenshot)
 
@@ -216,7 +214,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Increase volume.
   , ((0, xF86XK_AudioRaiseVolume),
      spawn "amixer -q set Master 5%+")
- 
+
   -- Mute volume.
   , ((modMask .|. controlMask, xK_m),
      spawn "amixer -q set Master toggle")
@@ -326,7 +324,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
   -- Quit xmonad.
   , ((modMask .|. shiftMask, xK_q),
-     io (exitWith ExitSuccess))
+     io exitSuccess)
 
   -- Restart xmonad.
   , ((modMask, xK_q),
@@ -352,7 +350,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 -- Mouse bindings
 --
 
-myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
+myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList
   [
     -- mod-button1, Set the window to floating mode and move by dragging
     ((modMask, button1),
@@ -432,7 +430,7 @@ defaults = defaultConfig {
     mouseBindings      = myMouseBindings,
 
     -- hooks, layouts
-    layoutHook         = smartBorders $ myLayout,
+    layoutHook         = smartBorders myLayout,
     manageHook         = myManageHook,
     startupHook        = myStartupHook,
     handleEventHook    = handleEventHook defaultConfig <+> docksEventHook
