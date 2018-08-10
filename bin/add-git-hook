@@ -1,0 +1,33 @@
+#!/bin/bash
+
+USAGE="add-git-hook <hook name>"
+HOOKS_DIR="$HOME/scripts/git_hooks"
+
+set -e
+
+function copy_hook_script() {
+    if [ ! -d .git ]; then
+        echo "Not in a git repository" >& 2
+        exit 1
+    fi
+
+    local hook="$1"
+    local path="$HOOKS_DIR/$hook"
+
+    cp $path ".git/hooks"
+    echo "Copied '$hook' hook to .git/hooks"
+}
+
+function main() {
+    if [[ $# -ne 1 ]]; then
+        echo "Usage: ${USAGE}" >& 2
+        echo
+        echo "Available hooks:" >& 2
+        echo "$(ls $HOOKS_DIR)" >& 2
+        exit 1
+    else
+        copy_hook_script "$1"
+    fi
+}
+
+main "$@"
