@@ -20,6 +20,7 @@ Plugin 'mattn/emmet-vim'
 Plugin 'mbbill/undotree'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'NLKNguyen/papercolor-theme'
+Plugin 'freeo/vim-kalisi'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
 Plugin 'Yggdroot/indentLine'
@@ -149,7 +150,10 @@ if has("persistent_undo")
 endif
 
 set background=dark
-colorscheme PaperColor
+"colorscheme PaperColor
+colorscheme kalisi
+highlight Normal ctermbg=235
+highlight MatchParen cterm=reverse
 
 highlight GitGutterAdd ctermbg=none
 highlight GitGutterChange ctermbg=none
