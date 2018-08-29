@@ -11,15 +11,12 @@ Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'majutsushi/tagbar'
 Plugin 'davidhalter/jedi-vim'
-"Plugin 'nvie/vim-flake8'
-"Plugin 'Shougo/neocomplete'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'Raimondi/delimitMate'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'mattn/emmet-vim'
 Plugin 'mbbill/undotree'
 Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'freeo/vim-kalisi'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
@@ -150,7 +147,6 @@ if has("persistent_undo")
 endif
 
 set background=dark
-"colorscheme PaperColor
 colorscheme kalisi
 highlight Normal ctermbg=235
 highlight MatchParen cterm=reverse
