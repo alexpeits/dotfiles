@@ -193,15 +193,18 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
   -- Take a selective screenshot using the command specified by mySelectScreenshot.
   , ((modMask .|. shiftMask, xK_p),
-     spawn mySelectScreenshot)
+     spawn "rofi -modi drun -show drun")
+     -- spawn mySelectScreenshot)
 
   -- take a window screenshot using the command specified by myWindowScreenshot.
   , ((modMask .|. controlMask, xK_p),
-     unGrab >> spawn myWindowScreenshot)
+     spawn mySelectScreenshot)
+     -- unGrab >> spawn myWindowScreenshot)
 
   -- take a full screenshot using the command specified by myScreenshot.
   , ((modMask .|. controlMask .|. shiftMask, xK_p),
-     spawn myScreenshot)
+     spawn myWindowScreenshot)
+     -- spawn myScreenshot)
 
   -- Basically toggles xmobar (useful for fullscreen), requires lowerOnStart=True
   -- , ((mod4Mask, xK_F11), sendMessage ToggleStruts)
