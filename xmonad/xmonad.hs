@@ -26,7 +26,7 @@ import qualified Data.Map        as M
 -- Terminal
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
---
+-- 
 myTerminal = "/usr/bin/gnome-terminal"
 
 -- The command to lock the screen or show the screensaver.
@@ -58,12 +58,14 @@ myLauncher = "dmenu_run"
 {-myWorkspaces = ["1:term","2:web","3:code","4:vm","5:media"] ++ map show [6..9]-}
 {- myWorkspaces = map show [1..9] -}
 myWorkspaces =
-    [ "1:web"
-    , "2:emacs"
-    , "3:term"
+    [ "1:main"
+    , "2:term"
+    , "3:emacs"
     , "4:chat"
     , "5:music"
+    , "6:vm"
     ]
+nWorkspace = (myWorkspaces !!) . pred
 
 ------------------------------------------------------------------------
 -- Window rules
@@ -80,27 +82,21 @@ myWorkspaces =
 -- 'className' and 'resource' are used below.
 --
 myManageHook = composeAll
-    [ className =? "Slack" --> doShift (myWorkspaces !! 3)
-    , className =? "Skype" --> doShift (myWorkspaces !! 3)
-    , className =? "Pidgin" --> doShift (myWorkspaces !! 3)
-    , className =? "vlc" --> doShift (myWorkspaces !! 4) <+> doFloat
+    [
+      className =? "Slack" --> doShift (nWorkspace 4)
+    , className =? "Skype" --> doShift (nWorkspace 4)
+    , className =? "Pidgin" --> doShift (nWorkspace 4)
+    , className =? "vlc" --> doShift (nWorkspace 5)
+    , className =? "Spotify" --> doShift (nWorkspace 5)
+    , className =? "spotify" --> doShift (nWorkspace 5)
+    , className =? "VirtualBox" --> doShift (nWorkspace 6)
+
     , className =? "Indicator.py" --> doFloatAt 0.43 0.43
     , className =? "Zenity" --> doFloatAt 0.43 0.43
     , className =? "Gsimplecal" --> doFloatAt 0.815 0.022
-    ]
 
-    {-[ className =? "Chromium"       --> doShift "2:web"-}
-    {-, className =? "Google-chrome"  --> doShift "2:web"-}
-    {-, resource  =? "desktop_window" --> doIgnore-}
-    {-, className =? "Galculator"     --> doFloat-}
-    {-, className =? "Steam"          --> doFloat-}
-    {-, className =? "Gimp"           --> doFloat-}
-    {-, resource  =? "gpicview"       --> doFloat-}
-    {-, className =? "MPlayer"        --> doFloat-}
-    {-, className =? "VirtualBox"     --> doShift "4:vm"-}
-    {-, className =? "Xchat"          --> doShift "5:media"-}
-    {-, className =? "stalonetray"    --> doIgnore-}
-    {-, isFullscreen --> (doF W.focusDown <+> doFullFloat)]-}
+    , isFullscreen --> doFullFloat
+    ]
 
 ------------------------------------------------------------------------
 -- Layouts
@@ -113,7 +109,7 @@ myManageHook = composeAll
 -- which denotes layout choice.
 --
 -- on hold: Accordion, Full
-myLayout = avoidStruts(tiled ||| Mirror tiled ||| simpleTabbed ||| Grid ||| Accordion)
+myLayout = avoidStruts(tiled ||| Mirror tiled ||| simpleTabbed ||| Grid)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -149,15 +145,19 @@ instance UrgencyHook LibNotifyUrgencyHook where
 -- Colors and borders
 -- Currently based on the ir_black theme.
 --
-myNormalBorderColor  = "#7c7c7c"
-myFocusedBorderColor = "#ffb6b0"
+myNormalBorderColor  = "#626262"
+myFocusedBorderColor = "#ffbab5"
 
 -- Color of current window title in xmobar.
 xmobarTitleColor = "#FFB6B0"
+-- xmobarTitleColor = "#10c9c9"
 
 -- Color of current workspace in xmobar.
-{-xmobarCurrentWorkspaceColor = "#CEFFAC"-}
 xmobarCurrentWorkspaceColor = "#B7FF85"
+-- xmobarCurrentWorkspaceColor = "#afdf00"
+
+xmobarLayoutColor = "#858585"
+xmobarSepColor = "#858585"
 
 -- Width of the window border in pixels.
 myBorderWidth = 1
@@ -203,6 +203,10 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask .|. controlMask .|. shiftMask, xK_p),
      spawn myScreenshot)
 
+  -- Basically toggles xmobar (useful for fullscreen), requires lowerOnStart=True
+  -- , ((mod4Mask, xK_F11), sendMessage ToggleStruts)
+  , ((mod4Mask .|. shiftMask, xK_f), sendMessage ToggleStruts)
+
   -- Mute volume.
   , ((0, xF86XK_AudioMute),
      spawn "amixer -q set Master toggle")
@@ -214,6 +218,21 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Increase volume.
   , ((0, xF86XK_AudioRaiseVolume),
      spawn "amixer -q set Master 5%+")
+
+  , ((0, xF86XK_AudioMicMute),
+     spawn "amixer -q set Capture toggle")
+
+  -- Next track
+  , ((mod4Mask, xK_F2),
+     spawn "playerctl previous")
+
+  -- Previous track
+  , ((mod4Mask, xK_F3),
+     spawn "playerctl play-pause")
+
+  -- Play/pause
+  , ((mod4Mask, xK_F4),
+     spawn "playerctl next")
 
   -- Mute volume.
   , ((modMask .|. controlMask, xK_m),
@@ -229,11 +248,13 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
   -- Increase brightness.
   , ((0, xF86XK_MonBrightnessUp),
-     spawn "sudo /home/alex/bin/brightness.sh up")
+     spawn "xbacklight -inc 5%")
+     -- spawn "sudo /home/alex/bin/brightness.sh up")
 
   -- Decrease brightness.
   , ((0, xF86XK_MonBrightnessDown),
-     spawn "sudo /home/alex/bin/brightness.sh down")
+     spawn "xbacklight -dec 5%")
+     -- spawn "sudo /home/alex/bin/brightness.sh down")
 
   -- Audio previous.
   , ((0, 0x1008FF16),
@@ -399,7 +420,8 @@ main = do
             ppOutput = hPutStrLn xmproc
           , ppTitle = xmobarColor xmobarTitleColor "" . shorten 100
           , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "[" "]"
-          , ppSep = "   "
+          , ppSep = xmobarColor xmobarSepColor "" "  |  "
+          , ppLayout = xmobarColor xmobarLayoutColor ""
       }
       , manageHook = manageDocks <+> myManageHook
       , startupHook = setWMName "LG3D"

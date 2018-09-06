@@ -11,12 +11,12 @@ Config {
     fgColor = "grey",
     position = Static { xpos = 0, ypos = 0, width = 1770, height = 22 },
     commands = [
-        Run Network "enp0s31f6" ["-L","0","-H","32","--normal","green","--high","red"] 50,
-        Run Network "wlp3s0" ["-L","0","-H","32","--normal","green","--high","red"] 50,
-        Run Cpu ["-t", "cpu: <total>%", "-L","3","-H","50","--normal","green","--high","red"] 50,
-        Run Memory ["-t","mem: <usedratio>%"] 50,
+        Run Network "enp0s31f6" ["-L","0","-H","32","--normal","green","--high","red"] 30,
+        Run Network "wlp3s0" ["-L","0","-H","32","--normal","green","--high","red"] 30,
+        Run Cpu ["-t", "cpu: <total>%", "-L","3","-H","50","--normal","green","--high","red"] 30,
+        Run Memory ["-t","mem: <usedratio>%"] 30,
         Run Date "%a %b %_d %Y %H:%M:%S" "date" 10,
-        Run Com "/bin/bash" ["-c", "~/.xmonad/get-volume.sh"] "myvolume" 10,
+        Run Com "/bin/bash" ["-c", "~/.xmonad/get-volume.sh"] "myvolume" 5,
         Run Com "/bin/bash" ["-c", "~/bin/getlayout.sh"] "mylayout" 5,
         Run Battery [
             "-t", "<acstatus> <left>%",

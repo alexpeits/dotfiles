@@ -58,16 +58,19 @@ feh --bg-scale ~/Pictures/wallpaper
 
 # applets
 trayer --edge top --align right --SetDockType true --SetPartialStrut true \
- --expand true --widthtype pixel --width 120 --transparent true --tint 0x0 --height 22 &
+ --expand true --widthtype pixel --width 150 --transparent true --tint 0x0 --height 22 &
 
 eval $(gnome-keyring-daemon --start)
 # gnome-keyring-daemon --daemonize --login &
 # gnome-session &
+/usr/lib/gnome-settings-daemon/gsd-xsettings &
 # export GNOME_KEYRING_SOCKET
 export GNOME_KEYRING_PID
 
 (cd ~/projects/indicator-redshift && python -m indicator_redshift.indicator) &
 (cd ~/projects/indicator-charge && python -m indicator_charge.indicator) &
+
+/usr/bin/env emacs --daemon=workspace-terminal &
 
 if [ -x /usr/bin/caffeine-indicator ]; then
     /usr/bin/caffeine-indicator &
