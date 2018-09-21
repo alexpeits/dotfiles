@@ -18,6 +18,7 @@ Config {
         Run Date "%a %b %_d %Y %H:%M:%S" "date" 10,
         Run Com "/bin/bash" ["-c", "~/.xmonad/get-volume.sh"] "myvolume" 5,
         Run Com "/bin/bash" ["-c", "~/bin/getlayout.sh"] "mylayout" 5,
+        Run Brightness ["--template", "☀ <percent>%", "--", "-D", "intel_backlight"] 5,
         Run Battery [
             "-t", "<acstatus> <left>%",
             "--Low", "20",
@@ -37,6 +38,6 @@ Config {
     ],
     sepChar = "%",
     alignSep = "}{",
-    template = "%StdinReader%}{ %cpu% | %memory% | %wlp3s0% | %enp0s31f6% | %mylayout% | ♫ %myvolume% | %battery% | <action=`gsimplecal` button=1><fc=#ee9a00>%date%</fc></action> ",
+    template = "%StdinReader%}{ %cpu% | %memory% | %wlp3s0% | %enp0s31f6% | %bright% | ♫ %myvolume% | %battery% | %mylayout% | <action=`gsimplecal` button=1><fc=#ee9a00>%date%</fc></action> ",
     lowerOnStart = False
 }
