@@ -49,12 +49,13 @@ myLauncher = unwords
 
 -- Scratchpads
 myScratchpads =
-  [ NS "scratch" "gedit --class=Scratch ~/.scratch.txt" (className =? "Scratch") smallRectBR
-  -- , NS "scratch" "gnome-terminal --role=scratch -- em ~/.scratch.txt" (role =? "scratch") smallRectC
+  [ --NS "scratch" "gedit --class=Scratch ~/.scratch.txt" (className =? "Scratch") smallRectBR
+    NS "scratch" "gnome-terminal --role=scratch -- em ~/.scratch.org" (role =? "scratch") smallRectBR
   , NS "zeal" "zeal" (className =? "Zeal") largeRectM
   , NS "dropTerm" "gnome-terminal --role=dropTerm" (role =? "dropTerm") dropDown
   ]
   where role = stringProperty "WM_WINDOW_ROLE"
+        title = stringProperty "WM_NAME"
 
 myScratchAction = namedScratchpadAction myScratchpads  -- helper
 
@@ -106,7 +107,8 @@ nWorkspace = (myWorkspaces !!) . pred  -- helper
 --
 myManageHook = composeAll
     [
-      className =? "Slack" --> doShift (nWorkspace 4)
+      className =? "Emacs" --> doShift (nWorkspace 3)
+    , className =? "Slack" --> doShift (nWorkspace 4)
     , className =? "Skype" --> doShift (nWorkspace 4)
     , className =? "Pidgin" --> doShift (nWorkspace 4)
     , className =? "vlc" --> doShift (nWorkspace 5)
@@ -172,13 +174,15 @@ myNormalBorderColor  = "#626262"
 myFocusedBorderColor = "#ffbab5"
 
 -- Color of current window title in xmobar.
-xmobarTitleColor = "#FFB6B0"
+-- xmobarTitleColor = "#FFB6B0"
+xmobarTitleColor = "#d58966"
 
 -- Color of current workspace in xmobar.
-xmobarCurrentWorkspaceColor = "#B7FF85"
+-- xmobarCurrentWorkspaceColor = "#B7FF85"
+xmobarCurrentWorkspaceColor = "#2ec8a2"
 
-xmobarLayoutColor = "#858585"
-xmobarSepColor = "#858585"
+xmobarLayoutColor = "#7e7e7e"
+xmobarSepColor = "#7e7e7e"
 
 -- Width of the window border in pixels.
 myBorderWidth = 1
@@ -310,6 +314,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
   -- Restart xmonad.
   , ((modMask, xK_q), restart "xmonad" True)
+
+  -- , ((modMask, xK_0), spawn "false" >> spawn "zenity --password")
   ]
   ++
 

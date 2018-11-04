@@ -18,6 +18,7 @@ Plugin 'mattn/emmet-vim'
 Plugin 'mbbill/undotree'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'freeo/vim-kalisi'
+Plugin 'joshdick/onedark.vim'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
 Plugin 'Yggdroot/indentLine'
@@ -74,6 +75,7 @@ endif
 set laststatus=2
 let g:airline_powerline_fonts=1
 let g:airline_theme='dark'
+"let g:airline_theme='onedark'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 " set guifont=UbuntuMonoDerivativePowerline\ Nerd\ Font\ Regular\ 13
@@ -146,6 +148,7 @@ if has("persistent_undo")
     set undofile
 endif
 
+"colorscheme onedark
 set background=dark
 colorscheme kalisi
 highlight Normal ctermbg=235
