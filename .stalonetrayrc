@@ -1,0 +1,29 @@
+background "#0c1014"
+# set dockapp mode, which can be either simple (for
+# e.g. OpenBox, wmaker for WindowMaker, or none
+# (default). NEW in 0.8.
+dockapp_mode none
+# tray's geometry in standard X notation; width and
+# height are specified in slot_size multiples
+geometry 8x1-0+0
+grow_gravity NW
+icon_gravity NE
+icon_size 20
+# maximal tray dimensions; 0 in width/height means
+# no limit
+max_geometry 0x0
+# hide tray`s window from the taskbar
+skip_taskbar true
+transparent false
+# set the EWMH-compatible window layer; one of:
+# bootom, normal, top
+window_layer bottom
+# enable/disable window struts for tray window (to
+# avoid converting of tray window by maximized
+# windows); mode defines to which screen border tray
+# will be attached; it can be either top, bottom,
+# left, right, none or auto (default)
+window_strut auto
+# set the EWMH-compatible window type; one of:
+# desktop, dock, normal, toolbar, utility
+window_type dock
