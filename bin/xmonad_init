@@ -2,6 +2,12 @@
 
 # xmonad specific stuff
 
+MESSAGE=""
+
+add_message() {
+    MESSAGE="$MESSAGE\n$1"
+}
+
 XMONAD_DIR=$HOME/.xmonad
 
 #  if no user configuration
@@ -24,24 +30,9 @@ else
     fi
 fi
 
-XMONADSTART_CACHEDIR=$HOME/.cache/xmonad-start
-NO_DIALOG_FILE=$HOME/.cache/xmonad-start/no-startup-dialog
-if [ -x "/usr/bin/zenity" -a ! -r "$NO_DIALOG_FILE" ]; then
-    if ! zenity --question --text="To open an terminal press: Alt-Shift-Return\n\nFor more keybindings and info see manpage: man xmonad\n\n${INFO:+$INFO\n\n}\nShow this dialog next time?"; then
-	mkdir -p $XMONADSTART_CACHEDIR
-	touch $NO_DIALOG_FILE
-    fi
-fi
-
-if [ -r $XMONAD_DIR/session ]; then
-    sh $XMONAD_DIR/session
-fi
-
 if [ -f ~/.Xresources ]; then
     xrdb -merge ~/.Xresources
 fi
-
-# gnome-settings-daemon &
 
 # keybindings
 setxkbmap -option caps:escape
@@ -52,31 +43,44 @@ xsetroot -cursor_name left_ptr
 
 # natural scrolling
 touchpad_id=$(xinput list | grep -i touchpad | awk -F'\t' '{print $2}' | awk -F'=' '{print $2}')
-#xinput set-prop "12" "libinput Natural Scrolling Enabled" 1
 xinput set-prop "$touchpad_id" "libinput Natural Scrolling Enabled" 1
 
 # background
-feh --bg-scale ~/Pictures/wallpaper
+if $(hash feh); then
+    feh --bg-scale ~/Pictures/wallpaper
+else
+    add_message "- Install feh"
+fi
 
 # applets
-trayer --edge top --align right --SetDockType true --SetPartialStrut true \
- --expand true --widthtype pixel --width 150 --transparent true --tint 0x0 --height 22 &
+# trayer --edge top --align right --SetDockType true --SetPartialStrut true \
+#     --expand true --widthtype pixel --width 150 --transparent true --alpha 0 --tint 0x0c1014 --height 22 &
+if $(hash stalonetray); then
+    stalonetray &
+else
+    add_message "- Install stalonetray"
+fi
 
 eval $(gnome-keyring-daemon --start)
 # gnome-keyring-daemon --daemonize --login &
-# gnome-session &
-/usr/lib/gnome-settings-daemon/gsd-xsettings &
 # export GNOME_KEYRING_SOCKET
 export GNOME_KEYRING_PID
+# gnome-session &
+/usr/lib/gnome-settings-daemon/gsd-xsettings &
 
-(cd ~/projects/indicator-redshift && python -m indicator_redshift.indicator) &
-(cd ~/projects/indicator-charge && python -m indicator_charge.indicator) &
-
-/usr/bin/env emacs --daemon=workspace-terminal &
-
-if [ -x /usr/bin/caffeine-indicator ]; then
-    /usr/bin/caffeine-indicator &
+if [ -d $HOME/projects/indicator-redshift ]; then
+    (cd $HOME/projects/indicator-redshift && python -m indicator_redshift.indicator) &
 fi
+
+if [ -d $HOME/projects/indicator-charge ]; then
+    (cd $HOME/projects/indicator-charge && python -m indicator_charge.indicator) &
+fi
+
+#/usr/bin/env emacs --daemon=workspace-terminal &
+
+# if [ -x /usr/bin/caffeine-indicator ]; then
+#     /usr/bin/caffeine-indicator &
+# fi
 
 if [ -x /usr/bin/dropbox ] ; then
     /usr/bin/dropbox start &
@@ -95,14 +99,16 @@ if [ -x /usr/bin/xscreensaver ] ; then
 fi
 
 if [ -x /usr/bin/gnome-power-manager ] ; then
-   sleep 3
-   /usr/bin/gnome-power-manager &
+    (sleep 3 && /usr/bin/gnome-power-manager) &
 fi
 
 if [ -x /usr/lib/notification-daemon/notification-daemon ]; then
     /usr/lib/notification-daemon/notification-daemon &
 fi
 
+if [ ! -z "$MESSAGE" ]; then
+    (echo "$MESSAGE" | xmessage -file -) &
+fi
 
 # start xmonad
 

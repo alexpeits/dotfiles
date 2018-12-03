@@ -1,21 +1,28 @@
 import System.IO
 import System.Exit
 
+import Data.Maybe (isJust)
+
+import Control.Monad.IO.Class
+
 import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook
-import XMonad.Layout.Fullscreen
+import XMonad.Hooks.InsertPosition
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Tabbed
-import XMonad.Layout.Grid
-import XMonad.Util.Run (spawnPipe, safeSpawn)
+import XMonad.Layout.ThreeColumns
+import XMonad.Layout.Fullscreen
+import XMonad.Layout.Named
+import XMonad.Util.Run (spawnPipe, safeSpawn, runProcessWithInput)
 import XMonad.Util.NamedWindows
 import XMonad.Util.Ungrab
 import XMonad.Util.NamedScratchpad
-import XMonad.Actions.SpawnOn
+import XMonad.Actions.CycleWS
+import XMonad.Actions.WindowBringer
 
 import qualified XMonad.StackSet as W
 
@@ -47,11 +54,19 @@ myLauncher = unwords
   , "-theme lb -show-icons -kb-mode-next Alt+m"
   ]
 
+rofiGoToWinArgs =
+  [ "-dmenu"
+  , "-i", "-p", "Go to window"
+  , "-matching", "fuzzy", "-no-levenshtein-sort", "-sort"
+  , "-theme", "lb"
+  ]
+
 -- Scratchpads
 myScratchpads =
-  [ --NS "scratch" "gedit --class=Scratch ~/.scratch.txt" (className =? "Scratch") smallRectBR
-    NS "scratch" "gnome-terminal --role=scratch -- em ~/.scratch.org" (role =? "scratch") smallRectBR
-  , NS "zeal" "zeal" (className =? "Zeal") largeRectM
+  [ NS "scratch" "gedit --class=Scratch ~/.scratch.txt" (className =? "Scratch") smallRectBR
+  -- , NS "scratch" "gnome-terminal --role=scratch -- em ~/.scratch.org" (role =? "scratch") smallRectBR
+  -- , NS "zeal" "zeal" (className =? "Zeal") largeRectM
+  , NS "docs" "firefox --new-instance --class Docs -P Simple https://hoogle.haskell.org https://www.haskell.org/hoogle/" (className =? "Docs") medRectBR
   , NS "dropTerm" "gnome-terminal --role=dropTerm" (role =? "dropTerm") dropDown
   ]
   where role = stringProperty "WM_WINDOW_ROLE"
@@ -62,7 +77,7 @@ myScratchAction = namedScratchpadAction myScratchpads  -- helper
 -- Various geometries
 --
 -- helpers for RationalRect
-myTopMargin = 22 / 1080  -- depends on xmobar height
+myTopMargin = 20 / 1080  -- depends on xmobar height
 middleRR w h = W.RationalRect ((1 - w) / 2) ((1 - h) / 2) w h
 topRightRR w h = W.RationalRect (1 - w) myTopMargin w h
 topLeftRR w h = W.RationalRect 0 myTopMargin w h
@@ -70,10 +85,11 @@ botRightRR w h = W.RationalRect (1 - w) (1 - h) w h
 botLeftRR w h = W.RationalRect 0 (1 - h) w h
 dropDownRR w h = W.RationalRect 0 myTopMargin w h
 
-largeRectM = customFloating $ middleRR 0.85 0.85
+largeRectM = customFloating $ middleRR 0.8 0.8
 medRectM = customFloating $ middleRR 0.65 0.75
+medRectBR = customFloating $ botRightRR 0.4 0.45
 smallRectTR = customFloating $ topRightRR 0.25 0.3
-smallRectBR = customFloating $ botRightRR 0.5 0.6
+smallRectBR = customFloating $ botRightRR 0.3 0.4
 dropDown = customFloating $ dropDownRR 1 0.4
 
 ------------------------------------------------------------------------
@@ -124,6 +140,7 @@ myManageHook = composeAll
     , className =? "Zenity" --> doFloatAt 0.43 0.43
     , className =? "Gsimplecal" --> doFloatAt 0.815 0.022
 
+    , className =? "stalonetray" --> doIgnore
     , isFullscreen --> doFullFloat
     ]
 
@@ -138,21 +155,19 @@ myManageHook = composeAll
 -- which denotes layout choice.
 --
 -- on hold: Accordion, Full
-myLayout = avoidStruts (
-  tiled |||
-  Mirror tiled |||
-  simpleTabbed |||
-  Grid
-  )
+myLayout = avoidStruts $
+  Tall nmaster delta halfRatio
+  ||| named "Focus" (Mirror (Tall nmaster delta bigMasterRatio))
+  ||| ThreeColMid nmaster delta halfRatio
+  ||| named "Tabs" simpleTabbed
   where
-     -- default tiling algorithm partitions the screen into two panes
-     tiled   = Tall nmaster delta ratio
      -- The default number of windows in the master pane
      nmaster = 1
-     -- Default proportion of screen occupied by master pane
-     ratio   = 1/2
      -- Percent of screen to increment by when resizing panes
-     delta   = 3/100
+     delta = 3/100
+     -- Ratios
+     halfRatio = 1/2
+     bigMasterRatio = 75/100
 
 ------------------------------------------------------------------------
 -- Notifications
@@ -163,7 +178,6 @@ instance UrgencyHook LibNotifyUrgencyHook where
     urgencyHook LibNotifyUrgencyHook w = do
         name     <- getName w
         Just idx <- W.findTag w <$> gets windowset
-
         safeSpawn "notify-send" [show name, "workspace " ++ idx]
 
 ------------------------------------------------------------------------
@@ -181,14 +195,32 @@ xmobarTitleColor = "#d58966"
 -- xmobarCurrentWorkspaceColor = "#B7FF85"
 xmobarCurrentWorkspaceColor = "#2ec8a2"
 
-xmobarLayoutColor = "#7e7e7e"
-xmobarSepColor = "#7e7e7e"
+xmobarLayoutColor = "#676767"
+xmobarSepColor = xmobarLayoutColor
 
 -- Width of the window border in pixels.
 myBorderWidth = 1
 
 ------------------------------------------------------------------------
 -- Key bindings
+
+-- helpers
+isActiveWS :: WindowSpace -> Bool
+isActiveWS ws@(W.Workspace tag _ _) = isActive && isNotScratch
+  where isActive = isJust $ W.stack ws
+        isNotScratch = tag /= "NSP"
+
+getScreenshot :: X ()
+getScreenshot = do
+  scrStr <-
+    runProcessWithInput "rofi-dmenu-args.sh"
+    ["Screenshot type", "Area", "Window", "Full"] ""
+  case filter (/= '\n') scrStr of
+    "Area"   -> spawn mySelectScreenshot
+    "Window" -> unGrab >> spawn myWindowScreenshot
+    "Full"   -> spawn myScreenshot
+    _        -> return ()
+
 --
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -212,25 +244,25 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Use this to launch programs without a key binding.
   , ((modMask, xK_p), spawn myLauncher)
 
+  -- Move to workspace of selected window
+  , ((modMask .|. shiftMask, xK_p) , gotoMenuArgs' "rofi" rofiGoToWinArgs)
+
   -- scratchpads
   , ((mod4Mask, xK_z), myScratchAction "dropTerm")
   , ((mod4Mask .|. shiftMask, xK_n), myScratchAction "scratch")
-  , ((mod4Mask .|. shiftMask, xK_d), myScratchAction "zeal")
+  , ((mod4Mask .|. shiftMask, xK_d), myScratchAction "docs")
 
-  -- Take a selective screenshot using the command specified by mySelectScreenshot.
-  , ((modMask .|. shiftMask, xK_p), unGrab >> spawn mySelectScreenshot)
-
-  -- take a window screenshot using the command specified by myWindowScreenshot.
-  , ((modMask .|. controlMask, xK_p), unGrab >> spawn myWindowScreenshot)
-
-  -- take a full screenshot using the command specified by myScreenshot.
-  , ((modMask .|. controlMask .|. shiftMask, xK_p), spawn myScreenshot)
+  -- Ask for screenshot type and take screenshot
+  , ((modMask .|. controlMask .|. shiftMask, xK_p), getScreenshot)
 
   -- Basically toggles xmobar (useful for fullscreen), requires lowerOnStart=True
   , ((mod4Mask .|. shiftMask, xK_f), sendMessage ToggleStruts)
 
-  -- Mute volume.
-  , ((0, xF86XK_AudioMute), spawn "amixer -q set Master toggle")
+  -- Mute/unmute volume.
+  -- There is a bug with this one:
+  -- , ((0, xF86XK_AudioMute), spawn "amixer -q set Master toggle")
+  -- Workaround
+  , ((0, xF86XK_AudioMute), spawn "amixer -D pulse set Master 1+ toggle")
 
   -- Decrease volume.
   , ((0, xF86XK_AudioLowerVolume), spawn "amixer -q set Master 5%-")
@@ -315,7 +347,9 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Restart xmonad.
   , ((modMask, xK_q), restart "xmonad" True)
 
-  -- , ((modMask, xK_0), spawn "false" >> spawn "zenity --password")
+  -- Cycle active workspaces
+  -- , ((modMask, xK_o), moveTo Next (WSIs (return isActiveWS)))
+  -- , ((modMask .|. shiftMask, xK_o), moveTo Prev (WSIs (return isActiveWS)))
   ]
   ++
 
@@ -368,16 +402,16 @@ myStartupHook = return ()
 --
 main = do
   xmproc <- spawnPipe "xmobar ~/.xmonad/xmobar.hs"
-  xmonad $ defaults {
+  xmonad $ fullscreenSupport $ defaults {
       logHook = dynamicLogWithPP $ xmobarPP {
             ppOutput = hPutStrLn xmproc
-          , ppTitle = xmobarColor xmobarTitleColor "" . shorten 100
+          , ppTitle = xmobarColor xmobarTitleColor "" . shorten 80
           , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "[" "]"
-          , ppSep = xmobarColor xmobarSepColor "" "  |  "
+          , ppSep = xmobarColor xmobarSepColor "" " | "
           , ppLayout = xmobarColor xmobarLayoutColor ""
           , ppHidden = (\ws -> if ws == "NSP" then "" else ws)
       }
-      , manageHook = manageDocks <+> myManageHook <+> namedScratchpadManageHook myScratchpads
+      , manageHook = manageDocks <+> insertPosition Below Newer <+> myManageHook <+> namedScratchpadManageHook myScratchpads
       , startupHook = setWMName "LG3D"
   }
 
