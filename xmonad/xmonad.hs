@@ -1,9 +1,11 @@
+{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
 import System.IO
 import System.Exit
 
 import Data.Maybe (isJust)
 
 import Control.Monad.IO.Class
+import Control.Arrow ((***), second)
 
 import XMonad
 
@@ -20,13 +22,16 @@ import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.Named
+import qualified XMonad.Layout.Combo as Combo
+import qualified XMonad.Layout.TwoPane as TwoPane
+import qualified XMonad.Layout.WindowNavigation as WNav
 import qualified XMonad.Layout.IndependentScreens as IndS
 
 import XMonad.Util.Run (spawnPipe, safeSpawn, runProcessWithInput)
 import XMonad.Util.NamedWindows
-import XMonad.Util.Ungrab
+--import XMonad.Util.Ungrab
 import XMonad.Util.NamedScratchpad
-import XMonad.Actions.CycleWS
+import XMonad.Actions.CycleWS as Cycle
 import XMonad.Actions.WindowBringer
 import qualified XMonad.Actions.CopyWindow as CopyW
 
@@ -34,6 +39,18 @@ import qualified XMonad.StackSet as W
 
 import qualified Data.Map        as M
 import Graphics.X11.ExtraTypes.XF86
+
+
+newtype Flip l a = Flip (l a) deriving (Show, Read)
+
+instance LayoutClass l a => LayoutClass (Flip l) a where
+    runLayout (W.Workspace i (Flip l) ms) r = (map (second flipRect) *** fmap Flip)
+                                                `fmap` runLayout (W.Workspace i l ms) (flipRect r)
+                                         where screenWidth = fromIntegral $ rect_width r
+                                               flipRect (Rectangle rx ry rw rh) = Rectangle (screenWidth - rx - (fromIntegral rw)) ry rw rh
+    handleMessage (Flip l) = fmap (fmap Flip) . handleMessage l
+    description (Flip l) = "Flip "++ description l
+
 
 ------------------------------------------------------------------------
 -- Terminal
@@ -83,7 +100,7 @@ myScratchAction = namedScratchpadAction myScratchpads  -- helper
 -- Various geometries
 --
 -- helpers for RationalRect
-myTopMargin = 20 / 1080  -- depends on xmobar height
+myTopMargin = 28 / 2160  -- depends on xmobar height
 middleRR w h = W.RationalRect ((1 - w) / 2) ((1 - h) / 2) w h
 topRightRR w h = W.RationalRect (1 - w) myTopMargin w h
 topLeftRR w h = W.RationalRect 0 myTopMargin w h
@@ -96,21 +113,14 @@ medRectM = customFloating $ middleRR 0.65 0.75
 medRectBR = customFloating $ botRightRR 0.4 0.45
 smallRectTR = customFloating $ topRightRR 0.25 0.3
 smallRectBR = customFloating $ botRightRR 0.3 0.4
-dropDown = customFloating $ dropDownRR 1 0.4
+dropDown = customFloating $ dropDownRR 1 0.3
 
 ------------------------------------------------------------------------
 -- Workspaces
 --
 {-myWorkspaces = ["1:term","2:web","3:code","4:vm","5:media"] ++ map show [6..9]-}
 {- myWorkspaces = map show [1..9] -}
-myWorkspaces = IndS.withScreens 1 $
-    [ "1:main"
-    , "2:term"
-    , "3:emacs"
-    , "4:chat"
-    , "5:music"
-    , "6:vm"
-    ] ++ map show [7..9]
+myWorkspaces = IndS.withScreens 2 $ map show [1..9]
 nWorkspace = (myWorkspaces !!) . pred  -- helper
 
 ------------------------------------------------------------------------
@@ -129,18 +139,18 @@ nWorkspace = (myWorkspaces !!) . pred  -- helper
 --
 myManageHook = composeAll
     [
-      className =? "Emacs" --> doShift (nWorkspace 3)
-    , className =? "Slack" --> doShift (nWorkspace 4)
-    , className =? "Skype" --> doShift (nWorkspace 4)
-    , className =? "Pidgin" --> doShift (nWorkspace 4)
-    , className =? "vlc" --> doShift (nWorkspace 5)
-    , className =? "Spotify" --> doShift (nWorkspace 5)
-    , className =? "spotify" --> doShift (nWorkspace 5)
-    , className =? "VirtualBox" --> doShift (nWorkspace 6)
-    , className =? "VirtualBox Manager" --> doShift (nWorkspace 6)
+      -- className =? "Emacs" --> doShift (nWorkspace 3)
+    -- , className =? "Slack" --> doShift (nWorkspace 4)
+    -- , className =? "Skype" --> doShift (nWorkspace 4)
+    -- , className =? "Pidgin" --> doShift (nWorkspace 4)
+    -- , className =? "vlc" --> doShift (nWorkspace 5)
+    -- , className =? "Spotify" --> doShift (nWorkspace 5)
+    -- , className =? "spotify" --> doShift (nWorkspace 5)
+    -- , className =? "VirtualBox" --> doShift (nWorkspace 6)
+    -- , className =? "VirtualBox Manager" --> doShift (nWorkspace 6)
 
     -- , className =? "Nautilus" --> medRectM
-    , className =? "Gnome-calculator" --> smallRectTR
+      className =? "Gnome-calculator" --> smallRectTR
 
     , className =? "Indicator.py" --> doFloatAt 0.43 0.43
     , className =? "Zenity" --> doFloatAt 0.43 0.43
@@ -161,19 +171,24 @@ myManageHook = composeAll
 -- which denotes layout choice.
 --
 -- on hold: Accordion, Full
-myLayout = avoidStruts $
-  Tall nmaster delta halfRatio
-  ||| named "Focus" (Mirror (Tall nmaster delta bigMasterRatio))
-  ||| ThreeColMid nmaster delta halfRatio
-  ||| named "Tabs" simpleTabbed
+myLayout = avoidStruts $ WNav.windowNavigation $
+  myTall
+  ||| named "VTall" (Mirror myTall)
+  -- ||| named "Split" (Combo.combineTwo (TwoPane.TwoPane delta 0.295) (Mirror myTall) simpleTabbed)
+  -- ||| named "Focus" (Mirror (Tall nmaster delta bigMasterRatio))
+  ||| named "Right" (Tall nmaster delta 0.295)
+  ||| named "Left" (Tall nmaster delta 0.71)
+  -- ||| ThreeColMid nmaster delta halfRatio
+  -- ||| named "Tabs" simpleTabbed
   where
-     -- The default number of windows in the master pane
-     nmaster = 1
-     -- Percent of screen to increment by when resizing panes
-     delta = 3/100
-     -- Ratios
-     halfRatio = 1/2
-     bigMasterRatio = 75/100
+    myTall = Tall nmaster delta halfRatio
+    -- The default number of windows in the master pane
+    nmaster = 1
+    -- Percent of screen to increment by when resizing panes
+    delta = 3/100
+    -- Ratios
+    halfRatio = 1/2
+    bigMasterRatio = 75/100
 
 ------------------------------------------------------------------------
 -- Notifications
@@ -191,15 +206,19 @@ instance UrgencyHook LibNotifyUrgencyHook where
 -- Currently based on the ir_black theme.
 --
 myNormalBorderColor  = "#626262"
-myFocusedBorderColor = "#ffbab5"
+myFocusedBorderColor = "#e57e77"
 
 -- Color of current window title in xmobar.
 -- xmobarTitleColor = "#FFB6B0"
 xmobarTitleColor = "#d58966"
+xmobarInactiveTitleColor = "#656565"
 
 -- Color of current workspace in xmobar.
 -- xmobarCurrentWorkspaceColor = "#B7FF85"
 xmobarCurrentWorkspaceColor = "#2ec8a2"
+xmobarUnfocusedWorkspaceColor = "#3b7887"
+xmobarInactiveCurrentWorkspaceColor = "#656565"
+xmobarInactiveUnfocusedWorkspaceColor = "#656565"
 
 xmobarLayoutColor = "#676767"
 xmobarSepColor = xmobarLayoutColor
@@ -223,7 +242,7 @@ getScreenshot = do
     ["Screenshot type", "Area", "Window", "Full"] ""
   case filter (/= '\n') scrStr of
     "Area"   -> spawn mySelectScreenshot
-    "Window" -> unGrab >> spawn myWindowScreenshot
+    -- "Window" -> unGrab >> spawn myWindowScreenshot
     "Full"   -> spawn myScreenshot
     _        -> return ()
 
@@ -276,8 +295,12 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Increase volume.
   , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master 5%+")
 
+  , ((modMask, xK_F5), spawn "amixer -q set Master 5%-")
+  , ((modMask, xK_F6), spawn "amixer -q set Master toggle")
+  , ((modMask, xK_F7), spawn "amixer -q set Master 5%+")
+
   -- Toggle mic
-  , ((0, xF86XK_AudioMicMute), spawn "amixer -q set Capture toggle")
+  -- , ((0, xF86XK_AudioMicMute), spawn "amixer -q set Capture toggle")
 
   -- Next track
   , ((mod4Mask, xK_F2), spawn "playerctl previous")
@@ -353,8 +376,15 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Restart xmonad.
   , ((modMask, xK_q), restart "xmonad" True)
 
-  -- Cycle active workspaces
-  -- , ((modMask, xK_o), moveTo Next (WSIs (return isActiveWS)))
+  -- Move windows to sublayouts
+  , ((modMask .|. shiftMask, xK_Left), sendMessage $ WNav.Move L)
+  , ((modMask .|. shiftMask, xK_Right), sendMessage $ WNav.Move R)
+  , ((modMask .|. shiftMask, xK_Up), sendMessage $ WNav.Move U)
+  , ((modMask .|. shiftMask, xK_Down), sendMessage $ WNav.Move D)
+
+  -- Cycle monitors
+  , ((modMask, xK_o), Cycle.nextScreen)
+  , ((modMask .|. shiftMask, xK_o), Cycle.shiftNextScreen)
   -- , ((modMask .|. shiftMask, xK_o), moveTo Prev (WSIs (return isActiveWS)))
   ]
   ++
@@ -363,7 +393,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- mod-shift-[1..9], Move client to workspace N
   [((m .|. modMask, k), windows $ IndS.onCurrentScreen f i)
       | (i, k) <- zip (IndS.workspaces' conf) [xK_1 .. xK_9]
-      , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+      , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
   ++
 
   -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
@@ -398,7 +428,7 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList
 -- Run xmonad with all the defaults we set up.
 --
 main = do
-  xmproc <- spawnPipe "xmobar ~/.xmonad/xmobar.hs"
+  -- xmproc <- spawnPipe "xmobar ~/.xmonad/xmobar.hs"
   xmonad $ fullscreenSupport $ defaultConfig
     { terminal = myTerminal
     , focusFollowsMouse = False
@@ -440,13 +470,16 @@ main = do
         <+> docksEventHook
     }
 
-barCreator (S sid) = spawnPipe $ "xmobar --screen " ++ show sid ++ " ~/.xmonad/xmobar.hs"
+barCreator (S sid) = spawnPipe $ "xmobar --screen " ++ show sid ++ " ~/.xmonad/xmobar" ++ show sid ++ ".hs"
 barDestroyer = return ()
 
 myLogPPActive copies = (myLogPP copies)
-  { ppTitle = xmobarColor xmobarTitleColor "" . shorten 80
+  { ppTitle = xmobarColor xmobarTitleColor "" . shorten 200
   , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "[" "]" . IndS.unmarshallW
-  , ppVisible = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "(" ")" . IndS.unmarshallW
+  , ppVisible = \ws ->
+      if ws `elem` copies
+      then xmobarColor xmobarUnfocusedWorkspaceColor "" $ wrap "(" ")" $ IndS.unmarshallW ws
+      else ""
   , ppHidden = \ws -> if ws == "NSP" then "" else IndS.unmarshallW ws
   , ppSep = xmobarColor xmobarSepColor "" " | "
   , ppLayout = xmobarColor xmobarLayoutColor ""
@@ -454,11 +487,15 @@ myLogPPActive copies = (myLogPP copies)
   }
 
 myLogPP copies = defaultPP
-  { ppTitle = xmobarColor xmobarTitleColor "" . shorten 80
-  , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "[" "]" . IndS.unmarshallW
-  , ppVisible = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "(" ")" . IndS.unmarshallW
+  { ppTitle = xmobarColor xmobarInactiveTitleColor "" . shorten 200
+  , ppCurrent = xmobarColor xmobarInactiveCurrentWorkspaceColor "" . wrap "[" "]" . IndS.unmarshallW
+  , ppVisible = \ws ->
+      if ws `elem` copies
+      then xmobarColor xmobarInactiveUnfocusedWorkspaceColor "" $ wrap "(" ")" $ IndS.unmarshallW ws
+      else ""
   , ppHidden = \ws -> if ws == "NSP" then "" else IndS.unmarshallW ws
   , ppSep = xmobarColor xmobarSepColor "" " | "
   , ppLayout = xmobarColor xmobarLayoutColor ""
   , ppUrgent = xmobarColor "red" "yellow"
   }
+
