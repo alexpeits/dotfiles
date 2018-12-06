@@ -6,23 +6,29 @@ import Data.Maybe (isJust)
 import Control.Monad.IO.Class
 
 import XMonad
+
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.InsertPosition
+import qualified XMonad.Hooks.DynamicBars as Bars
+
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.Named
+import qualified XMonad.Layout.IndependentScreens as IndS
+
 import XMonad.Util.Run (spawnPipe, safeSpawn, runProcessWithInput)
 import XMonad.Util.NamedWindows
 import XMonad.Util.Ungrab
 import XMonad.Util.NamedScratchpad
 import XMonad.Actions.CycleWS
 import XMonad.Actions.WindowBringer
+import qualified XMonad.Actions.CopyWindow as CopyW
 
 import qualified XMonad.StackSet as W
 
@@ -97,7 +103,7 @@ dropDown = customFloating $ dropDownRR 1 0.4
 --
 {-myWorkspaces = ["1:term","2:web","3:code","4:vm","5:media"] ++ map show [6..9]-}
 {- myWorkspaces = map show [1..9] -}
-myWorkspaces =
+myWorkspaces = IndS.withScreens 1 $
     [ "1:main"
     , "2:term"
     , "3:emacs"
@@ -355,8 +361,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
   -- mod-[1..9], Switch to workspace N
   -- mod-shift-[1..9], Move client to workspace N
-  [((m .|. modMask, k), windows $ f i)
-      | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+  [((m .|. modMask, k), windows $ IndS.onCurrentScreen f i)
+      | (i, k) <- zip (IndS.workspaces' conf) [xK_1 .. xK_9]
       , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
   ++
 
@@ -389,59 +395,70 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList
   ]
 
 ------------------------------------------------------------------------
--- Startup hook
--- Perform an arbitrary action each time xmonad starts or is restarted
--- with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
--- per-workspace layout choices.
---
--- By default, do nothing.
-myStartupHook = return ()
-
-------------------------------------------------------------------------
 -- Run xmonad with all the defaults we set up.
 --
 main = do
   xmproc <- spawnPipe "xmobar ~/.xmonad/xmobar.hs"
-  xmonad $ fullscreenSupport $ defaults {
-      logHook = dynamicLogWithPP $ xmobarPP {
-            ppOutput = hPutStrLn xmproc
-          , ppTitle = xmobarColor xmobarTitleColor "" . shorten 80
-          , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "[" "]"
-          , ppSep = xmobarColor xmobarSepColor "" " | "
-          , ppLayout = xmobarColor xmobarLayoutColor ""
-          , ppHidden = (\ws -> if ws == "NSP" then "" else ws)
-      }
-      , manageHook = manageDocks <+> insertPosition Below Newer <+> myManageHook <+> namedScratchpadManageHook myScratchpads
-      , startupHook = setWMName "LG3D"
+  xmonad $ fullscreenSupport $ defaultConfig
+    { terminal = myTerminal
+    , focusFollowsMouse = False
+    , clickJustFocuses = False
+    , borderWidth = myBorderWidth
+    , modMask = myModMask
+    , workspaces = myWorkspaces
+    , normalBorderColor = myNormalBorderColor
+    , focusedBorderColor = myFocusedBorderColor
+    -- key bindings
+    , keys = myKeys
+    , mouseBindings = myMouseBindings
+
+    , logHook = do
+        copies <- CopyW.wsContainingCopies
+        Bars.multiPP (myLogPPActive copies) (myLogPP copies)
+        -- dynamicLogWithPP $ xmobarPP
+        --   { ppOutput = hPutStrLn xmproc
+        --   , ppTitle = xmobarColor xmobarTitleColor "" . shorten 80
+        --   , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "[" "]"
+        --   , ppSep = xmobarColor xmobarSepColor "" " | "
+        --   , ppLayout = xmobarColor xmobarLayoutColor ""
+        --   , ppHidden = \ws -> if ws == "NSP" then "" else ws
+        --   , ppUrgent = xmobarColor "red" "yellow"
+        --   }
+
+    , manageHook =
+        manageDocks
+        <+> insertPosition Below Newer
+        <+> myManageHook
+        <+> namedScratchpadManageHook myScratchpads
+    , startupHook = do
+        setWMName "LG3D"
+        Bars.dynStatusBarStartup barCreator barDestroyer
+    , layoutHook = smartBorders myLayout
+    , handleEventHook =
+        Bars.dynStatusBarEventHook barCreator barDestroyer
+        <+> handleEventHook defaultConfig
+        <+> docksEventHook
+    }
+
+barCreator (S sid) = spawnPipe $ "xmobar --screen " ++ show sid ++ " ~/.xmonad/xmobar.hs"
+barDestroyer = return ()
+
+myLogPPActive copies = (myLogPP copies)
+  { ppTitle = xmobarColor xmobarTitleColor "" . shorten 80
+  , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "[" "]" . IndS.unmarshallW
+  , ppVisible = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "(" ")" . IndS.unmarshallW
+  , ppHidden = \ws -> if ws == "NSP" then "" else IndS.unmarshallW ws
+  , ppSep = xmobarColor xmobarSepColor "" " | "
+  , ppLayout = xmobarColor xmobarLayoutColor ""
+  , ppUrgent = xmobarColor "red" "yellow"
   }
 
-
-------------------------------------------------------------------------
--- Combine it all together
--- A structure containing your configuration settings, overriding
--- fields in the default config. Any you don't override, will
--- use the defaults defined in xmonad/XMonad/Config.hs
---
--- No need to modify this.
---
-defaults = defaultConfig {
-    -- simple stuff
-    terminal           = myTerminal,
-    focusFollowsMouse  = False,
-    clickJustFocuses   = False,
-    borderWidth        = myBorderWidth,
-    modMask            = myModMask,
-    workspaces         = myWorkspaces,
-    normalBorderColor  = myNormalBorderColor,
-    focusedBorderColor = myFocusedBorderColor,
-
-    -- key bindings
-    keys               = myKeys,
-    mouseBindings      = myMouseBindings,
-
-    -- hooks, layouts
-    layoutHook         = smartBorders myLayout,
-    manageHook         = myManageHook,
-    startupHook        = myStartupHook,
-    handleEventHook    = handleEventHook defaultConfig <+> docksEventHook
-}
+myLogPP copies = defaultPP
+  { ppTitle = xmobarColor xmobarTitleColor "" . shorten 80
+  , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "[" "]" . IndS.unmarshallW
+  , ppVisible = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "(" ")" . IndS.unmarshallW
+  , ppHidden = \ws -> if ws == "NSP" then "" else IndS.unmarshallW ws
+  , ppSep = xmobarColor xmobarSepColor "" " | "
+  , ppLayout = xmobarColor xmobarLayoutColor ""
+  , ppUrgent = xmobarColor "red" "yellow"
+  }
