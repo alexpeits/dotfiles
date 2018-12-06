@@ -1,4 +1,3 @@
-{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses #-}
 import System.IO
 import System.Exit
 
@@ -29,7 +28,7 @@ import qualified XMonad.Layout.IndependentScreens as IndS
 
 import XMonad.Util.Run (spawnPipe, safeSpawn, runProcessWithInput)
 import XMonad.Util.NamedWindows
---import XMonad.Util.Ungrab
+import XMonad.Util.Ungrab
 import XMonad.Util.NamedScratchpad
 import XMonad.Actions.CycleWS as Cycle
 import XMonad.Actions.WindowBringer
@@ -39,17 +38,6 @@ import qualified XMonad.StackSet as W
 
 import qualified Data.Map        as M
 import Graphics.X11.ExtraTypes.XF86
-
-
-newtype Flip l a = Flip (l a) deriving (Show, Read)
-
-instance LayoutClass l a => LayoutClass (Flip l) a where
-    runLayout (W.Workspace i (Flip l) ms) r = (map (second flipRect) *** fmap Flip)
-                                                `fmap` runLayout (W.Workspace i l ms) (flipRect r)
-                                         where screenWidth = fromIntegral $ rect_width r
-                                               flipRect (Rectangle rx ry rw rh) = Rectangle (screenWidth - rx - (fromIntegral rw)) ry rw rh
-    handleMessage (Flip l) = fmap (fmap Flip) . handleMessage l
-    description (Flip l) = "Flip "++ description l
 
 
 ------------------------------------------------------------------------
@@ -84,12 +72,20 @@ rofiGoToWinArgs =
   , "-theme", "lb"
   ]
 
+firefoxDocs = unwords
+  [ "firefox"
+  , "--new-instance --class Docs -P Simple"
+  , "https://hoogle.haskell.org"
+  , "https://www.haskell.org/hoogle"
+  , "https://pursuit.purescript.org"
+  ]
+
 -- Scratchpads
 myScratchpads =
   [ NS "scratch" "gedit --class=Scratch ~/.scratch.txt" (className =? "Scratch") smallRectBR
   -- , NS "scratch" "gnome-terminal --role=scratch -- em ~/.scratch.org" (role =? "scratch") smallRectBR
   -- , NS "zeal" "zeal" (className =? "Zeal") largeRectM
-  , NS "docs" "firefox --new-instance --class Docs -P Simple https://hoogle.haskell.org https://www.haskell.org/hoogle/" (className =? "Docs") medRectBR
+  , NS "docs" firefoxDocs (className =? "Docs") medRectBR
   , NS "dropTerm" "gnome-terminal --role=dropTerm" (role =? "dropTerm") dropDown
   ]
   where role = stringProperty "WM_WINDOW_ROLE"
@@ -100,7 +96,7 @@ myScratchAction = namedScratchpadAction myScratchpads  -- helper
 -- Various geometries
 --
 -- helpers for RationalRect
-myTopMargin = 28 / 2160  -- depends on xmobar height
+myTopMargin = 20 / 1080  -- depends on xmobar height
 middleRR w h = W.RationalRect ((1 - w) / 2) ((1 - h) / 2) w h
 topRightRR w h = W.RationalRect (1 - w) myTopMargin w h
 topLeftRR w h = W.RationalRect 0 myTopMargin w h
@@ -113,14 +109,21 @@ medRectM = customFloating $ middleRR 0.65 0.75
 medRectBR = customFloating $ botRightRR 0.4 0.45
 smallRectTR = customFloating $ topRightRR 0.25 0.3
 smallRectBR = customFloating $ botRightRR 0.3 0.4
-dropDown = customFloating $ dropDownRR 1 0.3
+dropDown = customFloating $ dropDownRR 1 0.35
 
 ------------------------------------------------------------------------
 -- Workspaces
 --
 {-myWorkspaces = ["1:term","2:web","3:code","4:vm","5:media"] ++ map show [6..9]-}
 {- myWorkspaces = map show [1..9] -}
-myWorkspaces = IndS.withScreens 2 $ map show [1..9]
+myWorkspaces = IndS.withScreens 1 $
+    [ "1:main"
+    , "2:term"
+    , "3:emacs"
+    , "4:chat"
+    , "5:music"
+    , "6:vm"
+    ] ++ map show [7..9]
 nWorkspace = (myWorkspaces !!) . pred  -- helper
 
 ------------------------------------------------------------------------
@@ -139,18 +142,18 @@ nWorkspace = (myWorkspaces !!) . pred  -- helper
 --
 myManageHook = composeAll
     [
-      -- className =? "Emacs" --> doShift (nWorkspace 3)
-    -- , className =? "Slack" --> doShift (nWorkspace 4)
-    -- , className =? "Skype" --> doShift (nWorkspace 4)
-    -- , className =? "Pidgin" --> doShift (nWorkspace 4)
-    -- , className =? "vlc" --> doShift (nWorkspace 5)
-    -- , className =? "Spotify" --> doShift (nWorkspace 5)
-    -- , className =? "spotify" --> doShift (nWorkspace 5)
-    -- , className =? "VirtualBox" --> doShift (nWorkspace 6)
-    -- , className =? "VirtualBox Manager" --> doShift (nWorkspace 6)
+      className =? "Emacs" --> doShift (nWorkspace 3)
+    , className =? "Slack" --> doShift (nWorkspace 4)
+    , className =? "Skype" --> doShift (nWorkspace 4)
+    , className =? "Pidgin" --> doShift (nWorkspace 4)
+    , className =? "vlc" --> doShift (nWorkspace 5)
+    , className =? "Spotify" --> doShift (nWorkspace 5)
+    , className =? "spotify" --> doShift (nWorkspace 5)
+    , className =? "VirtualBox" --> doShift (nWorkspace 6)
+    , className =? "VirtualBox Manager" --> doShift (nWorkspace 6)
 
     -- , className =? "Nautilus" --> medRectM
-      className =? "Gnome-calculator" --> smallRectTR
+    , className =? "Gnome-calculator" --> smallRectTR
 
     , className =? "Indicator.py" --> doFloatAt 0.43 0.43
     , className =? "Zenity" --> doFloatAt 0.43 0.43
@@ -171,15 +174,15 @@ myManageHook = composeAll
 -- which denotes layout choice.
 --
 -- on hold: Accordion, Full
-myLayout = avoidStruts $ WNav.windowNavigation $
+myLayout = avoidStruts $
   myTall
-  ||| named "VTall" (Mirror myTall)
+  -- ||| named "VTall" (Mirror myTall)
   -- ||| named "Split" (Combo.combineTwo (TwoPane.TwoPane delta 0.295) (Mirror myTall) simpleTabbed)
-  -- ||| named "Focus" (Mirror (Tall nmaster delta bigMasterRatio))
-  ||| named "Right" (Tall nmaster delta 0.295)
-  ||| named "Left" (Tall nmaster delta 0.71)
-  -- ||| ThreeColMid nmaster delta halfRatio
-  -- ||| named "Tabs" simpleTabbed
+  ||| named "Focus" (Mirror (Tall nmaster delta bigMasterRatio))
+  -- ||| named "Right" (Tall nmaster delta 0.295)
+  -- ||| named "Left" (Tall nmaster delta 0.71)
+  ||| named "3Col" (ThreeColMid nmaster delta halfRatio)
+  ||| named "Tabs" simpleTabbed
   where
     myTall = Tall nmaster delta halfRatio
     -- The default number of windows in the master pane
@@ -203,7 +206,6 @@ instance UrgencyHook LibNotifyUrgencyHook where
 
 ------------------------------------------------------------------------
 -- Colors and borders
--- Currently based on the ir_black theme.
 --
 myNormalBorderColor  = "#626262"
 myFocusedBorderColor = "#e57e77"
@@ -242,7 +244,7 @@ getScreenshot = do
     ["Screenshot type", "Area", "Window", "Full"] ""
   case filter (/= '\n') scrStr of
     "Area"   -> spawn mySelectScreenshot
-    -- "Window" -> unGrab >> spawn myWindowScreenshot
+    "Window" -> unGrab >> spawn myWindowScreenshot
     "Full"   -> spawn myScreenshot
     _        -> return ()
 
@@ -273,15 +275,15 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask .|. shiftMask, xK_p) , gotoMenuArgs' "rofi" rofiGoToWinArgs)
 
   -- scratchpads
-  , ((mod4Mask, xK_z), myScratchAction "dropTerm")
-  , ((mod4Mask .|. shiftMask, xK_n), myScratchAction "scratch")
-  , ((mod4Mask .|. shiftMask, xK_d), myScratchAction "docs")
+  , ((modMask, xK_z), myScratchAction "dropTerm")
+  , ((modMask .|. shiftMask, xK_n), myScratchAction "scratch")
+  , ((modMask .|. shiftMask, xK_d), myScratchAction "docs")
 
   -- Ask for screenshot type and take screenshot
   , ((modMask .|. controlMask .|. shiftMask, xK_p), getScreenshot)
 
   -- Basically toggles xmobar (useful for fullscreen), requires lowerOnStart=True
-  , ((mod4Mask .|. shiftMask, xK_f), sendMessage ToggleStruts)
+  , ((modMask .|. shiftMask, xK_f), sendMessage ToggleStruts)
 
   -- Mute/unmute volume.
   -- There is a bug with this one:
@@ -295,21 +297,21 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Increase volume.
   , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master 5%+")
 
-  , ((modMask, xK_F5), spawn "amixer -q set Master 5%-")
-  , ((modMask, xK_F6), spawn "amixer -q set Master toggle")
-  , ((modMask, xK_F7), spawn "amixer -q set Master 5%+")
+  -- , ((modMask, xK_F5), spawn "amixer -q set Master 5%-")
+  -- , ((modMask, xK_F6), spawn "amixer -q set Master toggle")
+  -- , ((modMask, xK_F7), spawn "amixer -q set Master 5%+")
 
   -- Toggle mic
-  -- , ((0, xF86XK_AudioMicMute), spawn "amixer -q set Capture toggle")
+  , ((0, xF86XK_AudioMicMute), spawn "amixer -q set Capture toggle")
 
   -- Next track
-  , ((mod4Mask, xK_F2), spawn "playerctl previous")
+  , ((modMask, xK_F2), spawn "playerctl previous")
 
   -- Previous track
-  , ((mod4Mask, xK_F3), spawn "playerctl play-pause")
+  , ((modMask, xK_F3), spawn "playerctl play-pause")
 
   -- Play/pause
-  , ((mod4Mask, xK_F4), spawn "playerctl next")
+  , ((modMask, xK_F4), spawn "playerctl next")
 
   -- Increase brightness.
   , ((0, xF86XK_MonBrightnessUp),
@@ -481,9 +483,6 @@ myLogPPActive copies = (myLogPP copies)
       then xmobarColor xmobarUnfocusedWorkspaceColor "" $ wrap "(" ")" $ IndS.unmarshallW ws
       else ""
   , ppHidden = \ws -> if ws == "NSP" then "" else IndS.unmarshallW ws
-  , ppSep = xmobarColor xmobarSepColor "" " | "
-  , ppLayout = xmobarColor xmobarLayoutColor ""
-  , ppUrgent = xmobarColor "red" "yellow"
   }
 
 myLogPP copies = defaultPP
