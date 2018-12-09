@@ -1,0 +1,13 @@
+# /etc/systemd/system
+[Unit]
+Description=Lock X session using xscreensaver for user %i
+Before=sleep.target
+
+[Service]
+User=%i
+Environment=DISPLAY=:0
+ExecStartPre=/usr/bin/xset dpms force suspend
+ExecStart=/usr/bin/xscreensaver-command -lock
+
+[Install]
+WantedBy=sleep.target
