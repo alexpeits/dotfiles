@@ -324,25 +324,23 @@ barCreator (S sid) = spawnPipe $
   ++ " ~/.xmonad/xmobar" ++ show sid ++ ".hs"
 
 #ifdef JOB
-unmarshall = IndS.unmarshallW
 tLength = 200
 #else
-unmarshall = id
 tLength = 100
 #endif
 
 myLogPPActive copies = (myLogPP copies)
   { ppTitle = xmobarColor xmobarTitleColor "" . shorten tLength
-  , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "[" "]" . unmarshall
-  , ppVisible = xmobarColor xmobarVisibleWorkspaceColor "" . wrap "(" ")" . unmarshall
-  , ppHidden = \ws -> if ws == "NSP" then "" else unmarshall ws
+  , ppCurrent = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "[" "]"
+  , ppVisible = xmobarColor xmobarVisibleWorkspaceColor "" . wrap "(" ")"
+  , ppHidden = \ws -> if ws == "NSP" then "" else ws
   }
 
 myLogPP copies = defaultPP
   { ppTitle = xmobarColor xmobarInactiveTitleColor "" . shorten tLength
-  , ppCurrent = xmobarColor xmobarInactiveCurrentWorkspaceColor "" . wrap "[" "]" . unmarshall
-  , ppVisible = xmobarColor xmobarInactiveVisibleWorkspaceColor "" . wrap "(" ")" . unmarshall
-  , ppHidden = \ws -> if ws == "NSP" then "" else unmarshall ws
+  , ppCurrent = xmobarColor xmobarInactiveCurrentWorkspaceColor "" . wrap "[" "]"
+  , ppVisible = xmobarColor xmobarInactiveVisibleWorkspaceColor "" . wrap "(" ")"
+  , ppHidden = \ws -> if ws == "NSP" then "" else ws
   , ppSep = xmobarColor xmobarSepColor "" " | "
   , ppLayout = xmobarColor xmobarLayoutColor ""
   , ppUrgent = xmobarColor "red" "yellow"
