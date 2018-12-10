@@ -1,0 +1,8 @@
+#!/bin/bash
+
+while true
+do
+    echo "nudge nudge"
+    xscreensaver-command -deactivate
+    sleep 1m
+done
