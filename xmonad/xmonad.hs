@@ -1,5 +1,5 @@
 {-# LANGUAGE CPP #-}
--- #define JOB
+#define JOB
 import System.IO
 import System.Exit
 
@@ -272,20 +272,20 @@ customKeys conf@(XConfig{XMonad.modMask = modMask}) =
   , ((modMask .|. shiftMask, xK_f), sendMessage ToggleStruts)
 
   -- mute/unmute
+#ifdef JOB
+  , ((modMask, xK_F5), spawn "amixer -q set Master 5%-")
+  -- , ((modMask, xK_F6), spawn "amixer -q set Master toggle")
+  , ((modMask, xK_F6), spawn "amixer -D pulse set Master 1+ toggle")
+  , ((modMask, xK_F7), spawn "amixer -q set Master 5%+")
+#else
   -- There is a bug with this one:
   -- , ((0, xF86XK_AudioMute), spawn "amixer -q set Master toggle")
   , ((0, xF86XK_AudioMute), spawn "amixer -D pulse set Master 1+ toggle")
-  -- volume down
   , ((0, xF86XK_AudioLowerVolume), spawn "amixer -q set Master 5%-")
-  -- volume up
   , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master 5%+")
   -- mic
-#ifndef JOB
   , ((0, xF86XK_AudioMicMute), spawn "amixer -q set Capture toggle")
 #endif
-  -- , ((modMask, xK_F5), spawn "amixer -q set Master 5%-")
-  -- , ((modMask, xK_F6), spawn "amixer -q set Master toggle")
-  -- , ((modMask, xK_F7), spawn "amixer -q set Master 5%+")
 
   -- next track
   , ((modMask, xK_F2), spawn "playerctl previous")
