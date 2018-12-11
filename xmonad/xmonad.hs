@@ -177,12 +177,13 @@ myManageHook = composeAll
 -- # Layouts
 
 myLayout = avoidStruts $
-  myTall
 #ifdef JOB
+  named "Tall" (deco myTall)
   ||| named "Left" (deco myLeft)
   ||| named "Right" (deco myRight)
-  ||| named "Focus" (Mirror (Tall nmaster delta bigMasterRatio))
+  ||| named "Focus" (deco (Mirror (Tall nmaster delta bigMasterRatio)))
 #else
+  myTall
   ||| named "Focus" (Mirror (Tall nmaster delta bigMasterRatio))
   ||| named "3Col" (ThreeColMid nmaster delta halfRatio)
   ||| named "Tabs" (Tabs.tabbed Deco.shrinkText tabTheme)
@@ -194,6 +195,8 @@ myLayout = avoidStruts $
   -- ||| named "BSplit" (Combo.combineTwo (Mirror (TwoPane.TwoPane delta 0.63)) (Mirror myTall) myTabbed)
   where
     myTall = Tall nmaster delta halfRatio
+    myLeft = named "Left" (Tall nmaster delta 0.75)
+    myRight = named "Right" (Reflect.reflectHoriz myLeft)
     -- theme
     tabTheme = def
       { activeColor = "#245361"
@@ -210,6 +213,16 @@ myLayout = avoidStruts $
     -- Ratios
     halfRatio = 1/2
     bigMasterRatio = 75/100
+    deco = NoFrills.noFrillsDeco shrinkText topBarTheme
+    topBarTheme = def
+     { inactiveBorderColor   = "#002b36"
+     , inactiveColor         = "#002b36"
+     , inactiveTextColor     = "#002b36"
+     , activeBorderColor     = "#268bd2"
+     , activeColor           = "#268bd2"
+     , activeTextColor       = "#268bd2"
+     , decoHeight            = 10
+     }
 
 ------------------------------------------------------------------------
 -- # Keybindings
@@ -267,7 +280,9 @@ customKeys conf@(XConfig{XMonad.modMask = modMask}) =
   -- volume up
   , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master 5%+")
   -- mic
+#ifndef JOB
   , ((0, xF86XK_AudioMicMute), spawn "amixer -q set Capture toggle")
+#endif
   -- , ((modMask, xK_F5), spawn "amixer -q set Master 5%-")
   -- , ((modMask, xK_F6), spawn "amixer -q set Master toggle")
   -- , ((modMask, xK_F7), spawn "amixer -q set Master 5%+")
