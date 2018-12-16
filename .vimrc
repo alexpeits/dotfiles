@@ -2,6 +2,18 @@ set nocompatible
 filetype off
 syntax enable
 
+let g:haskell_enable_quantification = 1   " highlighting `forall`
+let g:haskell_enable_recursivedo = 1      " highlighting `mdo` and `rec`
+let g:haskell_enable_arrowsyntax = 1      " highlighting `proc`
+let g:haskell_enable_pattern_synonyms = 1 " highlighting `pattern`
+let g:haskell_enable_typeroles = 1        " highlighting type roles
+let g:haskell_enable_static_pointers = 1  " highlighting `static`
+let g:haskell_backpack = 1 " highlighting backpack keywords
+let g:haskell_indent_disable = 1
+let g:lucius_high_contrast = 1
+let g:lucius_style = 'dark'
+let g:lucius_no_term_bg = 1
+
 set rtp+=~/.vim/bundle/Vundle.vim
 
 call vundle#begin()
@@ -18,12 +30,13 @@ Plugin 'mattn/emmet-vim'
 Plugin 'mbbill/undotree'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'freeo/vim-kalisi'
-Plugin 'joshdick/onedark.vim'
+Plugin 'jonathanfilip/vim-lucius'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
 Plugin 'Yggdroot/indentLine'
 Plugin 'mileszs/ack.vim'
 Plugin 'google/vim-searchindex'
+Plugin 'neovimhaskell/haskell-vim'
 call vundle#end()
 
 
@@ -74,10 +87,11 @@ endif
 " Powerline setup
 set laststatus=2
 let g:airline_powerline_fonts=1
-let g:airline_theme='dark'
-"let g:airline_theme='onedark'
+let g:airline_theme='luna'
+"let g:airline_theme='dark'
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_skip_empty_sections = 1
 " set guifont=UbuntuMonoDerivativePowerline\ Nerd\ Font\ Regular\ 13
 
 "Syntastic
@@ -148,11 +162,38 @@ if has("persistent_undo")
     set undofile
 endif
 
-"colorscheme onedark
 set background=dark
-colorscheme kalisi
-highlight Normal ctermbg=235
-highlight MatchParen cterm=reverse
+"colorscheme kalisi
+colorscheme lucius
+"highlight Normal ctermbg=234
+"highlight MatchParen cterm=reverse
+
+" ekmett stuff
+highlight Comment cterm=italic gui=italic
+highlight Normal ctermbg=NONE guibg=NONE
+
+highlight Comment cterm=italic gui=italic
+highlight SpecialComment cterm=italic gui=italic ctermfg=DarkGreen
+highlight Normal ctermbg=NONE guibg=NONE
+highlight haskellBottom ctermfg=Red
+highlight haskellFail ctermfg=LightRed
+highlight HaskellDecl cterm=italic ctermfg=DarkCyan
+highlight HaskellDeclKeyword cterm=italic ctermfg=DarkCyan
+highlight haskellImportKeywords cterm=italic ctermfg=DarkCyan
+highlight haskellWhere cterm=italic ctermfg=DarkCyan
+highlight haskellLet cterm=italic ctermfg=DarkCyan
+highlight haskellDefault cterm=italic ctermfg=DarkCyan
+highlight haskellKeyword cterm=italic ctermfg=DarkCyan
+highlight haskellStatic cterm=italic ctermfg=DarkCyan
+highlight haskellConditional cterm=italic ctermfg=DarkCyan
+highlight haskellBackpackStructure cterm=italic ctermfg=DarkCyan
+highlight haskellForall cterm=italic ctermfg=DarkCyan
+highlight haskellRecursiveDo cterm=italic ctermfg=DarkCyan
+highlight haskellPatternKeyword cterm=italic ctermfg=DarkCyan
+highlight haskellTypeRoles cterm=italic ctermfg=DarkCyan
+highlight Pmenu cterm=italic ctermbg=Black ctermfg=DarkGrey
+highlight PmenuSel cterm=italic ctermbg=DarkGrey ctermfg=Black
+highlight LineNr ctermfg=241 ctermbg=NONE
 
 highlight GitGutterAdd ctermbg=none
 highlight GitGutterChange ctermbg=none
