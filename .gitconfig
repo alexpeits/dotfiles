@@ -1,6 +1,6 @@
 [user]
     name = Alexandros Peitsinis
-    email = alexpeitsinis@gmail.com
+    email = alex.peitsinis@habito.com
 [credential]
     helper = store
 [core]
@@ -16,3 +16,5 @@
     count = shortlog -s -n --all
     squash = rebase -i HEAD^^
     delremote = push origin --delete
+    branch-point = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
+    diff-branch = !git diff "$@" $(git branch-point)..HEAD

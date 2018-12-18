@@ -6,12 +6,20 @@
 # Sphinx
 #docs/_build
 
+# Haskell
+.ghcid-output
+
 # Vim
 *.swp
+tags
 
 # emacs
 .projectile
 .dir-locals.el
+TAGS
 
 # tern
 .tern-port
+
+# local dev
+.local.sh
