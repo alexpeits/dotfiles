@@ -66,7 +66,7 @@ parse_git_state() {
 # If inside a Git repository, print its branch and state
 git_super_status() {
   local git_where="$(parse_git_branch)"
-  [ -n "$git_where" ] && echo "$GIT_PROMPT_SYMBOL$GIT_PROMPT_PREFIX%{$fg[magenta]%}${git_where#(refs/heads/|tags/)}%{$reset_color%}$(parse_git_state)$GIT_PROMPT_SUFFIX"
+  [ -z "$HIDE_GIT_PROMPT" ] && [ -n "$git_where" ] && echo "$GIT_PROMPT_SYMBOL$GIT_PROMPT_PREFIX%{$fg[magenta]%}${git_where#(refs/heads/|tags/)}%{$reset_color%}$(parse_git_state)$GIT_PROMPT_SUFFIX"
 }
 
 # Set the right-hand prompt
