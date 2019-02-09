@@ -1,5 +1,5 @@
 {-# LANGUAGE CPP #-}
-#define JOB
+-- #define JOB
 import System.IO
 import System.Exit
 
@@ -29,6 +29,7 @@ import qualified XMonad.Layout.WindowNavigation as WNav
 import qualified XMonad.Layout.IndependentScreens as IndS
 import qualified XMonad.Layout.Reflect as Reflect
 import qualified XMonad.Layout.NoFrillsDecoration as NoFrills
+import qualified XMonad.Layout.StackTile as StackTile
 
 import XMonad.Util.Run (spawnPipe, safeSpawn, runProcessWithInput)
 import XMonad.Util.NamedWindows
@@ -99,6 +100,7 @@ myScratchpads =
   -- , NS "zeal" "zeal" (className =? "Zeal") largeRectM
   , NS "docs" firefoxDocs (className =? "Docs") medRectBR
   , NS "dropTerm" "gnome-terminal --role=dropTerm" (role =? "dropTerm") dropDown
+  , NS "files" "nautilus --new-window --class=nautilusScratch" (className =? "nautilusScratch") medRectM
   ]
   where role = stringProperty "WM_WINDOW_ROLE"
         title = stringProperty "WM_NAME"
@@ -177,14 +179,14 @@ myManageHook = composeAll
 -- # Layouts
 
 myLayout = avoidStruts $
+  myTall
 #ifdef JOB
-  named "Tall" (deco myTall)
   ||| named "Left" (deco myLeft)
   ||| named "Right" (deco myRight)
-  ||| named "Focus" (deco (Mirror (Tall nmaster delta bigMasterRatio)))
-#else
-  myTall
   ||| named "Focus" (Mirror (Tall nmaster delta bigMasterRatio))
+#else
+  -- ||| named "Focus" (Mirror (Tall nmaster delta bigMasterRatio))
+  ||| named "StackT" (StackTile.StackTile 2 delta (70/100))
   ||| named "3Col" (ThreeColMid nmaster delta halfRatio)
   ||| named "Tabs" (Tabs.tabbed Deco.shrinkText tabTheme)
 #endif
@@ -195,8 +197,6 @@ myLayout = avoidStruts $
   -- ||| named "BSplit" (Combo.combineTwo (Mirror (TwoPane.TwoPane delta 0.63)) (Mirror myTall) myTabbed)
   where
     myTall = Tall nmaster delta halfRatio
-    myLeft = named "Left" (Tall nmaster delta 0.75)
-    myRight = named "Right" (Reflect.reflectHoriz myLeft)
     -- theme
     tabTheme = def
       { activeColor = "#245361"
@@ -213,16 +213,6 @@ myLayout = avoidStruts $
     -- Ratios
     halfRatio = 1/2
     bigMasterRatio = 75/100
-    deco = NoFrills.noFrillsDeco shrinkText topBarTheme
-    topBarTheme = def
-     { inactiveBorderColor   = "#002b36"
-     , inactiveColor         = "#002b36"
-     , inactiveTextColor     = "#002b36"
-     , activeBorderColor     = "#268bd2"
-     , activeColor           = "#268bd2"
-     , activeTextColor       = "#268bd2"
-     , decoHeight            = 10
-     }
 
 ------------------------------------------------------------------------
 -- # Keybindings
@@ -267,25 +257,24 @@ customKeys conf@(XConfig{XMonad.modMask = modMask}) =
   , ((0, xK_F12), myScratchAction "dropTerm")
   , ((modMask .|. shiftMask, xK_n), myScratchAction "scratch")
   , ((modMask .|. shiftMask, xK_d), myScratchAction "docs")
+  , ((modMask .|. shiftMask, xK_b), myScratchAction "files")
 
   -- toggle xmobar
   , ((modMask .|. shiftMask, xK_f), sendMessage ToggleStruts)
 
   -- mute/unmute
-#ifdef JOB
-  , ((modMask, xK_F5), spawn "amixer -q set Master 5%-")
-  -- , ((modMask, xK_F6), spawn "amixer -q set Master toggle")
-  , ((modMask, xK_F6), spawn "amixer -D pulse set Master 1+ toggle")
-  , ((modMask, xK_F7), spawn "amixer -q set Master 5%+")
-#else
   -- There is a bug with this one:
   -- , ((0, xF86XK_AudioMute), spawn "amixer -q set Master toggle")
   , ((0, xF86XK_AudioMute), spawn "amixer -D pulse set Master 1+ toggle")
+  -- volume down
   , ((0, xF86XK_AudioLowerVolume), spawn "amixer -q set Master 5%-")
+  -- volume up
   , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master 5%+")
   -- mic
   , ((0, xF86XK_AudioMicMute), spawn "amixer -q set Capture toggle")
-#endif
+  -- , ((modMask, xK_F5), spawn "amixer -q set Master 5%-")
+  -- , ((modMask, xK_F6), spawn "amixer -q set Master toggle")
+  -- , ((modMask, xK_F7), spawn "amixer -q set Master 5%+")
 
   -- next track
   , ((modMask, xK_F2), spawn "playerctl previous")
@@ -341,7 +330,7 @@ barCreator (S sid) = spawnPipe $
 #ifdef JOB
 tLength = 200
 #else
-tLength = 100
+tLength = 72
 #endif
 
 myLogPPActive copies = (myLogPP copies)
