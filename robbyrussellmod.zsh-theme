@@ -19,9 +19,8 @@ local info="%{$fg_bold[white]%}%n@%m%{$reset_color%}"
 local ret_status="%(?:%{$fg_bold[green]%}$symb:%{$fg_bold[red]%}$symb)"
 local root_ret_status="%(?:%{$fg_bold[green]%}#:%{$fg_bold[red]%}#)"
 PROMPT='$(build_prompt)%{$fg[cyan]%}%~%{$reset_color%}$(git_super_status) %(!.${root_ret_status}.${ret_status})%{$reset_color%} '
-PROMPT2='%{$fg[cyan]%}┌─╼ $(build_prompt)%{$fg[cyan]%}%(5~|%-1~/…/%2~|%4~)%{$reset_color%}$(git_super_status)
+PROMPT2='%{$fg[cyan]%}┌─╼ %{$reset_color%}$(build_prompt)%{$fg[cyan]%}%~%{$reset_color%}$(git_super_status)
 %{$fg[cyan]%}└╼ %(!.${root_ret_status}.${ret_status})%{$reset_color%} '
-# PROMPT='%(!.${root_ret_status}.${ret_status}) %{$fg[cyan]%}%~%{$reset_color%} $(git_super_status) '
 RPROMPT='[%T]'
 
 switch_prompts() {
