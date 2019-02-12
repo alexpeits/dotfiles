@@ -22,9 +22,12 @@ PROMPT='$(build_prompt)%{$fg[cyan]%}%~%{$reset_color%}$(git_super_status) %(!.${
 PROMPT2='%{$fg[cyan]%}┌─╼ $(build_prompt)%{$fg[cyan]%}%(5~|%-1~/…/%2~|%4~)%{$reset_color%}$(git_super_status)
 %{$fg[cyan]%}└╼ %(!.${root_ret_status}.${ret_status})%{$reset_color%} '
 # PROMPT='%(!.${root_ret_status}.${ret_status}) %{$fg[cyan]%}%~%{$reset_color%} $(git_super_status) '
+RPROMPT='[%T]'
 
 switch_prompts() {
     local tmp=$PROMPT
     PROMPT=$PROMPT2
     PROMPT2=$tmp
 }
+
+alias sp=switch_prompts
