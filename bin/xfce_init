@@ -1,0 +1,93 @@
+#!/bin/sh
+MESSAGE=""
+
+add_message() {
+    MESSAGE="$MESSAGE\n$1"
+}
+
+if [ -f ~/.Xresources ]; then
+    xrdb -merge ~/.Xresources
+fi
+
+# keybindings
+setxkbmap -option caps:escape
+setxkbmap -option ctrl:ralt_rctrl
+setxkbmap -layout us,gr -option grp:alt_space_toggle
+
+#setxkbmap -option ctrl:nocaps
+#xcape -t 300 -e 'Control_L=Escape'
+
+#cursor
+xsetroot -cursor_name left_ptr
+
+# natural scrolling
+touchpad_id=$(xinput list | grep -i touchpad | awk -F'\t' '{print $2}' | awk -F'=' '{print $2}')
+xinput set-prop "$touchpad_id" "libinput Natural Scrolling Enabled" 1
+
+# keyboard repeat rate
+xset r rate 500 45
+
+# background
+#if $(hash feh); then
+    #feh --bg-scale ~/Pictures/wallpaper
+#else
+    #add_message "- Install feh"
+#fi
+
+
+#eval $(gnome-keyring-daemon --start)
+# gnome-keyring-daemon --daemonize --login &
+# export GNOME_KEYRING_SOCKET
+#export GNOME_KEYRING_PID
+# gnome-session &
+#/usr/lib/gnome-settings-daemon/gsd-xsettings &
+
+if [ -d $HOME/projects/indicator-redshift ]; then
+    (cd $HOME/projects/indicator-redshift && python -m indicator_redshift.indicator) &
+fi
+
+if [ -d $HOME/projects/indicator-charge ]; then
+    (cd $HOME/projects/indicator-charge && python -m indicator_charge.indicator) &
+fi
+
+#/usr/bin/env emacs --daemon=workspace-terminal &
+
+# if [ -x /usr/bin/caffeine-indicator ]; then
+#     /usr/bin/caffeine-indicator &
+# fi
+
+#if [ -x /usr/bin/dropbox ] ; then
+    #/usr/bin/dropbox start &
+#fi
+
+#if [ -x /usr/bin/blueman-applet ]; then
+    #/usr/bin/blueman-applet &
+#fi
+
+#if [ -x /usr/bin/nm-applet ] ; then
+   #/usr/bin/nm-applet --sm-disable &
+#fi
+
+#if [ -x /usr/bin/xscreensaver ] ; then
+    #/usr/bin/xscreensaver -no-splash &
+#fi
+
+#if [ -x /usr/bin/gnome-power-manager ] ; then
+    #(sleep 3 && /usr/bin/gnome-power-manager) &
+#fi
+
+#if [ -x /usr/lib/notification-daemon/notification-daemon ]; then
+    #/usr/lib/notification-daemon/notification-daemon &
+#fi
+
+#if [ -x gitit && -d $HOME/sources/wiki ]; then
+    #(cd $HOME/sources/wiki && gitit) &
+#fi
+
+if [ ! -z "$MESSAGE" ]; then
+    (echo "$MESSAGE" | xmessage -file -) &
+fi
+
+#(sleep 5 && xfce4-panel --restart) &
+
+#xmonad --replace
