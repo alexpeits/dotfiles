@@ -33,6 +33,7 @@ import qualified XMonad.Layout.IndependentScreens as IndS
 import qualified XMonad.Layout.Reflect as Reflect
 import qualified XMonad.Layout.NoFrillsDecoration as NoFrills
 import qualified XMonad.Layout.StackTile as StackTile
+import qualified XMonad.Layout.Maximize as Maximize
 
 import XMonad.Util.Run (spawnPipe, safeSpawn, runProcessWithInput)
 import XMonad.Util.NamedWindows
@@ -181,16 +182,16 @@ myManageHook = composeAll
 ------------------------------------------------------------------------
 -- # Layouts
 
-myLayout = avoidStruts $
+myLayout = avoidStruts $ Maximize.maximize $
   myTall
 #ifdef JOB
   ||| named "Left" (deco myLeft)
   ||| named "Right" (deco myRight)
   ||| named "Focus" (Mirror (Tall nmaster delta bigMasterRatio))
 #else
-  -- ||| named "Focus" (Mirror (Tall nmaster delta bigMasterRatio))
-  ||| named "StackT" (StackTile.StackTile 2 delta (70/100))
-  ||| named "3Col" (ThreeColMid nmaster delta halfRatio)
+  ||| named "Focus" (Mirror (Tall nmaster delta bigMasterRatio))
+  -- ||| named "StackT" (StackTile.StackTile 2 delta (70/100))
+  -- ||| named "3Col" (ThreeColMid nmaster delta halfRatio)
   ||| named "Tabs" (Tabs.tabbed Deco.shrinkText tabTheme)
 #endif
   -- ||| named "VTall" (Mirror myTall)
@@ -248,6 +249,9 @@ customKeys conf@(XConfig{XMonad.modMask = modMask}) =
   -- screen lock
   , ((modMask .|. controlMask, xK_l), spawn myScreensaver)
 
+  -- maximize current window
+  , ((modMask, xK_backslash), withFocused (sendMessage . Maximize.maximizeRestore))
+
   -- launcher
   , ((modMask, xK_p), spawn myLauncher)
   -- window select
@@ -278,6 +282,9 @@ customKeys conf@(XConfig{XMonad.modMask = modMask}) =
   -- , ((modMask, xK_F5), spawn "amixer -q set Master 5%-")
   -- , ((modMask, xK_F6), spawn "amixer -q set Master toggle")
   -- , ((modMask, xK_F7), spawn "amixer -q set Master 5%+")
+
+  -- Toggle CM keyboard led on/off
+  , ((0, xK_Scroll_Lock), spawn "~/bin/cmstorm_led")
 
   -- next track
   , ((modMask, xK_F2), spawn "playerctl previous")
