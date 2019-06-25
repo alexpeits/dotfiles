@@ -133,4 +133,10 @@ if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
 fi
 
+export PATH=~/.fzf/bin:$PATH
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# pipe command result to fzf and edit in $EDITOR
+er() {
+    $EDITOR $("$@" | fzf)
+}
