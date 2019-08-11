@@ -103,9 +103,9 @@ let g:NERDCustomDelimiters = {
 " fzf
 let g:fzf_layout = { 'down': '~20%' }
 nnoremap <C-p> :GFiles<CR>
-nnoremap <leader>p :Files<CR>
+nnoremap <leader>f :Files<CR>
 nnoremap <leader>b :Buffers<CR>
-nnoremap <leader>f :Ag<CR>
+nnoremap <leader>s :Ag<CR>
 nnoremap <leader>gc :Commits<CR>
 nnoremap <leader>gd :BCommits<CR>
 
