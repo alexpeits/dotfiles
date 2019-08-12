@@ -175,8 +175,11 @@ vnoremap < <gv
 nnoremap <leader>q :bp<CR>
 nnoremap <leader>w :bn<CR>
 
-execute "set <M-o>=\eo"
+if !has('nvim')
+    execute "set <M-o>=\eo"
+endif
 nnoremap <M-o> <C-w>w
+vnoremap <M-o> <C-w>w
 
 cnoreabbrev lo lopen
 cnoreabbrev lc lclose
