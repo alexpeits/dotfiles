@@ -21,6 +21,7 @@ let
     buildInputs = [
       ghcWithPackages
       haskellPackages.ghcid
+      pkgs.entr
     ];
   };
 

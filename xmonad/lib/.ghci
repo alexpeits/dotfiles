@@ -1,2 +1,3 @@
-:l XMonad.My.Keys XMonad.My.Layouts XMonad.My.Scratchpad XMonad.My.Util XMonad.My.Variables XMonad.My.Windows XMonad.My.Workspaces
-:m + XMonad.My.Keys XMonad.My.Layouts XMonad.My.Scratchpad XMonad.My.Util XMonad.My.Variables XMonad.My.Windows XMonad.My.Workspaces
+:set prompt "\ESC[01;34mλ> \ESC[m"
+:l XMonad.My.Config XMonad.My.Keys XMonad.My.Layouts XMonad.My.Scratchpad XMonad.My.Util XMonad.My.Windows XMonad.My.Workspaces
+:m + XMonad.My.Config XMonad.My.Keys XMonad.My.Layouts XMonad.My.Scratchpad XMonad.My.Util XMonad.My.Windows XMonad.My.Workspaces
