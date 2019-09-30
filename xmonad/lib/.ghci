@@ -1,2 +1,2 @@
-:l *XMonad.My
+:l XMonad.My.Keys XMonad.My.Layouts XMonad.My.Scratchpad XMonad.My.Util XMonad.My.Variables XMonad.My.Windows XMonad.My.Workspaces
 :m + XMonad.My.Keys XMonad.My.Layouts XMonad.My.Scratchpad XMonad.My.Util XMonad.My.Variables XMonad.My.Windows XMonad.My.Workspaces
